@@ -1,0 +1,39 @@
+[
+  {
+    "name": "order-agent",
+    "description": "This agent is responsible for order management",
+    "version": "1.0.0",
+    "addresses": [{
+      "protocol": "http",
+        "uri": "localhost:8080"
+    }],
+    "capabilities": [
+      {
+        "name": "order-status",
+        "description": "This capability is responsible for order status tracking.",
+        "version": "1.0.0"
+      },
+      {
+        "name": "order-cancel",
+        "description": "This capability is responsible for order cancellation.",
+        "version": "1.0.0"
+      }
+    ]
+  },
+  {
+    "name": "offer-agent",
+    "description": "This agent is responsible for offer recommendation, cross-sell, and up-sell",
+    "version": "1.0.0",
+    "addresses": [{
+      "protocol": "http",
+      "uri": "localhost:8080"
+    }],
+    "capabilities": [
+      {
+        "name": "offer-recommendation",
+        "description": "This capability is responsible for offer recommendation.",
+        "version": "1.0.0"
+      }
+    ]
+  }
+]

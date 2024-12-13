@@ -1,0 +1,17 @@
+spring:
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      embedding:
+        options:
+          model: text-embedding-3-small
+        metadata-mode: none
+    vectorstore:
+      qdrant:
+        collection-name: test
+        host: localhost
+        port: 6334
+route:
+  agent:
+    vector:
+      spec-file-path: src/test/resources/agentRoutingSpecs.json

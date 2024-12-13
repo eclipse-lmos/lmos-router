@@ -1,0 +1,20 @@
+# SPDX-FileCopyrightText: 2024 Deutsche Telekom AG
+# 
+# SPDX-License-Identifier: Apache-2.0
+
+version = 1
+SPDX-PackageName = "arc"
+SPDX-PackageSupplier = "Deutsche Telekom AG <opensource@telekom.de>"
+SPDX-PackageDownloadLocation = "https://github.com/eclipse-lmos/lmos-router"
+
+[[annotations]]
+path = [".gitignore", ".editorconfig", "**/main/resources/META-INF/**", "**/test/resources/META-INF/**", "**/test/resources/*.json", "**/test/resources/*.txt", "**/test/resources/*.yml"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "none"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = ["gradle/**", "gradlew", "gradle.properties", "gradlew.bat"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Copyright 2015 the original author or authors."
+SPDX-License-Identifier = "Apache-2.0"

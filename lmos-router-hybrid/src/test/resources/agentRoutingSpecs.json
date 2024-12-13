@@ -1,0 +1,76 @@
+[
+  {
+    "name": "order-agent",
+    "description": "This agent is responsible for order management",
+    "version": "1.0.0",
+    "addresses": [
+      {
+        "protocol": "http",
+        "uri": "localhost:8080"
+      }
+    ],
+    "capabilities": [
+      {
+        "name": "cancel_order",
+        "description": "This capability is responsible for order cancellation.",
+        "version": "1.0.0"
+      },
+      {
+        "name": "change_order",
+        "description": "This capability is responsible for order change or purchased item change related queries.",
+        "version": "1.0.0"
+      },
+      {
+        "name": "place_order",
+        "description": "This capability is responsible for order placement, shopping and acquisition related queries.",
+        "version": "1.0.0"
+      },
+      {
+        "name": "track_order",
+        "description": "This capability is responsible for order tracking related queries such as ETA (Estimated Time of Arrival) etc",
+        "version": "1.0.0"
+      }
+    ]
+  },
+  {
+    "name": "payment-agent",
+    "description": "This agent is responsible for payment management",
+    "version": "1.0.0",
+    "addresses": [
+      {
+        "protocol": "http",
+        "uri": "localhost:8080"
+      }
+    ],
+    "capabilities": [
+      {
+        "name": "check_payment_methods",
+        "description": "This capability is responsible for checking payment methods.",
+        "version": "1.0.0"
+      },
+      {
+        "name": "payment_issue",
+        "description": "This capability is responsible for payment issue.",
+        "version": "1.0.0"
+      }
+    ]
+  },
+  {
+    "name": "subscription-agent",
+    "description": "This agent is responsible for subscription management and related queries",
+    "version": "1.0.0",
+    "addresses": [
+      {
+        "protocol": "http",
+        "uri": "localhost:8080"
+      }
+    ],
+    "capabilities": [
+      {
+        "name": "newsletter_subscription",
+        "description": "This capability is responsible for newsletter subscription.",
+        "version": "1.0.0"
+      }
+    ]
+  }
+]

@@ -1,0 +1,13 @@
+spring:
+  ai:
+    openai:
+      chat:
+        options:
+          model: gpt-4o-mini
+          response-format: json_object
+        enabled: true
+      api-key: ${OPENAI_API_KEY}
+route:
+  agent:
+    llm:
+      spec-file-path: src/test/resources/agentRoutingSpecs.json

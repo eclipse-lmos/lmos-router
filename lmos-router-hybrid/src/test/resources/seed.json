@@ -1,0 +1,66 @@
+[
+{
+"agentName": "order-agent",
+"text": "The user is unable to change some items in order 123456"
+},
+{
+"agentName": "order-agent",
+"text": "The user is unsure about the steps needed to purchase an article"
+},
+{
+"agentName": "invoice-agent",
+"text": "The user wants to quickly view invoice #00108"
+},
+{
+"agentName": "order-agent",
+"text": "The user is unable to pay for purchase 123456"
+},
+{
+"agentName": "payment-agent",
+"text": "The user needs help reporting an error with payments"
+},
+{
+"agentName": "payment-agent",
+"text": "The user needs assistance with reporting an error The user specifically needs help with a payment-related issue"
+},
+  {
+"agentName": "payment-agent",
+"text": "The user needs help with a payment-related issue"
+  },
+  {
+"agentName": "payment-agent",
+"text": "The user is looking to change their payment method"
+  },
+{
+"agentName": "account-agent",
+"text": "The user needs assistance with resetting their profile PIN"
+},
+{
+"agentName": "account-agent",
+"text": "The user is looking to switch to the platinum account"
+},
+  {
+"agentName": "account-agent",
+"text": "The user is looking to change their account type"
+  },
+  {
+"agentName": "account-agent",
+"text": "The user is looking to change their account information"
+  },
+{
+"agentName": "order-agent",
+"text": "The user wants to purchase an article"
+},
+{
+"agentName": "subscription-agent",
+"text": "The user wants to view the status of their newsletter subscription"
+},
+{
+"agentName": "subscription-agent",
+"text": "The user wants assistance unsubscribing from the corporate newsletter"
+},
+{
+"agentName": "order-agent",
+"text": "The user needs help canceling a specific purchase with ID 123456"
+}
+]

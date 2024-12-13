@@ -1,0 +1,28 @@
+[{
+  "text": "I want to buy a car",
+  "agentName": "offer-agent"
+},
+  {
+    "text": "Suggest me a new phone",
+    "agentName": "offer-agent"
+  },
+  {
+    "text": "I am looking for a new laptop",
+    "agentName": "offer-agent"
+  },
+  {
+    "text": "I want to cancel my order",
+    "agentName": "order-agent"
+  },
+  {
+    "text": "What is the status of my order",
+    "agentName": "order-agent"
+  },
+  {
+    "text": "I am planning to return my order",
+    "agentName": "order-agent"
+  },
+  {
+    "text": "Could you please help me with my order",
+    "agentName": "order-agent"
+  }]

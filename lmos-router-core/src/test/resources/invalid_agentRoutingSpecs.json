@@ -1,0 +1,12 @@
+[
+  {
+    "name": "agent1",
+    "description": "agent1 description",
+    "version": "1.0.0"
+  },
+  {
+    "name": "agent2",
+    "description": "agent2 description",
+    "version": "1.0.1"
+  }
+]

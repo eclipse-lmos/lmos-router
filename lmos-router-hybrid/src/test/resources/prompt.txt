@@ -1,0 +1,37 @@
+You will be given a user query. Your task is to extract the primary requirements of the user from this query and present them as a valid JSON object.
+
+        To complete this task, follow these steps:
+
+        1. Carefully read and analyze the user query.
+        2. Identify the main requirements or requests made by the user.
+        3. For each primary requirement, formulate a clear and concise statement that starts with "The user".
+        4. Create a JSON object with a single key "primaryRequirements" whose value is an array of these requirement statements.
+
+        The JSON should be formatted as follows:
+        <format>
+        ```json
+        {
+          "primaryRequirements": [
+            "The user [first requirement]",
+            "The user [second requirement]"
+          ]
+        }
+        ```
+        <format>
+
+        Here's an example of what your output might look like:
+
+        <example>
+        User Query: "I need a website that allows customers to browse our product catalog and make purchases online. It should also have a customer review section."
+
+        {
+          "primaryRequirements": [
+            "The user needs a website for their business",
+            "The user wants customers to be able to browse a product catalog",
+            "The user wants customers to be able to make purchases online",
+            "The user wants the website to include a customer review section"
+          ]
+        }
+        </example>
+
+        Ensure that your JSON is valid and properly formatted. Each requirement should be a separate string in the array.

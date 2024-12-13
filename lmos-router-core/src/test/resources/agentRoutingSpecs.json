@@ -1,0 +1,39 @@
+[
+  {
+    "name": "agent1",
+    "description": "agent1 description",
+    "version": "1.0.0",
+    "addresses": [{
+      "protocol": "http",
+      "uri": "http://localhost:8080"
+    }],
+    "capabilities": [
+      {
+        "name": "capability1",
+        "description": "capability1 description",
+        "version": "1.0.0"
+      },
+      {
+        "name": "capability2",
+        "description": "capability2 description",
+        "version": "1.0.0"
+      }
+    ]
+  },
+  {
+    "name": "agent2",
+    "description": "agent2 description",
+    "version": "1.0.1",
+    "addresses": [{
+      "protocol": "http",
+      "uri": "http://localhost:8080"
+    }],
+    "capabilities": [
+      {
+        "name": "capability1",
+        "description": "capability1 description",
+        "version": "1.0.0"
+      }
+    ]
+  }
+]

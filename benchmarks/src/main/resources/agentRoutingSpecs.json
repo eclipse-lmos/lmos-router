@@ -1,0 +1,274 @@
+[
+  {
+    "name": "account-agent",
+    "description": "This agent is responsible for account management related queries",
+    "version": "1.0.0",
+    "addresses": [{
+      "protocol": "http",
+      "uri": "localhost:8080"
+    }],
+    "capabilities": [
+      {
+        "name": "create_account",
+        "description": "This capability is responsible for account creation.",
+        "version": "1.0.0"
+      },
+        {
+            "name": "edit_account",
+            "description": "This capability is responsible for account update.",
+            "version": "1.0.0"
+        },
+        {
+            "name": "delete_account",
+            "description": "This capability is responsible for account deletion, account cancellation, or account termination.",
+            "version": "1.0.0"
+        },
+      {
+        "name": "recover_password",
+        "description": "This capability is responsible for password recovery.",
+        "version": "1.0.0"
+      },
+      {
+        "name": "registration_problems",
+        "description": "This capability is responsible for registration problems.",
+        "version": "1.0.0"
+      },
+      {
+        "name": "switch_account",
+        "description": "This capability is responsible for account switching.",
+        "version": "1.0.0"
+      }
+    ]
+  },
+  {
+    "name": "cancel-agent",
+    "description": "This agent is responsible for cancellation of services and related queries",
+    "version": "1.0.0",
+    "addresses": [{
+      "protocol": "http",
+      "uri": "localhost:8080"
+    }],
+    "capabilities": [
+      {
+        "name": "check_cancellation_fee",
+        "description": "This capability is responsible for checking cancellation fee, withdrawal fee, or termination fee.",
+        "version": "1.0.0"
+      }
+    ]
+  },
+  {
+    "name": "delivery-agent",
+    "description": "This agent is responsible for delivery of products and related queries",
+    "version": "1.0.0",
+    "addresses": [{
+      "protocol": "http",
+      "uri": "localhost:8080"
+    }],
+    "capabilities": [
+      {
+        "name": "delivery_options",
+        "description": "This capability is responsible for delivery options such as estimated delivery time/period, delivery methods and whether a particular location is deliverable or not.",
+        "version": "1.0.0"
+      },
+      {
+        "name": "delivery_period",
+        "description": "This capability is responsible for notifying when the delivery will be made.",
+        "version": "1.0.0"
+      }
+    ]
+  },
+  {
+    "name": "feedback-agent",
+    "description": "This agent is responsible for feedback management and related queries",
+    "version": "1.0.0",
+    "addresses": [
+      {
+        "protocol": "http",
+        "uri": "localhost:8080"
+      }
+    ],
+    "capabilities": [
+      {
+        "name": "complaint",
+        "description": "This capability is responsible for complaints and filing consumer claims.",
+        "version": "1.0.0"
+      },
+      {
+        "name": "review",
+        "description": "This capability is responsible for reviews.",
+        "version": "1.0.0"
+      }
+    ]
+  },
+  {
+    "name": "invoice-agent",
+    "description": "This agent is responsible for invoice management and related queries",
+    "version": "1.0.0",
+    "addresses": [
+      {
+        "protocol": "http",
+        "uri": "localhost:8080"
+      }
+    ],
+    "capabilities": [
+      {
+        "name": "check_invoice",
+        "description": "This capability is responsible for checking invoice.",
+        "version": "1.0.0"
+      },
+      {
+        "name": "get_invoice",
+        "description": "This capability is responsible for getting invoice.",
+        "version": "1.0.0"
+      }
+    ]
+  },
+  {
+    "name": "order-agent",
+    "description": "This agent is responsible for order management",
+    "version": "1.0.0",
+    "addresses": [
+      {
+        "protocol": "http",
+        "uri": "localhost:8080"
+      }
+    ],
+    "capabilities": [
+      {
+        "name": "cancel_order",
+        "description": "This capability is responsible for order cancellation.",
+        "version": "1.0.0"
+      },
+      {
+        "name": "change_order",
+        "description": "This capability is responsible for order change or purchased item change related queries.",
+        "version": "1.0.0"
+      },
+      {
+        "name": "place_order",
+        "description": "This capability is responsible for order placement, shopping and acquisition related queries.",
+        "version": "1.0.0"
+      },
+        {
+            "name": "track_order",
+            "description": "This capability is responsible for order tracking related queries such as ETA (Estimated Time of Arrival) etc",
+            "version": "1.0.0"
+        }
+    ]
+  },
+    {
+        "name": "payment-agent",
+        "description": "This agent is responsible for payment management",
+        "version": "1.0.0",
+        "addresses": [
+        {
+            "protocol": "http",
+            "uri": "localhost:8080"
+        }
+        ],
+        "capabilities": [
+        {
+            "name": "check_payment_methods",
+            "description": "This capability is responsible for checking payment methods.",
+            "version": "1.0.0"
+        },
+        {
+            "name": "payment_issue",
+            "description": "This capability is responsible for payment issue.",
+            "version": "1.0.0"
+        }
+        ]
+    },
+  {
+    "name": "refund-agent",
+    "description": "This agent is responsible for refund management and related queries",
+    "version": "1.0.0",
+    "addresses": [
+      {
+        "protocol": "http",
+        "uri": "localhost:8080"
+      }
+    ],
+    "capabilities": [
+      {
+        "name": "check_refund_policy",
+        "description": "This capability is responsible for checking refund policy.",
+        "version": "1.0.0"
+      },
+      {
+        "name": "get_refund",
+        "description": "This capability is responsible for getting refund.",
+        "version": "1.0.0"
+      },
+        {
+            "name": "track_refund",
+            "description": "This capability is responsible for refund tracking and refund status.",
+            "version": "1.0.0"
+        }
+    ]
+  },
+  {
+    "name": "shipping-agent",
+    "description": "This agent is responsible for shipping management and related queries",
+    "version": "1.0.0",
+    "addresses": [
+      {
+        "protocol": "http",
+        "uri": "localhost:8080"
+      }
+    ],
+    "capabilities": [
+      {
+        "name": "check_shipping_address",
+        "description": "This capability is responsible for checking shipping address.",
+        "version": "1.0.0"
+      },
+      {
+        "name": "set_up_shipping_address",
+        "description": "This capability is responsible for setting up shipping address.",
+        "version": "1.0.0"
+      }
+    ]
+  },
+  {
+    "name": "subscription-agent",
+    "description": "This agent is responsible for subscription management and related queries",
+    "version": "1.0.0",
+    "addresses": [
+      {
+        "protocol": "http",
+        "uri": "localhost:8080"
+      }
+    ],
+    "capabilities": [
+      {
+        "name": "newsletter_subscription",
+        "description": "This capability is responsible for newsletter subscription.",
+        "version": "1.0.0"
+      }
+    ]
+  },
+  {
+    "name": "contact-agent",
+    "description": "This agent is responsible for human support and customer service",
+    "version": "1.0.0",
+    "addresses": [
+      {
+        "protocol": "http",
+        "uri": "localhost:8080"
+      }
+    ],
+    "capabilities": [
+      {
+        "name": "contact_human_agent",
+        "description": "This capability is responsible for contacting human agent.",
+        "version": "1.0.0"
+      },
+        {
+            "name": "contact_customer_service",
+            "description": "This capability is responsible for customer service.",
+            "version": "1.0.0"
+        }
+    ]
+  }
+]
