@@ -183,6 +183,10 @@ release {
     preTagCommitMessage = "Release:"
 }
 
+tasks.named("release") {
+    finalizedBy("publish")
+}
+
 tasks.register("releaseBuild") {
     dependsOn(subprojects.mapNotNull { it.tasks.findByName("build") })
 }
