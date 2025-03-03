@@ -12,7 +12,7 @@ jobs:
   CI:
     uses: eclipse-lmos/.github/.github/workflows/gradle-ci-main.yml@main
     permissions:
-      contents: read
+      contents: write
       packages: write
     secrets:
       oss-username: ${{ secrets.OSSRH_USERNAME }}
