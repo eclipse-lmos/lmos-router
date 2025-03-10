@@ -81,7 +81,7 @@ subprojects {
     }
 
     mavenPublishing {
-        publishToMavenCentral(SonatypeHost.DEFAULT)
+        publishToMavenCentral(SonatypeHost.DEFAULT, automaticRelease = true)
         signAllPublications()
 
         pom {
@@ -188,7 +188,7 @@ release {
 }
 
 tasks.named("release") {
-    finalizedBy("publish")
+    finalizedBy("publishAllPublicationsToMavenCentralRepository")
 }
 
 tasks.register("releaseBuild") {
