@@ -37,7 +37,7 @@ class SpringModelClient(
                             }
                         },
                     ),
-                ).result.output.content
+                ).result.output.text
             Success(AssistantMessage(response))
         } catch (e: Exception) {
             Failure(AgentRoutingSpecResolverException(e.message ?: "An error occurred", e))
