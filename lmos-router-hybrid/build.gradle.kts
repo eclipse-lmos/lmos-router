@@ -6,7 +6,7 @@ dependencies {
     api(project(":lmos-router-core"))
     api(project(":lmos-router-llm"))
     api(project(":lmos-router-vector"))
-    implementation("org.slf4j:slf4j-api:1.7.25")
+    implementation("org.slf4j:slf4j-api:2.0.17")
     implementation("com.azure:azure-ai-openai:1.0.0-beta.14")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.7.3")
     implementation("io.ktor:ktor-client-cio-jvm:2.3.12")
