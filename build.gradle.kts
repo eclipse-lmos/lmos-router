@@ -63,7 +63,7 @@ subprojects {
     dependencies {
         "testImplementation"("org.junit.jupiter:junit-jupiter:5.12.0")
         "testImplementation"("org.junit.platform:junit-platform-launcher:1.12.0")
-        "testImplementation"("org.assertj:assertj-core:3.26.3")
+        "testImplementation"("org.assertj:assertj-core:3.27.3")
         "testImplementation"("io.mockk:mockk:1.13.13")
     }
 
