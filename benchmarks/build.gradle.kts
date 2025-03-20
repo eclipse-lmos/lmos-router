@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 dependencies {
-    implementation("org.apache.commons:commons-csv:1.13.0")
+    implementation("org.apache.commons:commons-csv:1.14.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.8.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
     implementation("io.ktor:ktor-client-cio-jvm:3.1.1")
