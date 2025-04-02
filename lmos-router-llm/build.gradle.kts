@@ -5,7 +5,7 @@
 dependencies {
     api(project(":lmos-router-core"))
     implementation("org.slf4j:slf4j-api:2.0.17")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.8.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.8.1")
     implementation("dev.langchain4j:langchain4j-open-ai:0.36.2")
     implementation("dev.langchain4j:langchain4j-anthropic:0.36.2")
     implementation("dev.langchain4j:langchain4j-azure-open-ai:0.36.2")
