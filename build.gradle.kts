@@ -65,7 +65,7 @@ subprojects {
         "testImplementation"("org.junit.jupiter:junit-jupiter:5.12.1")
         "testImplementation"("org.junit.platform:junit-platform-launcher:1.12.2")
         "testImplementation"("org.assertj:assertj-core:3.27.3")
-        "testImplementation"("io.mockk:mockk:1.14.0")
+        "testImplementation"("io.mockk:mockk:1.14.2")
     }
 
     tasks.named("dokkaJavadoc") {
