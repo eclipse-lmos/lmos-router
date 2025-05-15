@@ -18,7 +18,7 @@ plugins {
     id("org.jetbrains.dokka") version "2.0.0"
     id("org.cyclonedx.bom") version "2.3.0" apply false
     id("net.researchgate.release") version "3.1.0"
-    id("com.vanniktech.maven.publish") version "0.31.0"
+    id("com.vanniktech.maven.publish") version "0.32.0"
 }
 
 val springBootVersion by extra { "3.3.5" }
