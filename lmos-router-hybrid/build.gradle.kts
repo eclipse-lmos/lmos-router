@@ -9,6 +9,6 @@ dependencies {
     implementation("org.slf4j:slf4j-api:2.0.17")
     implementation("com.azure:azure-ai-openai:1.0.0-beta.16")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.8.1")
-    implementation("io.ktor:ktor-client-cio-jvm:3.1.2")
+    implementation("io.ktor:ktor-client-cio-jvm:3.2.0")
     testImplementation("org.testcontainers:ollama:1.20.6")
 }
