@@ -13,5 +13,5 @@ dependencies {
     testImplementation("org.springframework.ai:spring-ai-qdrant-store-spring-boot-starter:1.0.0-M6")
     testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
-    testImplementation("org.testcontainers:qdrant:1.21.0")
+    testImplementation("org.testcontainers:qdrant:1.21.3")
 }
