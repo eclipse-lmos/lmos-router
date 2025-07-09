@@ -1,0 +1,173 @@
+{
+  "id": "de-web-1.0.0-stable",
+  "capabilityGroups": [
+    {
+      "id": "urn:my-company:agent:billing",
+      "description": "This agent is responsible for billing and invoicing",
+      "capabilities": [
+        {
+          "id": "urn:my-company:capability:billing:view",
+          "name": "View Bills",
+          "version": "1.0",
+          "description": "Allows a customer to retrieve and view their latest invoices and billing information.",
+          "examples": [
+            "show my bill",
+            "view my invoice",
+            "how much do I owe?",
+            "billing details",
+            "show me my outstanding balance",
+            "download my latest invoice",
+            "view last month's charges",
+            "show billing summary",
+            "how much was my last bill?",
+            "where can I see my payment history?"
+          ]
+        },
+        {
+          "id": "urn:my-company:capability:billing:address:change",
+          "name": "Change Address",
+          "version": "1.0",
+          "description": "Allows a customer to change their billing address.",
+          "examples": [
+            "change my billing address",
+            "update billing address",
+            "I moved, change my address",
+            "edit my billing details",
+            "new billing address",
+            "set a different invoice address",
+            "change where my bills are sent",
+            "update my contact address",
+            "change invoice delivery address",
+            "I want to change my address for invoices"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "urn:my-company:agent:sales",
+      "description": "This agent assists customers with purchasing products and services",
+      "capabilities": [
+        {
+          "id": "urn:my-company:capability:sales:view-offers",
+          "name": "View Offers",
+          "version": "1.0",
+          "description": "Allows a customer to browse and view current promotions, discounts, and available offers.",
+          "examples": [
+            "show me current deals",
+            "what offers are available?",
+            "do you have any promotions?",
+            "latest discounts",
+            "show available bundles",
+            "what are the best deals today?",
+            "current special offers",
+            "do you offer any student discounts?",
+            "are there any holiday deals?",
+            "let me see your top promotions"
+          ]
+        },
+        {
+          "id": "urn:my-company:capability:sales:upgrade-plan",
+          "name": "Upgrade Plan",
+          "version": "1.0",
+          "description": "Helps a customer upgrade their existing service plan.",
+          "examples": [
+            "I want to upgrade my plan",
+            "show me better plans",
+            "can I switch to a premium package?",
+            "upgrade my mobile subscription",
+            "move to a higher plan",
+            "add more data to my plan",
+            "I need faster internet",
+            "get more features in my plan",
+            "suggest a better plan",
+            "change to the gold plan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "urn:my-company:agent:ordering",
+      "description": "This agent helps customers place and track their orders",
+      "capabilities": [
+        {
+          "id": "urn:my-company:capability:ordering:place-order",
+          "name": "Place Order",
+          "version": "1.0",
+          "description": "Allows a customer to place a new order for products or services.",
+          "examples": [
+            "I want to order a new phone",
+            "buy a new SIM card",
+            "order internet service",
+            "purchase a router",
+            "I'd like to subscribe to your service",
+            "get me a new device",
+            "how can I place an order?",
+            "sign me up for your internet plan",
+            "I'd like to start a new subscription",
+            "can I get a new modem?"
+          ]
+        },
+        {
+          "id": "urn:my-company:capability:ordering:track-order",
+          "name": "Track Order",
+          "version": "1.0",
+          "description": "Provides tracking information for an ongoing order.",
+          "examples": [
+            "where is my order?",
+            "track my shipment",
+            "order status",
+            "delivery update",
+            "when will my package arrive?",
+            "track my delivery",
+            "is my order shipped yet?",
+            "give me shipping info",
+            "where's my parcel?",
+            "update on my order"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "urn:my-company:agent:faq",
+      "description": "This agent provides answers to frequently asked questions about products, services, and policies",
+      "capabilities": [
+        {
+          "id": "urn:my-company:capability:faq:general-inquiry",
+          "name": "General Inquiry",
+          "version": "1.0",
+          "description": "Answers common questions regarding the company's services and policies.",
+          "examples": [
+            "what are your customer service hours?",
+            "how do I reset my password?",
+            "do you offer international roaming?",
+            "what is your refund policy?",
+            "how do I contact support?",
+            "what payment methods do you accept?",
+            "is there a cancellation fee?",
+            "how do I update my account info?",
+            "do you have a mobile app?",
+            "how long is the trial period?"
+          ]
+        },
+        {
+          "id": "urn:my-company:capability:faq:troubleshooting",
+          "name": "Troubleshooting Help",
+          "version": "1.0",
+          "description": "Provides troubleshooting assistance for common technical issues.",
+          "examples": [
+            "why is my internet so slow?",
+            "my phone isn’t connecting to the network",
+            "fix Wi-Fi issues",
+            "how to reset my router?",
+            "I can't make calls",
+            "my device won’t start",
+            "troubleshoot my connection",
+            "mobile data not working",
+            "how to fix frequent disconnections?",
+            "my router keeps restarting"
+          ]
+        }
+      ]
+    }
+  ]
+}

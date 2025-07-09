@@ -1,0 +1,49 @@
+server:
+  port: 8080
+
+lmos:
+  router:
+    classifier:
+      vector:
+        enabled: true
+      llm:
+        enabled: true
+      hybrid-rag:
+        enabled: true
+      hybrid-fast-track:
+        enabled: true
+    llm:
+      provider: ${LLM_PROVIDER:openai}
+      api-key: ${LLM_API_KEY:your-api-key}
+      base-url: ${LLM_BASE_URL:https://model-base-url.com}
+      model: ${LLM_MODEL_NAME:your-model}
+      maxChatHistory: ${LLM_MAX_CHAT_HISTORY:10}
+      system-prompt: ${LLM_SYSTEM_PROMPT:}
+    embedding:
+      store:
+        host: ${EMBEDDING_STORE_HOST:localhost}
+        port: ${EMBEDDING_STORE_PORT:6334}
+        tlsEnabled: ${EMBEDDING_STORE_TLS_ENABLED:false}
+        apiKey:  ${EMBEDDING_STORE_TLS_ENABLED:my-api-key}
+      ranking:
+        maxEmbeddings: ${EMBEDDING_RANKING_MAX_EMBEDDINGS:15}
+        minWeight: ${EMBEDDING_RANKING_MIN_WEIGHT:5.0}
+        minDistance: ${EMBEDDING_RANKING_MIN_DISTANCE:4.0}
+        minMeanScore: ${EMBEDDING_RANKING_MIN_MEAN_SCORE:0.5}
+        minRealDistance: ${EMBEDDING_RANKING_MIN_REAL_DISTANCE:0.3}
+      model:
+        provider: ${EMBEDDING_MODEL_PROVIDER:openai} # Options: openai, huggingface, local_onnx
+        base-url: ${EMBEDDING_MODEL_OPENAI_BASE_URL:https://api.openai.com/v1/embeddings} # Only required for provider openai
+        model-name: ${EMBEDDING_MODEL_HUGGINGFACE_MODEL_NAME:intfloat/multilingual-e5-large} # Only required for provider huggingface
+        api-key: ${EMBEDDING_MODEL_HUGGINGFACE_API_KEY:your-api-key} # Only required for provider huggingface
+        model-path: ${EMBEDDING_MODEL_LOCAL_MODEL_PATH:/path/to/your/local/model.onnx} # Only required for provider local_onnx
+        tokenizer-path: ${EMBEDDING_MODEL_LOCAL_TOKENIZER_PATH:/path/to/your/local/tokenizer.json} # Only required for provider local_onnx
+      rephraser:
+        maxHistoryMessages: 10
+      enabled: ${EMBEDDING_ENABLED:true}
+      document-path: ${EMBEDDING_MODEL_DOCUMENT_PATH:/path/to/your/capabilities/directory}
+
+logging:
+  level:
+    sun:
+      rmi: ERROR

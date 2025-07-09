@@ -1,0 +1,3 @@
+org.eclipse.lmos.classifier.hybrid.starter.ModelAutoConfiguration
+org.eclipse.lmos.classifier.hybrid.starter.FastTrackAgentClassifierAutoConfiguration
+org.eclipse.lmos.classifier.hybrid.starter.RagAgentClassifierAutoConfiguration

@@ -1,0 +1,15 @@
+lmos:
+  router:
+    classifier:
+      vector:
+        enabled: true
+    embedding:
+      store:
+        host: ${EMBEDDING_STORE_HOST:localhost}
+        port: ${EMBEDDING_STORE_PORT:6334}
+      model:
+        provider: openai
+        base-url: ${EMBEDDING_MODEL_BASE_URL:https://api.openai.com/v1/embeddings}
+      rephraser:
+        maxHistoryMessages: 10
+      enabled: ${EMBEDDING_ENABLED:true}
