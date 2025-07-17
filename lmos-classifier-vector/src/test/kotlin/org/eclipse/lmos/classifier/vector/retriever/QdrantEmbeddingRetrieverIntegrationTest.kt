@@ -88,8 +88,24 @@ class QdrantEmbeddingRetrieverIntegrationTest {
     @Test
     fun `retrieve returns embeddings sorted by relevance`() {
         // given
-        val fistPoint = createPoint("agent-id-1", "capability-id-1", "capability-desc-1", "my great example")
-        val secondPoint = createPoint("agent-id-2", "capability-id-2", "capability-desc-2", "something else")
+        val fistPoint =
+            createPoint(
+                "agent-id-1",
+                "agent-name-1",
+                "agent-address-1",
+                "capability-id-1",
+                "capability-desc-1",
+                "my great example",
+            )
+        val secondPoint =
+            createPoint(
+                "agent-id-2",
+                "agent-name-2",
+                "agent-address-2",
+                "capability-id-2",
+                "capability-desc-2",
+                "something else",
+            )
 
         qdrantClient.upsertAsync(getQdrantCollectionName(context), listOf(fistPoint, secondPoint)).get()
 
@@ -119,6 +135,8 @@ class QdrantEmbeddingRetrieverIntegrationTest {
 
     private fun createPoint(
         agentId: String,
+        agentName: String,
+        agentAddress: String,
         capabilityId: String,
         capabilityDescription: String,
         capabilityExample: String,
@@ -131,6 +149,8 @@ class QdrantEmbeddingRetrieverIntegrationTest {
             .putAllPayload(
                 mapOf(
                     EMBEDDING_METADATA_AGENT_ID to value(agentId),
+                    EMBEDDING_METADATA_AGENT_NAME to value(agentName),
+                    EMBEDDING_METADATA_AGENT_ADDRESS to value(agentAddress),
                     EMBEDDING_METADATA_CAPABILITY_ID to value(capabilityId),
                     EMBEDDING_METADATA_CAPABILITY_DESCRIPTION to value(capabilityDescription),
                     EMBEDDING_METADATA_CAPABILITY_EXAMPLE to value(capabilityExample),

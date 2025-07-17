@@ -60,8 +60,21 @@ data class SystemContext(
  * This field is only populated when the classification includes embedding-based retrieval.
  */
 open class ClassificationResult(
-    var agents: List<String>,
+    var agents: List<ClassifiedAgent>,
     val topRankedEmbeddings: List<Agent> = emptyList(),
+)
+
+/**
+ * Represents a classified agent that has been selected as a result of the classification process.
+ *
+ * @property id ID of the agent.
+ * @property name Name of the agent.
+ * @property address Address of the agent, typically used for routing or invocation.
+ */
+data class ClassifiedAgent(
+    val id: String,
+    val name: String,
+    val address: String,
 )
 
 /**
@@ -90,10 +103,14 @@ enum class HistoryMessageRole {
  * Represents an agent with a unique identifier and a set of capabilities.
  *
  * @property id The unique identifier of the agent.
+ * @property name The name of the agent.
+ * @property address The address of the agent.
  * @property capabilities The list of capabilities.
  */
 data class Agent(
     val id: String,
+    val name: String,
+    val address: String,
     val capabilities: List<Capability>,
 )
 

@@ -88,6 +88,8 @@ data class Embedding(
     val example: String,
     val score: Double,
     val agentId: String,
+    val agentName: String,
+    val agentAddress: String,
     val capabilityId: String,
     val capabilityDescription: String,
 )

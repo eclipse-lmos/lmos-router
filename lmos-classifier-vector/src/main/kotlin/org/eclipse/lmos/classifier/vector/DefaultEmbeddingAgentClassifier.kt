@@ -6,6 +6,7 @@ package org.eclipse.lmos.classifier.vector
 
 import org.eclipse.lmos.classifier.core.ClassificationRequest
 import org.eclipse.lmos.classifier.core.ClassificationResult
+import org.eclipse.lmos.classifier.core.ClassifiedAgent
 import org.eclipse.lmos.classifier.core.rephrase.Rephraser
 import org.eclipse.lmos.classifier.core.semantic.*
 import org.eclipse.lmos.classifier.vector.ranker.EmbeddingRankingThreshold
@@ -24,13 +25,21 @@ class DefaultEmbeddingAgentClassifier(
     override fun classify(request: ClassificationRequest): ClassificationResult {
         val rephrasedMessage = rephraser.rephrase(request.inputContext)
         val embeddings = embeddingRetriever.retrieve(request.systemContext, rephrasedMessage)
-        val qualifiedAgents = embeddingRanker.findMostQualifiedAgents(embeddings)
+        val qualifiedAgentsIds = embeddingRanker.findMostQualifiedAgents(embeddings)
+        val agent =
+            qualifiedAgentsIds
+                .firstOrNull()
+                ?.let { agentId ->
+                    val embedding = embeddings.find { it.agentId == agentId }
+                    embedding?.let { ClassifiedAgent(it.agentId, it.agentName, it.agentAddress) }
+                }
+
         logger.info(
-            "[${javaClass.simpleName}] Classified agent '${qualifiedAgents.firstOrNull()}' " +
+            "[${javaClass.simpleName}] Classified agent '${qualifiedAgentsIds.firstOrNull()}' " +
                 "for rephrased message '$rephrasedMessage', based on embeddings $embeddings.",
         )
         return ClassificationResult(
-            qualifiedAgents.firstOrNull()?.let { listOf(it) } ?: emptyList(),
+            listOfNotNull(agent),
             embeddings.convertEmbeddingsToAgents(),
         )
     }

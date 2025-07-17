@@ -14,13 +14,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import org.assertj.core.api.Assertions.assertThat
-import org.eclipse.lmos.classifier.core.Agent
-import org.eclipse.lmos.classifier.core.Capability
-import org.eclipse.lmos.classifier.core.ClassificationRequest
-import org.eclipse.lmos.classifier.core.HistoryMessage
+import org.eclipse.lmos.classifier.core.*
 import org.eclipse.lmos.classifier.core.HistoryMessageRole.*
-import org.eclipse.lmos.classifier.core.InputContext
-import org.eclipse.lmos.classifier.core.SystemContext
 import org.junit.jupiter.api.Test
 
 internal class DefaultModelAgentClassifierTest {
@@ -38,12 +33,12 @@ internal class DefaultModelAgentClassifierTest {
     private val underTest = DefaultModelAgentClassifier(chatModelMock, systemPrompt)
 
     @Test
-    fun `classify should return classification result with expected agentId`() {
+    fun `classify should return classification result with expected agent`() {
         // given
         val request = modelClassificationRequest()
 
-        val expectedAgentId = "weather-bot"
-        val chatResponse = ChatResponse.builder().aiMessage(AiMessage((expectedAgentId))).build()
+        val expectedAgent = ClassifiedAgent("weather-bot", "weather-bot-name", "weather-bot-address")
+        val chatResponse = ChatResponse.builder().aiMessage(AiMessage((expectedAgent.id))).build()
         val messagesSlot = slot<List<ChatMessage>>()
         every { chatModelMock.chat(capture(messagesSlot)) } returns chatResponse
 
@@ -51,7 +46,7 @@ internal class DefaultModelAgentClassifierTest {
         val classification = underTest.classify(request)
 
         // then
-        assertThat(classification.agents).isEqualTo(listOf(expectedAgentId))
+        assertThat(classification.agents).isEqualTo(listOf(expectedAgent))
         assertThat(messagesSlot.captured).hasSize(4)
 
         assertThat(messagesSlot.captured[0]).isInstanceOf(SystemMessage::class.java)
@@ -100,10 +95,14 @@ internal class DefaultModelAgentClassifierTest {
                         listOf(
                             Agent(
                                 id = "weather-bot",
+                                name = "weather-bot-name",
+                                address = "weather-bot-address",
                                 capabilities = listOf(Capability(id = "weather", description = "Provides weather forecasts")),
                             ),
                             Agent(
                                 id = "news-bot",
+                                name = "weather-bot-name",
+                                address = "weather-bot-address",
                                 capabilities = listOf(Capability(id = "news", description = "Provides latest news")),
                             ),
                         ),

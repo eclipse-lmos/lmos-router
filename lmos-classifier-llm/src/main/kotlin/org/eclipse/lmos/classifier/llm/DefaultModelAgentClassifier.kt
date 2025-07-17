@@ -9,8 +9,10 @@ import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
 import dev.langchain4j.model.chat.ChatModel
+import dev.langchain4j.model.chat.response.ChatResponse
 import org.eclipse.lmos.classifier.core.ClassificationRequest
 import org.eclipse.lmos.classifier.core.ClassificationResult
+import org.eclipse.lmos.classifier.core.ClassifiedAgent
 import org.eclipse.lmos.classifier.core.HistoryMessageRole.*
 import org.eclipse.lmos.classifier.core.llm.ModelAgentClassifier
 import org.slf4j.LoggerFactory
@@ -28,7 +30,7 @@ class DefaultModelAgentClassifier(
         messages.add(prepareUserMessage(request))
 
         val response = chatModel.chat(messages)
-        val classificationResult = prepareResponse(response.aiMessage().text())
+        val classificationResult = prepareResponse(request, response)
         logger.info(
             "[${javaClass.simpleName}] Classified agent '${classificationResult.agents}' for query '${request.inputContext.userMessage}'.",
         )
@@ -59,8 +61,18 @@ class DefaultModelAgentClassifier(
 
     private fun prepareUserMessage(request: ClassificationRequest) = UserMessage(request.inputContext.userMessage)
 
-    private fun prepareResponse(agentId: String?) =
-        ClassificationResult(if (agentId == null || agentId == "null") emptyList() else listOf(agentId), emptyList())
+    private fun prepareResponse(
+        request: ClassificationRequest,
+        chatResponse: ChatResponse,
+    ): ClassificationResult {
+        val agentId = chatResponse.aiMessage()?.text()?.takeIf { it.isNotBlank() && it != "null" }
+        val agent = request.inputContext.agents.find { it.id == agentId }
+        return if (agent == null) {
+            ClassificationResult(emptyList())
+        } else {
+            ClassificationResult(listOf(ClassifiedAgent(agent.id, agent.name, agent.address)))
+        }
+    }
 
     companion object {
         fun builder(): ModelAgentClassifierBuilder = ModelAgentClassifierBuilder()

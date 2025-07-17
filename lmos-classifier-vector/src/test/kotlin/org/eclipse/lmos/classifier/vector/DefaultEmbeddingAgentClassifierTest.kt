@@ -7,9 +7,7 @@ package org.eclipse.lmos.classifier.vector
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
-import org.eclipse.lmos.classifier.core.ClassificationRequest
-import org.eclipse.lmos.classifier.core.InputContext
-import org.eclipse.lmos.classifier.core.SystemContext
+import org.eclipse.lmos.classifier.core.*
 import org.eclipse.lmos.classifier.core.semantic.*
 import org.eclipse.lmos.classifier.vector.rephrase.SimpleConcatenationRephraser
 import org.junit.jupiter.api.Test
@@ -38,22 +36,25 @@ class DefaultEmbeddingAgentClassifierTest {
             example = "Reset password",
             score = 1.0,
             agentId = "agent-1",
+            agentName = "agent-1-name",
+            agentAddress = "agent-1-address",
             capabilityId = "cap-1",
             capabilityDescription = "Resetting passwords",
         )
 
     @Test
-    fun `classify should return classification result with expected agentId`() {
+    fun `classify should return classification result with expected agent`() {
         // given
+        val expectedAgent = ClassifiedAgent(embedding.agentId, embedding.agentName, embedding.agentAddress)
         every { embeddingRetrieverMock.retrieve(request.systemContext, request.inputContext.userMessage) } returns
             listOf(embedding)
-        every { embeddingRankerMock.findMostQualifiedAgents(listOf(embedding)) } returns listOf("agent-1")
+        every { embeddingRankerMock.findMostQualifiedAgents(listOf(embedding)) } returns listOf(expectedAgent.id)
 
         // when
         val result = underTest.classify(request)
 
         // then
-        assertThat(result.agents).isEqualTo(listOf("agent-1"))
+        assertThat(result.agents).isEqualTo(listOf(expectedAgent))
         assertThat(result.topRankedEmbeddings).hasSize(1)
         assertThat(result.topRankedEmbeddings[0].id).isEqualTo("agent-1")
     }

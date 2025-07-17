@@ -37,6 +37,8 @@ internal class SingleAgentEmbeddingRankerTest {
                 example = "sample",
                 score = 1.23,
                 agentId = "agent-1",
+                agentName = "agent-1-name",
+                agentAddress = "agent-1-address",
                 capabilityId = "cap-1",
                 capabilityDescription = "desc",
             )
@@ -51,9 +53,9 @@ internal class SingleAgentEmbeddingRankerTest {
         // given
         val embeddings =
             listOf(
-                Embedding("a1", 3.0, "A", "c1", "desc"),
-                Embedding("a2", 3.0, "A", "c1", "desc"),
-                Embedding("b1", 1.0, "B", "c2", "desc"),
+                Embedding("a1", 3.0, "A", "A-Agent-Name", "A-Agent-Address", "c1", "desc"),
+                Embedding("a2", 3.0, "A", "A-Agent-Name", "A-Agent-Address", "c1", "desc"),
+                Embedding("b1", 1.0, "B", "B-Agent-Name", "B-Agent-Address", "c2", "desc"),
             )
         // when
         val result = underTest.findMostQualifiedAgents(embeddings)
@@ -68,9 +70,9 @@ internal class SingleAgentEmbeddingRankerTest {
         val ranker = SingleAgentEmbeddingRanker(thresholds)
         val embeddings =
             listOf(
-                Embedding("a1", 3.0, "A", "c1", "desc"),
-                Embedding("a2", 3.0, "A", "c1", "desc"),
-                Embedding("b1", 1.0, "B", "c2", "desc"),
+                Embedding("a1", 3.0, "A", "A-Agent-Name", "A-Agent-Address", "c1", "desc"),
+                Embedding("a2", 3.0, "A", "A-Agent-Name", "A-Agent-Address", "c1", "desc"),
+                Embedding("b1", 1.0, "B", "B-Agent-Name", "B-Agent-Address", "c2", "desc"),
             )
 
         // when
@@ -86,8 +88,8 @@ internal class SingleAgentEmbeddingRankerTest {
         val ranker = SingleAgentEmbeddingRanker(thresholds)
         val embeddings =
             listOf(
-                Embedding("a1", 6.0, "A", "c1", "desc"),
-                Embedding("b1", 2.5, "B", "c2", "desc"),
+                Embedding("a1", 6.0, "A", "A-Agent-Name", "A-Agent-Address", "c1", "desc"),
+                Embedding("b1", 2.5, "B", "B-Agent-Name", "B-Agent-Address", "c2", "desc"),
             )
         // when
         val result = ranker.findMostQualifiedAgents(embeddings)
@@ -102,9 +104,9 @@ internal class SingleAgentEmbeddingRankerTest {
         val ranker = SingleAgentEmbeddingRanker(thresholds)
         val embeddings =
             listOf(
-                Embedding("a1", 2.0, "A", "c1", "desc"),
-                Embedding("a2", 0.5, "A", "c1", "desc"),
-                Embedding("b1", 1.0, "B", "c2", "desc"),
+                Embedding("a1", 2.0, "A", "A-Agent-Name", "A-Agent-Address", "c1", "desc"),
+                Embedding("a2", 0.5, "A", "A-Agent-Name", "A-Agent-Address", "c1", "desc"),
+                Embedding("b1", 1.0, "B", "B-Agent-Name", "B-Agent-Address", "c2", "desc"),
             )
         // when
         val result = ranker.findMostQualifiedAgents(embeddings)
@@ -119,8 +121,8 @@ internal class SingleAgentEmbeddingRankerTest {
         val ranker = SingleAgentEmbeddingRanker(thresholds)
         val embeddings =
             listOf(
-                Embedding("a1", 4.0, "A", "c1", "desc"),
-                Embedding("b1", 3.2, "B", "c2", "desc"),
+                Embedding("a1", 4.0, "A", "A-Agent-Name", "A-Agent-Address", "c1", "desc"),
+                Embedding("b1", 3.2, "B", "B-Agent-Name", "B-Agent-Address", "c2", "desc"),
             )
         // when
         val result = ranker.findMostQualifiedAgents(embeddings)

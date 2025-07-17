@@ -67,6 +67,8 @@ internal class QdrantEmbeddingHandlerIntegrationTest {
         val agent =
             Agent(
                 "sales-agent",
+                "sales-agent-name",
+                "sales-agent-address",
                 listOf(
                     Capability("view-offers", "View offers", listOf("This is example 1", "This is example 2")),
                     Capability("place-order", "Place my order", listOf("This is example 3")),
@@ -91,6 +93,8 @@ internal class QdrantEmbeddingHandlerIntegrationTest {
         val initialAgent =
             Agent(
                 "sales-agent",
+                "sales-agent-name",
+                "sales-agent-address",
                 listOf(
                     Capability("view-offers", "View offers", listOf("This is example 1", "This is example 2")),
                 ),
@@ -108,6 +112,8 @@ internal class QdrantEmbeddingHandlerIntegrationTest {
         val updatedAgent =
             Agent(
                 "sales-agent",
+                "sales-agent-name",
+                "sales-agent-address",
                 listOf(
                     Capability("view-offers", "View offers", listOf("This is example 1")),
                 ),
@@ -128,6 +134,8 @@ internal class QdrantEmbeddingHandlerIntegrationTest {
         val originalAgent =
             Agent(
                 "sales-agent",
+                "sales-agent-name",
+                "sales-agent-address",
                 listOf(
                     Capability("view-offers", "View offers", listOf("This is example 1", "This is example 2")),
                     Capability("place-order", "Place my order", listOf("This is example 3")),
@@ -147,6 +155,8 @@ internal class QdrantEmbeddingHandlerIntegrationTest {
         val updatedAgent =
             Agent(
                 "sales-agent",
+                "sales-agent-name",
+                "sales-agent-address",
                 listOf(
                     Capability("view-offers", "View offers", listOf("This is example 1", "This is my updated example 2")),
                     Capability("place-order", "Place my order", listOf("This is example 3")),
@@ -170,6 +180,8 @@ internal class QdrantEmbeddingHandlerIntegrationTest {
         val agent =
             Agent(
                 "sales-agent",
+                "sales-agent-name",
+                "sales-agent-address",
                 listOf(Capability("view-offers", "View offers", emptyList())),
             )
 

@@ -68,7 +68,7 @@ class QdrantEmbeddingHandler(
             logger.info("Deleted ${pointsToDelete.size} embeddings from collection '$collection' for agent '${agent.id}'.")
         }
         if (pointsToAdd.isEmpty() && pointsToDelete.isEmpty()) {
-            logger.info("No embedding changes for agent '${agent.id}'.")
+            logger.info("No embedding changes for agent '${agent.id}' and collection '$collection'.")
         }
     }
 
@@ -101,7 +101,7 @@ class QdrantEmbeddingHandler(
                 capability.examples.map { example ->
                     val rawId = "${agent.id}::${capability.id}::${example.hashCode()}"
                     val uuid = UUID.nameUUIDFromBytes(rawId.toByteArray())
-                    uuid to PointInfo(uuid, agent.id, capability, example)
+                    uuid to PointInfo(uuid, agent.id, agent.name, agent.address, capability, example)
                 }
             }.toMap()
 
@@ -110,6 +110,8 @@ class QdrantEmbeddingHandler(
         val payload =
             mapOf(
                 EMBEDDING_METADATA_AGENT_ID to value(pointInfo.agentId),
+                EMBEDDING_METADATA_AGENT_NAME to value(pointInfo.agentName),
+                EMBEDDING_METADATA_AGENT_ADDRESS to value(pointInfo.agentAddress),
                 EMBEDDING_METADATA_CAPABILITY_ID to value(pointInfo.capability.id),
                 EMBEDDING_METADATA_CAPABILITY_DESCRIPTION to value(pointInfo.capability.description),
                 EMBEDDING_METADATA_CAPABILITY_EXAMPLE to value(pointInfo.example),
@@ -168,6 +170,8 @@ class QdrantEmbeddingHandler(
 data class PointInfo(
     val uuid: UUID,
     val agentId: String,
+    val agentName: String,
+    val agentAddress: String,
     val capability: Capability,
     val example: String,
 )

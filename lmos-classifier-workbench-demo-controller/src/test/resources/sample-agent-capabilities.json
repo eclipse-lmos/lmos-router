@@ -3,7 +3,8 @@
   "capabilityGroups": [
     {
       "id": "urn:my-company:agent:billing",
-      "description": "This agent is responsible for billing and invoicing",
+      "name": "billing-agent",
+      "address": "https://api.my-company.com/billing",
       "capabilities": [
         {
           "id": "urn:my-company:capability:billing:view",
@@ -45,7 +46,8 @@
     },
     {
       "id": "urn:my-company:agent:sales",
-      "description": "This agent assists customers with purchasing products and services",
+      "name": "sales-agent",
+      "address": "https://api.my-company.com/sales",
       "capabilities": [
         {
           "id": "urn:my-company:capability:sales:view-offers",
@@ -87,7 +89,8 @@
     },
     {
       "id": "urn:my-company:agent:ordering",
-      "description": "This agent helps customers place and track their orders",
+      "name": "ordering-agent",
+      "address": "https://api.my-company.com/ordering",
       "capabilities": [
         {
           "id": "urn:my-company:capability:ordering:place-order",
@@ -129,7 +132,8 @@
     },
     {
       "id": "urn:my-company:agent:faq",
-      "description": "This agent provides answers to frequently asked questions about products, services, and policies",
+      "name": "faq-agent",
+      "address": "https://api.my-company.com/faq",
       "capabilities": [
         {
           "id": "urn:my-company:capability:faq:general-inquiry",

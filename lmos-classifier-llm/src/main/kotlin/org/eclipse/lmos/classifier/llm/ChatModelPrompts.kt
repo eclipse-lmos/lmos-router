@@ -11,11 +11,9 @@ fun defaultSystemPrompt(): String =
     The following Agents are available to handle the customer conversation mentioned below:
     {{agents}}
         
-    Please select the correct agent for the customer and return the given 'agentId'.
-    Sample response: given-agent-id
+    Please select the correct agent for the customer and return the given agent id.
     
     If no suitable agent can be selected, return 'null' as agentId.
-    Sample response: null
     """.trimIndent()
 
 fun defaultGermanSystemPrompt(): String =
@@ -26,9 +24,7 @@ fun defaultGermanSystemPrompt(): String =
     Die folgenden Agenten stehen zur Bearbeitung der weiter unten genannten Kundenkonversation zur Verfügung:
     {{agents}}
         
-    Bitte wähle den richtigen Agenten für den Kunden aus und liefere die agentId zurück.
-    Beispielantwort: given-agent-id
+    Bitte wähle den richtigen Agenten für den Kunden aus und liefere die Agent-ID zurück.
     
     Wenn kein geeigneter Agent ausgewählt werden kann, gebe 'null' als Agenten-ID zurück.
-    Beispielantwort: null
     """.trimIndent()

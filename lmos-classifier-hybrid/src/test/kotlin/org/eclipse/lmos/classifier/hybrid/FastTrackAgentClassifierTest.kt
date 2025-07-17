@@ -17,20 +17,27 @@ class FastTrackAgentClassifierTest {
     private val modelClassifierMock = mockk<ModelAgentClassifier>()
     private val underTest: FastTrackAgentClassifier = FastTrackAgentClassifier(embeddingClassifierMock, modelClassifierMock)
 
-    private val topScoredEmbeddings =
-        listOf(
-            Agent(
-                id = "agent-1",
-                capabilities =
-                    listOf(
-                        Capability(
-                            id = "cap-1",
-                            description = "Handles subscription cancellation",
-                            examples = listOf("cancel my plan", "end membership"),
-                        ),
+    private val givenAgent =
+        Agent(
+            id = "agent-1",
+            name = "agent-1-name",
+            address = "agent-1-address",
+            capabilities =
+                listOf(
+                    Capability(
+                        id = "cap-1",
+                        description = "Handles subscription cancellation",
+                        examples = listOf("cancel my plan", "end membership"),
                     ),
-            ),
+                ),
         )
+    private val classifiedAgent =
+        ClassifiedAgent(
+            id = givenAgent.id,
+            name = givenAgent.name,
+            address = givenAgent.address,
+        )
+    private val topScoredEmbeddings = listOf(givenAgent)
 
     private val request =
         ClassificationRequest(
@@ -54,7 +61,7 @@ class FastTrackAgentClassifierTest {
         // given
         every { embeddingClassifierMock.classify(request) } returns
             ClassificationResult(
-                agents = listOf("agent-1"),
+                agents = listOf(classifiedAgent),
                 topRankedEmbeddings = topScoredEmbeddings,
             )
 
@@ -62,7 +69,7 @@ class FastTrackAgentClassifierTest {
         val result = underTest.classify(request)
 
         // then
-        assertThat(result.agents).isEqualTo(listOf("agent-1"))
+        assertThat(result.agents).isEqualTo(listOf(classifiedAgent))
         assertThat(result.topRankedEmbeddings).isEqualTo(topScoredEmbeddings)
     }
 
@@ -80,13 +87,13 @@ class FastTrackAgentClassifierTest {
             assertThat(req.inputContext.userMessage).isEqualTo(request.inputContext.userMessage)
             assertThat(req.inputContext.historyMessages).isEqualTo(request.inputContext.historyMessages)
             assertThat(req.inputContext.agents).isEqualTo(topScoredEmbeddings)
-            ClassificationResult(agents = listOf("agent-1"), topScoredEmbeddings)
+            ClassificationResult(agents = listOf(classifiedAgent), topScoredEmbeddings)
         }
 
         // when
         val result = underTest.classify(request)
 
         // then
-        assertThat(result.agents).isEqualTo(listOf("agent-1"))
+        assertThat(result.agents).isEqualTo(listOf(classifiedAgent))
     }
 }

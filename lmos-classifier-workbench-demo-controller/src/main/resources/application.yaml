@@ -28,7 +28,7 @@ lmos:
         host: ${EMBEDDING_STORE_HOST:localhost}
         port: ${EMBEDDING_STORE_PORT:6334}
         tlsEnabled: ${EMBEDDING_STORE_TLS_ENABLED:false}
-        apiKey:  ${EMBEDDING_STORE_TLS_ENABLED:my-api-key}
+        apiKey:  ${EMBEDDING_STORE_API_KEY:my-api-key}
       ranking:
         maxEmbeddings: ${EMBEDDING_RANKING_MAX_EMBEDDINGS:15}
         minWeight: ${EMBEDDING_RANKING_MIN_WEIGHT:5.0}
