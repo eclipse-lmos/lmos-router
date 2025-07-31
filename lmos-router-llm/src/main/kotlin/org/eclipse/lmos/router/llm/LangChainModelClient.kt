@@ -7,7 +7,7 @@ package org.eclipse.lmos.router.llm
 import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.model.anthropic.AnthropicChatModel
 import dev.langchain4j.model.azure.AzureOpenAiChatModel
-import dev.langchain4j.model.chat.ChatLanguageModel
+import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.request.ResponseFormat
 import dev.langchain4j.model.chat.request.ResponseFormatType
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel
@@ -19,25 +19,29 @@ import org.eclipse.lmos.router.llm.LangChainClientProvider.AZURE_OPENAI
 /**
  * A model client that uses Langchain4j(https://docs.langchain4j.dev/) to call a language model.
  *
- * @param chatLanguageModel The language model.
+ * @param chatModel The language model.
  */
 class LangChainModelClient(
-    private val chatLanguageModel: ChatLanguageModel,
+    private val chatModel: ChatModel,
 ) : ModelClient {
     override fun call(messages: List<ChatMessage>): Result<ChatMessage, AgentRoutingSpecResolverException> {
         try {
             val response =
-                chatLanguageModel.generate(
+                chatModel.chat(
                     messages.map {
                         when (it) {
-                            is UserMessage -> dev.langchain4j.data.message.UserMessage(it.content)
+                            is UserMessage ->
+                                dev.langchain4j.data.message
+                                    .UserMessage(it.content)
                             is AssistantMessage -> AiMessage(it.content)
-                            is SystemMessage -> dev.langchain4j.data.message.SystemMessage(it.content)
+                            is SystemMessage ->
+                                dev.langchain4j.data.message
+                                    .SystemMessage(it.content)
                             else -> throw AgentRoutingSpecResolverException("Unknown message type")
                         }
                     },
                 )
-            return Success(AssistantMessage(response.content().text()))
+            return Success(AssistantMessage(response.aiMessage().text()))
         } catch (e: Exception) {
             return Failure(AgentRoutingSpecResolverException("Failed to call language model", e))
         }
@@ -56,8 +60,8 @@ class LangChainModelClient(
  */
 class LangChainChatModelFactory private constructor() {
     companion object {
-        fun createClient(properties: ModelClientProperties): ChatLanguageModel {
-            return when (properties.provider) {
+        fun createClient(properties: ModelClientProperties): ChatModel =
+            when (properties.provider) {
                 LangChainClientProvider.OPENAI.name.lowercase(),
                 -> {
                     val model =
@@ -75,7 +79,8 @@ class LangChainChatModelFactory private constructor() {
 
                 LangChainClientProvider.ANTHROPIC.name.lowercase() -> {
                     val model =
-                        AnthropicChatModel.builder()
+                        AnthropicChatModel
+                            .builder()
                             .apiKey(properties.apiKey)
                             .modelName(properties.model)
                             .maxTokens(properties.maxTokens)
@@ -91,7 +96,8 @@ class LangChainChatModelFactory private constructor() {
                     require(properties.baseUrl != null) { "baseUrl is required for '${AZURE_OPENAI.name.lowercase()}' provider" }
 
                     val model =
-                        AzureOpenAiChatModel.builder()
+                        AzureOpenAiChatModel
+                            .builder()
                             .endpoint(properties.baseUrl)
                             .apiKey(properties.apiKey)
                             .deploymentName(properties.model)
@@ -105,7 +111,8 @@ class LangChainChatModelFactory private constructor() {
 
                 LangChainClientProvider.GEMINI.name.lowercase() -> {
                     val model =
-                        GoogleAiGeminiChatModel.builder()
+                        GoogleAiGeminiChatModel
+                            .builder()
                             .modelName(properties.model)
                             .maxOutputTokens(properties.maxTokens)
                             .temperature(properties.temperature)
@@ -114,7 +121,8 @@ class LangChainChatModelFactory private constructor() {
 
                     properties.format.takeIf { it != null }?.let {
                         model.responseFormat(
-                            ResponseFormat.builder()
+                            ResponseFormat
+                                .builder()
                                 .type(ResponseFormatType.valueOf(it))
                                 .build(),
                         )
@@ -127,7 +135,9 @@ class LangChainChatModelFactory private constructor() {
                 }
 
                 LangChainClientProvider.OLLAMA.name.lowercase() -> {
-                    OllamaChatModel.builder().baseUrl(properties.baseUrl)
+                    OllamaChatModel
+                        .builder()
+                        .baseUrl(properties.baseUrl)
                         .modelName(properties.model)
                         .temperature(properties.temperature)
                         .build()
@@ -153,7 +163,6 @@ class LangChainChatModelFactory private constructor() {
                     throw IllegalArgumentException("Unknown model client properties: $properties")
                 }
             }
-        }
     }
 }
 

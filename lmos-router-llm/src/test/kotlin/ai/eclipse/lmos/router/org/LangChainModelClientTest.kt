@@ -4,7 +4,9 @@
 
 package org.eclipse.lmos.router.llm.org.eclipse.lmos.router.llm
 
-import dev.langchain4j.model.chat.ChatLanguageModel
+import dev.langchain4j.data.message.AiMessage
+import dev.langchain4j.model.chat.ChatModel
+import dev.langchain4j.model.chat.response.ChatResponse
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -19,7 +21,7 @@ import dev.langchain4j.data.message.UserMessage as LangchainUserMessage
  * Tests for [LangChainModelClient].
  */
 class LangChainModelClientTest {
-    private val mockChatLanguageModel = mockk<ChatLanguageModel>()
+    private val mockChatLanguageModel = mockk<ChatModel>()
     private val modelClient = LangChainModelClient(mockChatLanguageModel)
 
     @Test
@@ -27,11 +29,11 @@ class LangChainModelClientTest {
         // Arrange
         val userMessage = UserMessage("Hello")
         val assistantResponse = "Hi there!"
-        val mockResponse = mockk<dev.langchain4j.model.output.Response<dev.langchain4j.data.message.AiMessage>>()
+        val mockResponse = mockk<ChatResponse>()
 
-        every { mockResponse.content().text() } returns assistantResponse
+        every { mockResponse.aiMessage().text() } returns assistantResponse
         every {
-            mockChatLanguageModel.generate(
+            mockChatLanguageModel.chat(
                 listOf(LangchainUserMessage("Hello")),
             )
         } returns mockResponse
@@ -44,7 +46,7 @@ class LangChainModelClientTest {
         val success = result as Success
         assertEquals(AssistantMessage(assistantResponse), success.value)
         verify(exactly = 1) {
-            mockChatLanguageModel.generate(listOf(LangchainUserMessage("Hello")))
+            mockChatLanguageModel.chat(listOf(LangchainUserMessage("Hello")))
         }
     }
 
@@ -55,7 +57,7 @@ class LangChainModelClientTest {
         val exception = RuntimeException("Model error")
 
         every {
-            mockChatLanguageModel.generate(
+            mockChatLanguageModel.chat(
                 listOf(LangchainUserMessage("Hello")),
             )
         } throws exception
@@ -69,7 +71,7 @@ class LangChainModelClientTest {
         assertEquals("Failed to call language model", failure.reason.message)
         assertEquals(exception, failure.reason.cause)
         verify(exactly = 1) {
-            mockChatLanguageModel.generate(listOf(LangchainUserMessage("Hello")))
+            mockChatLanguageModel.chat(listOf(LangchainUserMessage("Hello")))
         }
     }
 
@@ -78,15 +80,16 @@ class LangChainModelClientTest {
         // Arrange
         val assistantMsg = AssistantMessage("I can help you with that.")
         val systemMsg = SystemMessage("System initialized.")
-        val mockResponse = mockk<dev.langchain4j.model.output.Response<dev.langchain4j.data.message.AiMessage>>()
+        val mockResponse = mockk<ChatResponse>()
 
-        every { mockResponse.content().text() } returns "Sure, let's proceed."
+        every { mockResponse.aiMessage().text() } returns "Sure, let's proceed."
         every {
-            mockChatLanguageModel.generate(
+            mockChatLanguageModel.chat(
                 listOf(
                     LangchainUserMessage("Hello"),
                     LangchainSystemMessage("System initialized."),
-                    dev.langchain4j.data.message.AiMessage("I can help you with that."),
+                    dev.langchain4j.data.message
+                        .AiMessage("I can help you with that."),
                 ),
             )
         } returns mockResponse
@@ -106,11 +109,12 @@ class LangChainModelClientTest {
         val success = result as Success
         assertEquals(AssistantMessage("Sure, let's proceed."), success.value)
         verify(exactly = 1) {
-            mockChatLanguageModel.generate(
+            mockChatLanguageModel.chat(
                 listOf(
                     LangchainUserMessage("Hello"),
                     LangchainSystemMessage("System initialized."),
-                    dev.langchain4j.data.message.AiMessage("I can help you with that."),
+                    dev.langchain4j.data.message
+                        .AiMessage("I can help you with that."),
                 ),
             )
         }
@@ -123,10 +127,10 @@ class LangChainModelClientTest {
 
         // Assuming that the language model can handle empty input and returns a valid response
         val assistantResponse = "Hello! How can I assist you today?"
-        val mockResponse = mockk<dev.langchain4j.model.output.Response<dev.langchain4j.data.message.AiMessage>>()
+        val mockResponse = mockk<ChatResponse>()
 
-        every { mockResponse.content().text() } returns assistantResponse
-        every { mockChatLanguageModel.generate(emptyList()) } returns mockResponse
+        every { mockResponse.aiMessage().text() } returns assistantResponse
+        every { mockChatLanguageModel.chat(emptyList()) } returns mockResponse
 
         // Act
         val result = modelClient.call(messages)
@@ -136,7 +140,7 @@ class LangChainModelClientTest {
         val success = result as Success
         assertEquals(AssistantMessage(assistantResponse), success.value)
         verify(exactly = 1) {
-            mockChatLanguageModel.generate(emptyList())
+            mockChatLanguageModel.chat(emptyList())
         }
     }
 
@@ -147,7 +151,7 @@ class LangChainModelClientTest {
         val exception = AgentRoutingSpecResolverException("Custom exception")
 
         every {
-            mockChatLanguageModel.generate(
+            mockChatLanguageModel.chat(
                 listOf(LangchainUserMessage("Hello")),
             )
         } throws exception
@@ -161,7 +165,7 @@ class LangChainModelClientTest {
         assertEquals("Failed to call language model", failure.reason.message)
         assertEquals(exception, failure.reason.cause)
         verify(exactly = 1) {
-            mockChatLanguageModel.generate(listOf(LangchainUserMessage("Hello")))
+            mockChatLanguageModel.chat(listOf(LangchainUserMessage("Hello")))
         }
     }
 }
