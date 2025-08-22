@@ -42,3 +42,5 @@ bin/
 .DS_Store
 /.idea/
 .kotlin
+
+*/qdrant-storage

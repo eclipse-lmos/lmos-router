@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2025 Deutsche Telekom AG and others
+#
+# SPDX-License-Identifier: Apache-2.0
+
+services:
+  qdrant:
+    image: qdrant/qdrant
+    container_name: qdrant-container
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    environment:
+      - QDRANT__SERVICE__WORKERS=2
+      - QDRANT__SERVICE__GRPC_PORT=6334
+      - QDRANT__SERVICE__HTTP_PORT=6333
+    volumes:
+      - ./qdrant-storage:/qdrant/storage

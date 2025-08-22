@@ -21,8 +21,6 @@ plugins {
     id("com.vanniktech.maven.publish") version "0.32.0"
 }
 
-val springBootVersion by extra { "3.3.5" }
-
 subprojects {
     group = "org.eclipse.lmos"
 
@@ -151,7 +149,9 @@ fun String.execWithCode(workingDir: File? = null): Pair<CommandResult, Sequence<
     }
 }
 
-class CommandResult(val code: Int) {
+class CommandResult(
+    val code: Int,
+) {
     val isFailed = code != 0
     val isSuccess = !isFailed
 
