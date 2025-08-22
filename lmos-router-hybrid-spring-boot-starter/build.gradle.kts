@@ -8,7 +8,7 @@ dependencies {
     api(project(":lmos-router-hybrid"))
     implementation("org.springframework.boot:spring-boot-autoconfigure:$springBootVersion")
     implementation("org.springframework.ai:spring-ai-core:1.0.0-M6")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.8.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.9.0")
     testImplementation("org.springframework.ai:spring-ai-openai-spring-boot-starter:1.0.0-M6")
     testImplementation("org.springframework.ai:spring-ai-qdrant-store-spring-boot-starter:1.0.0-M6")
     testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
