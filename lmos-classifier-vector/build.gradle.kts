@@ -21,6 +21,6 @@ dependencies {
 
     testImplementation("org.testcontainers:testcontainers:1.21.3")
     testImplementation("org.testcontainers:junit-jupiter:1.21.3")
-    testImplementation("org.testcontainers:qdrant:1.20.0")
+    testImplementation("org.testcontainers:qdrant:1.21.3")
     testImplementation("org.awaitility:awaitility:4.3.0")
 }
