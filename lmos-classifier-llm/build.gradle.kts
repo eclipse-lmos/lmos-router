@@ -17,7 +17,7 @@ dependencies {
     compileOnly("dev.langchain4j:langchain4j-anthropic:$langChain4jModulesVersion")
     compileOnly("dev.langchain4j:langchain4j-google-ai-gemini:$langChain4jModulesVersion")
     compileOnly("dev.langchain4j:langchain4j-ollama:$langChain4jModulesVersion")
-    compileOnly("com.azure:azure-identity:1.16.1")
+    compileOnly("com.azure:azure-identity:1.17.0")
 
     testImplementation("org.assertj:assertj-core:$assertjVersion")
     testImplementation("dev.langchain4j:langchain4j-open-ai:$langChain4jOpenAiVersion")
@@ -25,5 +25,5 @@ dependencies {
     testImplementation("dev.langchain4j:langchain4j-anthropic:$langChain4jModulesVersion")
     testImplementation("dev.langchain4j:langchain4j-google-ai-gemini:$langChain4jModulesVersion")
     testImplementation("dev.langchain4j:langchain4j-ollama:$langChain4jModulesVersion")
-    testImplementation("com.azure:azure-identity:1.16.1")
+    testImplementation("com.azure:azure-identity:1.17.0")
 }
