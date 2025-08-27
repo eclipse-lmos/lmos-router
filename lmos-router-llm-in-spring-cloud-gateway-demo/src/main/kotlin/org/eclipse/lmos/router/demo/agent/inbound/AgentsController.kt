@@ -12,12 +12,8 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/agents")
 class AgentsController {
     @GetMapping("/offer-agent")
-    fun offerAgentResponse(): String {
-        return "Offer agent responding!"
-    }
+    fun offerAgentResponse(): String = "Offer agent responding!"
 
     @GetMapping("/service-agent")
-    fun serviceAgentResponse(): String {
-        return "Service agent responding!"
-    }
+    fun serviceAgentResponse(): String = "Service agent responding!"
 }

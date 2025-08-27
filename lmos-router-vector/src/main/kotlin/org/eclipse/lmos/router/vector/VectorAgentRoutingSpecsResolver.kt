@@ -24,26 +24,24 @@ open class VectorAgentRoutingSpecsResolver(
     override fun resolve(
         context: Context,
         input: UserMessage,
-    ): Result<AgentRoutingSpec?, AgentRoutingSpecResolverException> {
-        return resolve(setOf(), context, input)
-    }
+    ): Result<AgentRoutingSpec?, AgentRoutingSpecResolverException> = resolve(setOf(), context, input)
 
     override fun resolve(
         filters: Set<SpecFilter>,
         context: Context,
         input: UserMessage,
-    ): Result<AgentRoutingSpec?, AgentRoutingSpecResolverException> {
-        return try {
+    ): Result<AgentRoutingSpec?, AgentRoutingSpecResolverException> =
+        try {
             val agentSpecs = agentRoutingSpecsProvider.provide(filters).getOrThrow()
             val result =
-                vectorSearchClient.find(
-                    VectorSearchClientRequest(input.content, context),
-                    agentSpecs,
-                ).getOrThrow()
+                vectorSearchClient
+                    .find(
+                        VectorSearchClientRequest(input.content, context),
+                        agentSpecs,
+                    ).getOrThrow()
 
             Success(agentSpecs.firstOrNull { it.name == result?.agentName })
         } catch (e: Exception) {
             Failure(AgentRoutingSpecResolverException("Failed to resolve agent spec", e))
         }
-    }
 }

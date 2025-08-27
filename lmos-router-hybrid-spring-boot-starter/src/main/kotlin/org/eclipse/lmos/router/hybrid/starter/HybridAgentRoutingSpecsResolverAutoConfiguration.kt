@@ -38,9 +38,8 @@ open class HybridAgentRoutingSpecsResolverAutoConfiguration(
      */
     @Bean
     @ConditionalOnMissingBean(VectorSearchClient::class)
-    open fun vectorSearchClient(vectorStore: VectorStore): VectorSearchClient {
-        return SpringVectorSearchClient(vectorStore, springVectorSearchClientProperties)
-    }
+    open fun vectorSearchClient(vectorStore: VectorStore): VectorSearchClient =
+        SpringVectorSearchClient(vectorStore, springVectorSearchClientProperties)
 
     /**
      * Provides a [VectorSeedClient] that uses the vector store to seed vectors.
@@ -50,9 +49,7 @@ open class HybridAgentRoutingSpecsResolverAutoConfiguration(
      */
     @Bean
     @ConditionalOnMissingBean(VectorSeedClient::class)
-    open fun vectorSeedClient(vectorStore: VectorStore): VectorSeedClient {
-        return SpringVectorSeedClient(vectorStore)
-    }
+    open fun vectorSeedClient(vectorStore: VectorStore): VectorSeedClient = SpringVectorSeedClient(vectorStore)
 
     /**
      * Provides a [ModelClient] that uses the [ChatModel] to resolve agent routing specifications.
@@ -62,9 +59,7 @@ open class HybridAgentRoutingSpecsResolverAutoConfiguration(
      */
     @Bean
     @ConditionalOnMissingBean(ModelClient::class)
-    open fun springAgentResolverCompletionProvider(chatModel: ChatModel): ModelClient {
-        return SpringModelClient(chatModel)
-    }
+    open fun springAgentResolverCompletionProvider(chatModel: ChatModel): ModelClient = SpringModelClient(chatModel)
 
     /**
      * Provides an [AgentRoutingSpecsProvider] that reads agent routing specifications from a JSON file.
@@ -73,9 +68,7 @@ open class HybridAgentRoutingSpecsResolverAutoConfiguration(
      */
     @Bean
     @ConditionalOnMissingBean(AgentRoutingSpecsProvider::class)
-    open fun agentRoutingSpecsProvider(): AgentRoutingSpecsProvider {
-        return JsonAgentRoutingSpecsProvider(properties.specFilePath)
-    }
+    open fun agentRoutingSpecsProvider(): AgentRoutingSpecsProvider = JsonAgentRoutingSpecsProvider(properties.specFilePath)
 
     /**
      * Provides a [ModelPromptProvider] that uses the default model prompt provider.
@@ -84,9 +77,7 @@ open class HybridAgentRoutingSpecsResolverAutoConfiguration(
      */
     @Bean
     @ConditionalOnMissingBean(ModelPromptProvider::class)
-    open fun agentResolverPromptProvider(): ModelPromptProvider {
-        return ExternalModelPromptProvider(properties.resolverPromptFilePath)
-    }
+    open fun agentResolverPromptProvider(): ModelPromptProvider = ExternalModelPromptProvider(properties.resolverPromptFilePath)
 
     /**
      * Provides a [ModelToVectorQueryConverter] that uses the no-op model to vector query converter.
@@ -95,9 +86,7 @@ open class HybridAgentRoutingSpecsResolverAutoConfiguration(
      */
     @Bean
     @ConditionalOnMissingBean(ModelToVectorQueryConverter::class)
-    open fun modelToVectorQueryConverter(): ModelToVectorQueryConverter {
-        return NoOpModelToVectorQueryConverter()
-    }
+    open fun modelToVectorQueryConverter(): ModelToVectorQueryConverter = NoOpModelToVectorQueryConverter()
 
     /**
      * Provides a [HybridAgentRoutingSpecsResolver] that resolves agent routing specifications using the vector search client.
@@ -116,13 +105,12 @@ open class HybridAgentRoutingSpecsResolverAutoConfiguration(
         modelClient: ModelClient,
         promptProvider: ModelPromptProvider,
         modelToVectorQueryConverter: ModelToVectorQueryConverter,
-    ): HybridAgentRoutingSpecsResolver {
-        return HybridAgentRoutingSpecsResolver(
+    ): HybridAgentRoutingSpecsResolver =
+        HybridAgentRoutingSpecsResolver(
             agentRoutingSpecsProvider,
             modelClient,
             promptProvider,
             vectorSearchClient,
             modelToVectorQueryConverter,
         )
-    }
 }

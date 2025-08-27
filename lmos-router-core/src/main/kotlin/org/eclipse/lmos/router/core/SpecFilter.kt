@@ -14,17 +14,19 @@ interface SpecFilter {
 /**
  * This is a filter that filters agent specs by name.
  */
-class NameSpecFilter(private val value: String) : SpecFilter {
-    override fun filter(agentRoutingSpecs: Set<AgentRoutingSpec>): Set<AgentRoutingSpec> {
-        return agentRoutingSpecs.filter { it.name == value }.toSet()
-    }
+class NameSpecFilter(
+    private val value: String,
+) : SpecFilter {
+    override fun filter(agentRoutingSpecs: Set<AgentRoutingSpec>): Set<AgentRoutingSpec> =
+        agentRoutingSpecs.filter { it.name == value }.toSet()
 }
 
 /**
  * This is a filter that filters agent specs by version.
  */
-class VersionSpecFilter(private val value: String) : SpecFilter {
-    override fun filter(agentRoutingSpecs: Set<AgentRoutingSpec>): Set<AgentRoutingSpec> {
-        return agentRoutingSpecs.filter { it.version == value }.toSet()
-    }
+class VersionSpecFilter(
+    private val value: String,
+) : SpecFilter {
+    override fun filter(agentRoutingSpecs: Set<AgentRoutingSpec>): Set<AgentRoutingSpec> =
+        agentRoutingSpecs.filter { it.version == value }.toSet()
 }

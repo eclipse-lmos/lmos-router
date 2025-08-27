@@ -14,4 +14,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties
  * @param specFilePath The path to the JSON file that contains the agent routing specifications.
  */
 @ConfigurationProperties(prefix = "route.agent.llm")
-data class LLMAgentRoutingSpecsResolverProperties(var specFilePath: String = "")
+data class LLMAgentRoutingSpecsResolverProperties(
+    var specFilePath: String = "",
+)

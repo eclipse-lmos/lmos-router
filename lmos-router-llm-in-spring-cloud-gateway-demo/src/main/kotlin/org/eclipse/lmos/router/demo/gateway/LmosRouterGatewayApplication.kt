@@ -28,10 +28,12 @@ open class GatewayConfiguration {
     open fun routeLocator(
         builder: RouteLocatorBuilder,
         agentRoutingSpecsResolver: AgentRoutingSpecsResolver,
-    ): RouteLocator {
-        return builder.routes()
+    ): RouteLocator =
+        builder
+            .routes()
             .route("lmos-router-demo") { r ->
-                r.path("/agents")
+                r
+                    .path("/agents")
                     .filters { f ->
                         f.filter { exchange, chain ->
                             val req = exchange.request
@@ -48,11 +50,8 @@ open class GatewayConfiguration {
                             exchange.attributes[GATEWAY_REQUEST_URL_ATTR] = request.uri
                             chain.filter(exchange.mutate().request(request).build())
                         }
-                    }
-                    .uri("http://localhost:9090")
-            }
-            .build()
-    }
+                    }.uri("http://localhost:9090")
+            }.build()
 
     private fun resolveAgentRoutingSpec(
         userQuery: String?,
@@ -69,14 +68,21 @@ open class GatewayConfiguration {
     @Bean
     open fun agentRoutingSpecsResolver(): AgentRoutingSpecsResolver {
         val provider =
-            SimpleAgentRoutingSpecProvider().add(
-                AgentRoutingSpecBuilder().name("offer-agent").description("This agent is responsible for offer management")
-                    .version("1.0.0").address(Address(uri = "/agents/offer-agent")).build(),
-            )
+            SimpleAgentRoutingSpecProvider()
                 .add(
-                    AgentRoutingSpecBuilder().name("service-agent")
+                    AgentRoutingSpecBuilder()
+                        .name("offer-agent")
+                        .description("This agent is responsible for offer management")
+                        .version("1.0.0")
+                        .address(Address(uri = "/agents/offer-agent"))
+                        .build(),
+                ).add(
+                    AgentRoutingSpecBuilder()
+                        .name("service-agent")
                         .description("This agent is responsible for service management")
-                        .version("1.0.0").address(Address(uri = "/agents/service-agent")).build(),
+                        .version("1.0.0")
+                        .address(Address(uri = "/agents/service-agent"))
+                        .build(),
                 )
         return LLMAgentRoutingSpecsResolver(provider)
     }

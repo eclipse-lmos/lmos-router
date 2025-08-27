@@ -24,7 +24,5 @@ class NoOpModelToVectorQueryConverter : ModelToVectorQueryConverter() {
     override fun convert(
         modelResponse: String,
         context: Context,
-    ): VectorSearchClientRequest {
-        return VectorSearchClientRequest(query = modelResponse, context = context)
-    }
+    ): VectorSearchClientRequest = VectorSearchClientRequest(query = modelResponse, context = context)
 }

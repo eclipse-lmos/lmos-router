@@ -28,14 +28,19 @@ interface AgentRoutingSpecsProvider {
  * @param msg The error message.
  * @param cause The cause of the exception.
  */
-class AgentRoutingSpecsProviderException(msg: String, cause: Exception? = null) : Exception(msg, cause)
+class AgentRoutingSpecsProviderException(
+    msg: String,
+    cause: Exception? = null,
+) : Exception(msg, cause)
 
 /**
  * A provider that reads agent routing specifications from a JSON file.
  *
  * @param jsonFilePath The path to the JSON file containing the agent routing specifications.
  */
-class JsonAgentRoutingSpecsProvider(jsonFilePath: String) : AgentRoutingSpecsProvider {
+class JsonAgentRoutingSpecsProvider(
+    jsonFilePath: String,
+) : AgentRoutingSpecsProvider {
     private val agentRoutingSpecs = mutableSetOf<AgentRoutingSpec>()
 
     init {

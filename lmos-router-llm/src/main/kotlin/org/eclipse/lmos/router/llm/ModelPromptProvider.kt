@@ -30,8 +30,8 @@ class DefaultModelPromptProvider : ModelPromptProvider {
         context: Context,
         agentRoutingSpecs: Set<AgentRoutingSpec>,
         input: UserMessage,
-    ): Result<String, AgentRoutingSpecResolverException> {
-        return Success(
+    ): Result<String, AgentRoutingSpecResolverException> =
+        Success(
             """
             You are an AI tasked with selecting the most suitable agent to address a user query based on the agents' capabilities. 
             You will be provided with a list of agents and their capabilities, followed by a user query. 
@@ -61,20 +61,18 @@ class DefaultModelPromptProvider : ModelPromptProvider {
             Do not include any additional explanation or justification in your response; only provide the JSON object as specified.
             """.trimIndent(),
         )
-    }
 }
 
 class ExternalModelPromptProvider(
     private val promptFilePath: String,
     private val agentRoutingSpecsListType: AgentRoutingSpecListType = AgentRoutingSpecListType.XML,
-) :
-    ModelPromptProvider {
+) : ModelPromptProvider {
     override fun providePrompt(
         context: Context,
         agentRoutingSpecs: Set<AgentRoutingSpec>,
         input: UserMessage,
-    ): Result<String, AgentRoutingSpecResolverException> {
-        return try {
+    ): Result<String, AgentRoutingSpecResolverException> =
+        try {
             var prompt = java.io.File(promptFilePath).readText()
             val agentRoutingSpecsString =
                 when (agentRoutingSpecsListType) {
@@ -86,16 +84,17 @@ class ExternalModelPromptProvider(
         } catch (e: Exception) {
             Failure(AgentRoutingSpecResolverException("Failed to read prompt file: $promptFilePath", e))
         }
-    }
 }
 
-enum class AgentRoutingSpecListType(val keyword: String) {
+enum class AgentRoutingSpecListType(
+    val keyword: String,
+) {
     XML("agents_list_xml"),
     JSON("agents_list_json"),
 }
 
-fun generateAgentRoutingSpecsXml(agentRoutingSpecs: Set<AgentRoutingSpec>): String {
-    return buildString {
+fun generateAgentRoutingSpecsXml(agentRoutingSpecs: Set<AgentRoutingSpec>): String =
+    buildString {
         appendLine("<agents_list>")
         agentRoutingSpecs.forEach { agentRoutingSpec ->
             appendLine("<agent>")
@@ -113,6 +112,5 @@ fun generateAgentRoutingSpecsXml(agentRoutingSpecs: Set<AgentRoutingSpec>): Stri
         }
         appendLine("</agents_list>")
     }
-}
 
 fun generateAgentRoutingSpecsJson(agentRoutingSpecs: Set<AgentRoutingSpec>) = Json.encodeToString(agentRoutingSpecs)

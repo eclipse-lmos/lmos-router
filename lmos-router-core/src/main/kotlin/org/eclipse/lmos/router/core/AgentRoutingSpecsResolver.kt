@@ -34,4 +34,7 @@ interface AgentRoutingSpecsResolver {
  * @param msg The error message.
  * @param cause The cause of the exception.
  */
-open class AgentRoutingSpecResolverException(msg: String, cause: Exception? = null) : Exception(msg, cause)
+open class AgentRoutingSpecResolverException(
+    msg: String,
+    cause: Exception? = null,
+) : Exception(msg, cause)

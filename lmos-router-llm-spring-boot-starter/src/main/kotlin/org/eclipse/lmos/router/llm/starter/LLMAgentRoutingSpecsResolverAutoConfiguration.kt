@@ -39,9 +39,7 @@ open class LLMAgentRoutingSpecsResolverAutoConfiguration(
      */
     @Bean
     @ConditionalOnMissingBean(ModelClient::class)
-    open fun springAgentResolverCompletionProvider(chatModel: ChatModel): ModelClient {
-        return SpringModelClient(chatModel)
-    }
+    open fun springAgentResolverCompletionProvider(chatModel: ChatModel): ModelClient = SpringModelClient(chatModel)
 
     /**
      * Provides an [AgentRoutingSpecsProvider] that reads agent routing specifications from a JSON file.
@@ -50,9 +48,7 @@ open class LLMAgentRoutingSpecsResolverAutoConfiguration(
      */
     @Bean
     @ConditionalOnMissingBean(AgentRoutingSpecsProvider::class)
-    open fun agentRoutingSpecsProvider(): AgentRoutingSpecsProvider {
-        return JsonAgentRoutingSpecsProvider(properties.specFilePath)
-    }
+    open fun agentRoutingSpecsProvider(): AgentRoutingSpecsProvider = JsonAgentRoutingSpecsProvider(properties.specFilePath)
 
     /**
      * Provides a [ModelPromptProvider] that uses the default model prompt provider.
@@ -61,9 +57,7 @@ open class LLMAgentRoutingSpecsResolverAutoConfiguration(
      */
     @Bean
     @ConditionalOnMissingBean(ModelPromptProvider::class)
-    open fun agentResolverPromptProvider(): ModelPromptProvider {
-        return DefaultModelPromptProvider()
-    }
+    open fun agentResolverPromptProvider(): ModelPromptProvider = DefaultModelPromptProvider()
 
     /**
      * Provides an [LLMAgentRoutingSpecsResolver] that uses the [AgentRoutingSpecsProvider], [ModelPromptProvider], and [ModelClient] to resolve agent routing specifications.
@@ -79,7 +73,5 @@ open class LLMAgentRoutingSpecsResolverAutoConfiguration(
         agentRoutingSpecsProvider: AgentRoutingSpecsProvider,
         modelPromptProvider: ModelPromptProvider,
         modelClient: ModelClient,
-    ): LLMAgentRoutingSpecsResolver {
-        return LLMAgentRoutingSpecsResolver(agentRoutingSpecsProvider, modelPromptProvider, modelClient)
-    }
+    ): LLMAgentRoutingSpecsResolver = LLMAgentRoutingSpecsResolver(agentRoutingSpecsProvider, modelPromptProvider, modelClient)
 }

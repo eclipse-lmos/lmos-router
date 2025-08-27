@@ -61,9 +61,7 @@ class CapabilitiesBuilder {
 
     fun version(version: String) = apply { this.version = version }
 
-    fun build(): Capability {
-        return Capability(name, description, version)
-    }
+    fun build(): Capability = Capability(name, description, version)
 }
 
 /**

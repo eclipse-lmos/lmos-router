@@ -73,7 +73,14 @@ suspend fun processCsvInParallel(
             val headers = csvParser.headerNames.plus("prediction").toTypedArray()
 
             // Create the CSV printer with the updated headers
-            val csvPrinter = CSVPrinter(writer, CSVFormat.DEFAULT.builder().setHeader(*headers).build())
+            val csvPrinter =
+                CSVPrinter(
+                    writer,
+                    CSVFormat.DEFAULT
+                        .builder()
+                        .setHeader(*headers)
+                        .build(),
+                )
 
             val jobs = mutableListOf<Job>()
             var count = 0

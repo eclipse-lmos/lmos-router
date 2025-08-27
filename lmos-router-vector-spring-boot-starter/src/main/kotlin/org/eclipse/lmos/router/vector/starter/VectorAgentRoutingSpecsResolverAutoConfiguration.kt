@@ -32,9 +32,8 @@ open class VectorAgentRoutingSpecsResolverAutoConfiguration(
      */
     @Bean
     @ConditionalOnMissingBean(VectorSearchClient::class)
-    open fun vectorSearchClient(vectorStore: VectorStore): VectorSearchClient {
-        return SpringVectorSearchClient(vectorStore, springVectorSearchClientProperties)
-    }
+    open fun vectorSearchClient(vectorStore: VectorStore): VectorSearchClient =
+        SpringVectorSearchClient(vectorStore, springVectorSearchClientProperties)
 
     /**
      * Provides a [VectorSeedClient] that uses the vector store to seed vectors.
@@ -44,9 +43,7 @@ open class VectorAgentRoutingSpecsResolverAutoConfiguration(
      */
     @Bean
     @ConditionalOnMissingBean(VectorSeedClient::class)
-    open fun vectorSeedClient(vectorStore: VectorStore): VectorSeedClient {
-        return SpringVectorSeedClient(vectorStore)
-    }
+    open fun vectorSeedClient(vectorStore: VectorStore): VectorSeedClient = SpringVectorSeedClient(vectorStore)
 
     /**
      * Provides an [AgentRoutingSpecsProvider] that reads agent routing specifications from a JSON file.
@@ -55,9 +52,7 @@ open class VectorAgentRoutingSpecsResolverAutoConfiguration(
      */
     @Bean
     @ConditionalOnMissingBean(AgentRoutingSpecsProvider::class)
-    open fun agentRoutingSpecsProvider(): AgentRoutingSpecsProvider {
-        return JsonAgentRoutingSpecsProvider(properties.specFilePath)
-    }
+    open fun agentRoutingSpecsProvider(): AgentRoutingSpecsProvider = JsonAgentRoutingSpecsProvider(properties.specFilePath)
 
     /**
      * Provides a [VectorAgentRoutingSpecsResolver] that resolves agent routing specifications using the vector search client.
@@ -71,7 +66,5 @@ open class VectorAgentRoutingSpecsResolverAutoConfiguration(
     open fun vectorAgentRoutingSpecsResolver(
         agentRoutingSpecsProvider: AgentRoutingSpecsProvider,
         vectorSearchClient: VectorSearchClient,
-    ): VectorAgentRoutingSpecsResolver {
-        return VectorAgentRoutingSpecsResolver(agentRoutingSpecsProvider, vectorSearchClient)
-    }
+    ): VectorAgentRoutingSpecsResolver = VectorAgentRoutingSpecsResolver(agentRoutingSpecsProvider, vectorSearchClient)
 }

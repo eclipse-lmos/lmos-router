@@ -31,9 +31,7 @@ class DefaultModelClient(
     private val delegate: LangChainModelClient =
         LangChainModelClient(LangChainChatModelFactory.createClient(defaultModelClientProperties)),
 ) : ModelClient {
-    override fun call(messages: List<ChatMessage>): Result<ChatMessage, AgentRoutingSpecResolverException> {
-        return delegate.call(messages)
-    }
+    override fun call(messages: List<ChatMessage>): Result<ChatMessage, AgentRoutingSpecResolverException> = delegate.call(messages)
 }
 
 open class ModelClientProperties(

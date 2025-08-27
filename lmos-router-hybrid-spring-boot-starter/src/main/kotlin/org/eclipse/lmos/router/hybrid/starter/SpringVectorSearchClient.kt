@@ -36,18 +36,21 @@ class SpringVectorSearchClient(
     override fun find(
         request: VectorSearchClientRequest,
         agentRoutingSpecs: Set<AgentRoutingSpec>,
-    ): Result<VectorSearchClientResponse?, VectorClientException> {
-        return try {
+    ): Result<VectorSearchClientResponse?, VectorClientException> =
+        try {
             val documents =
                 vectorStore.similaritySearch(
-                    SearchRequest.builder().query(request.query)
+                    SearchRequest
+                        .builder()
+                        .query(request.query)
                         .similarityThreshold(springVectorSearchClientProperties.threshold)
                         .topK(springVectorSearchClientProperties.topK)
                         .filterExpression(
-                            FilterExpressionBuilder().`in`(
-                                AGENT_FIELD_NAME,
-                                *agentRoutingSpecs.map { it.name }.toTypedArray(),
-                            ).build(),
+                            FilterExpressionBuilder()
+                                .`in`(
+                                    AGENT_FIELD_NAME,
+                                    *agentRoutingSpecs.map { it.name }.toTypedArray(),
+                                ).build(),
                         ).build(),
                 )
             if (documents?.isEmpty() == true) {
@@ -69,5 +72,4 @@ class SpringVectorSearchClient(
         } catch (e: Exception) {
             Failure(VectorClientException("Failed to find similar vectors", e))
         }
-    }
 }

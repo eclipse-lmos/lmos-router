@@ -70,13 +70,15 @@ class SpringVectorAgentRoutingSpecsResolverFlow(
 
     @BeforeEach
     fun setUp() {
-        qdrantClient.createCollectionAsync(
-            "test",
-            Collections.VectorParams.newBuilder()
-                .setDistance(Collections.Distance.Cosine)
-                .setSize(1536)
-                .build(),
-        ).get()
+        qdrantClient
+            .createCollectionAsync(
+                "test",
+                Collections.VectorParams
+                    .newBuilder()
+                    .setDistance(Collections.Distance.Cosine)
+                    .setSize(1536)
+                    .build(),
+            ).get()
     }
 
     @AfterEach
@@ -86,7 +88,9 @@ class SpringVectorAgentRoutingSpecsResolverFlow(
 }
 
 @Component
-class QdrantVectorConfigurationListener : ApplicationListener<ApplicationEnvironmentPreparedEvent>, DisposableBean {
+class QdrantVectorConfigurationListener :
+    ApplicationListener<ApplicationEnvironmentPreparedEvent>,
+    DisposableBean {
     private lateinit var container: QdrantContainer
 
     override fun onApplicationEvent(event: ApplicationEnvironmentPreparedEvent) {

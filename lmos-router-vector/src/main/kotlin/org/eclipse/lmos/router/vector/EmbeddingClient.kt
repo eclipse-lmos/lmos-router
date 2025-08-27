@@ -39,7 +39,10 @@ interface EmbeddingClient {
  *
  * @param message The exception message.
  */
-class EmbeddingClientException(message: String, reason: Exception? = null) : Exception(message, reason)
+class EmbeddingClientException(
+    message: String,
+    reason: Exception? = null,
+) : Exception(message, reason)
 
 /**
  * A default implementation of the EmbeddingClient.
@@ -51,12 +54,11 @@ class DefaultEmbeddingClient(
     private val client: HttpClient,
     private val embeddingClientProperties: DefaultEmbeddingClientProperties = DefaultEmbeddingClientProperties(),
 ) : EmbeddingClient {
-    override fun embed(text: String): Result<List<Double>, EmbeddingClientException> {
-        return when (batchEmbed(listOf(text))) {
+    override fun embed(text: String): Result<List<Double>, EmbeddingClientException> =
+        when (batchEmbed(listOf(text))) {
             is Failure -> Failure(EmbeddingClientException("Failed to embed text"))
             is Success -> Success(batchEmbed(listOf(text)).getOrThrow().first())
         }
-    }
 
     override fun batchEmbed(texts: List<String>): Result<List<List<Double>>, EmbeddingClientException> {
         val embeddings = mutableListOf<List<Double>>()
@@ -91,13 +93,12 @@ class DefaultEmbeddingClient(
  * - Embeds text using the OpenAI API.
  * - Embeds text in batches(batch size is configurable).
  */
-class OpenAIEmbeddingClient(private val openAIEmbeddingClientProperties: OpenAIEmbeddingClientProperties) :
-    EmbeddingClient {
+class OpenAIEmbeddingClient(
+    private val openAIEmbeddingClientProperties: OpenAIEmbeddingClientProperties,
+) : EmbeddingClient {
     private val client: HttpClient = HttpClient()
 
-    override fun embed(text: String): Result<List<Double>, EmbeddingClientException> {
-        return batchEmbed(listOf(text)).map { it.first() }
-    }
+    override fun embed(text: String): Result<List<Double>, EmbeddingClientException> = batchEmbed(listOf(text)).map { it.first() }
 
     override fun batchEmbed(texts: List<String>): Result<List<List<Double>>, EmbeddingClientException> {
         // Call openai api to get embeddings

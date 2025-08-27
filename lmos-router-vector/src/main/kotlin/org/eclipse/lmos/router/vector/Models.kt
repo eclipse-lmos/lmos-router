@@ -12,25 +12,37 @@ import org.eclipse.lmos.router.core.Context
 /**
  * A class representing a request to the VectorSearchClient.
  */
-open class VectorSearchClientRequest(val query: String, val context: Context)
+open class VectorSearchClientRequest(
+    val query: String,
+    val context: Context,
+)
 
 /**
  * A class representing a response from the VectorSearchClient.
  */
-open class VectorSearchClientResponse(val text: String, val agentName: String)
+open class VectorSearchClientResponse(
+    val text: String,
+    val agentName: String,
+)
 
 /**
  * A class representing a request to the VectorSeedClient.
  */
 @Serializable
-open class VectorSeedRequest(val agentName: String, val text: String)
+open class VectorSeedRequest(
+    val agentName: String,
+    val text: String,
+)
 
 /**
  * An exception thrown by the VectorClient.
  *
  * @param message The exception message.
  */
-class VectorClientException(message: String, reason: Exception? = null) : Exception(message, reason)
+class VectorClientException(
+    message: String,
+    reason: Exception? = null,
+) : Exception(message, reason)
 
 /**
  * Constants for the VectorRoute.
@@ -73,7 +85,10 @@ class OpenAIEmbeddingClientProperties(
  * @property input The list of strings to embed.
  */
 @Serializable
-class OpenAIEmbeddingRequest(val model: String, val input: List<String>)
+class OpenAIEmbeddingRequest(
+    val model: String,
+    val input: List<String>,
+)
 
 /**
  * Response from the OpenAI API for embedding text.
@@ -84,7 +99,12 @@ class OpenAIEmbeddingRequest(val model: String, val input: List<String>)
  * @property usage The usage statistics.
  */
 @Serializable
-class OpenAIEmbeddingResponse(val `object`: String, val data: List<OpenAIEmbeddingData>, val model: String, val usage: OpenAIEmbeddingUsage)
+class OpenAIEmbeddingResponse(
+    val `object`: String,
+    val data: List<OpenAIEmbeddingData>,
+    val model: String,
+    val usage: OpenAIEmbeddingUsage,
+)
 
 /**
  * Data class for the embedding response from the OpenAI API.
@@ -94,7 +114,11 @@ class OpenAIEmbeddingResponse(val `object`: String, val data: List<OpenAIEmbeddi
  * @property object The object type. It is "embedding" for an embedding.
  */
 @Serializable
-class OpenAIEmbeddingData(val embedding: List<Double>, val index: Int, val `object`: String)
+class OpenAIEmbeddingData(
+    val embedding: List<Double>,
+    val index: Int,
+    val `object`: String,
+)
 
 /**
  * Usage class for the embedding response from the OpenAI API.

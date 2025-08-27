@@ -18,21 +18,27 @@ sealed class ChatMessage {
  *
  * The [content] field contains the content of the message.
  */
-data class UserMessage(override val content: String) : ChatMessage()
+data class UserMessage(
+    override val content: String,
+) : ChatMessage()
 
 /**
  * Represents a system message.
  *
  * The [content] field contains the content of the message.
  */
-data class SystemMessage(override val content: String) : ChatMessage()
+data class SystemMessage(
+    override val content: String,
+) : ChatMessage()
 
 /**
  * Represents an assistant message.
  *
  * The [content] field contains the content of the message.
  */
-data class AssistantMessage(override val content: String) : ChatMessage()
+data class AssistantMessage(
+    override val content: String,
+) : ChatMessage()
 
 /**
  * Factory for creating chat messages.
@@ -41,14 +47,13 @@ class ChatMessageFactory {
     fun getChatMessage(
         content: String,
         role: String,
-    ): ChatMessage {
-        return when (role) {
+    ): ChatMessage =
+        when (role) {
             "user" -> UserMessage(content)
             "system" -> SystemMessage(content)
             "assistant" -> AssistantMessage(content)
             else -> throw IllegalArgumentException("Unknown message type")
         }
-    }
 }
 
 /**
@@ -62,7 +67,5 @@ class ChatMessageBuilder {
 
     fun role(role: String) = apply { this.role = role }
 
-    fun build(): ChatMessage {
-        return ChatMessageFactory().getChatMessage(content, role)
-    }
+    fun build(): ChatMessage = ChatMessageFactory().getChatMessage(content, role)
 }

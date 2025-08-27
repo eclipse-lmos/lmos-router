@@ -20,8 +20,8 @@ class SampleFlow {
                 override fun resolve(
                     context: Context,
                     input: UserMessage,
-                ): Result<AgentRoutingSpec?, AgentRoutingSpecResolverException> {
-                    return when (val specs = agentRoutingSpecsProvider.provide()) {
+                ): Result<AgentRoutingSpec?, AgentRoutingSpecResolverException> =
+                    when (val specs = agentRoutingSpecsProvider.provide()) {
                         is Success -> {
                             val agentRoutingSpec = specs.value.firstOrNull()
                             Success(agentRoutingSpec)
@@ -29,14 +29,13 @@ class SampleFlow {
 
                         is Failure -> Failure(AgentRoutingSpecResolverException("No agent spec found", specs.reason))
                     }
-                }
 
                 override fun resolve(
                     filters: Set<SpecFilter>,
                     context: Context,
                     input: UserMessage,
-                ): Result<AgentRoutingSpec?, AgentRoutingSpecResolverException> {
-                    return when (val specs = agentRoutingSpecsProvider.provide(filters)) {
+                ): Result<AgentRoutingSpec?, AgentRoutingSpecResolverException> =
+                    when (val specs = agentRoutingSpecsProvider.provide(filters)) {
                         is Success -> {
                             val agentRoutingSpec = specs.value.firstOrNull()
                             Success(agentRoutingSpec)
@@ -44,12 +43,17 @@ class SampleFlow {
 
                         is Failure -> Failure(AgentRoutingSpecResolverException("No agent spec found", specs.reason))
                     }
-                }
             }
 
         // Assert the agentSpecs collection is loaded and the agent resolver works
         assert(jsonAgentRoutingSpecsBuilder.provide().getOrNull()?.size == 2)
-        assert(simpleAgentResolver.resolve(Context(listOf()), UserMessage("Hello")).getOrNull()?.name?.isNotBlank() == true)
+        assert(
+            simpleAgentResolver
+                .resolve(Context(listOf()), UserMessage("Hello"))
+                .getOrNull()
+                ?.name
+                ?.isNotBlank() == true,
+        )
     }
 
     @Test
@@ -65,8 +69,8 @@ class SampleFlow {
                 override fun resolve(
                     context: Context,
                     input: UserMessage,
-                ): Result<AgentRoutingSpec?, AgentRoutingSpecResolverException> {
-                    return when (val specs = agentRoutingSpecsProvider.provide(setOf(NameSpecFilter("agent1")))) {
+                ): Result<AgentRoutingSpec?, AgentRoutingSpecResolverException> =
+                    when (val specs = agentRoutingSpecsProvider.provide(setOf(NameSpecFilter("agent1")))) {
                         is Success -> {
                             val agentRoutingSpec = specs.value.firstOrNull()
                             Success(agentRoutingSpec)
@@ -74,14 +78,13 @@ class SampleFlow {
 
                         is Failure -> Failure(AgentRoutingSpecResolverException("No agent spec found", specs.reason))
                     }
-                }
 
                 override fun resolve(
                     filters: Set<SpecFilter>,
                     context: Context,
                     input: UserMessage,
-                ): Result<AgentRoutingSpec?, AgentRoutingSpecResolverException> {
-                    return when (val specs = agentRoutingSpecsProvider.provide(filters)) {
+                ): Result<AgentRoutingSpec?, AgentRoutingSpecResolverException> =
+                    when (val specs = agentRoutingSpecsProvider.provide(filters)) {
                         is Success -> {
                             val agentSpec = specs.value.firstOrNull()
                             Success(agentSpec)
@@ -89,7 +92,6 @@ class SampleFlow {
 
                         is Failure -> Failure(AgentRoutingSpecResolverException("No agent spec found", specs.reason))
                     }
-                }
             }
 
         // Assert the agentSpecs collection is loaded and the agent resolver works
@@ -100,19 +102,33 @@ class SampleFlow {
     @Test
     fun `simple agent spec provider test`() {
         val agentSpecsProvider =
-            SimpleAgentRoutingSpecProvider().add(
-                AgentRoutingSpecBuilder().name("agent1").description("agent1 description").version("1.0.0")
-                    .address(Address(uri = "http://localhost:8080")).addCapability(
-                        CapabilitiesBuilder().name("capability1").description("capability1 description").version("1.0.0")
-                            .build(),
-                    ).addCapability(
-                        CapabilitiesBuilder().name("capability2").description("capability2 description").version("1.0.0")
-                            .build(),
-                    ).build(),
-            )
+            SimpleAgentRoutingSpecProvider()
                 .add(
-                    AgentRoutingSpecBuilder().name("agent2").description("agent2 description").version("1.1.0")
-                        .address(Address(uri = "http://localhost:8080")).build(),
+                    AgentRoutingSpecBuilder()
+                        .name("agent1")
+                        .description("agent1 description")
+                        .version("1.0.0")
+                        .address(Address(uri = "http://localhost:8080"))
+                        .addCapability(
+                            CapabilitiesBuilder()
+                                .name("capability1")
+                                .description("capability1 description")
+                                .version("1.0.0")
+                                .build(),
+                        ).addCapability(
+                            CapabilitiesBuilder()
+                                .name("capability2")
+                                .description("capability2 description")
+                                .version("1.0.0")
+                                .build(),
+                        ).build(),
+                ).add(
+                    AgentRoutingSpecBuilder()
+                        .name("agent2")
+                        .description("agent2 description")
+                        .version("1.1.0")
+                        .address(Address(uri = "http://localhost:8080"))
+                        .build(),
                 )
 
         val agentSpec = agentSpecsProvider.provide().getOrNull()?.find { agentSpec -> agentSpec.name == "agent1" }

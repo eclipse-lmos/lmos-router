@@ -52,7 +52,8 @@ class DefaultVectorClient(
             HttpClient(),
             DefaultEmbeddingClientProperties(),
         ),
-) : VectorSearchClient, VectorSeedClient {
+) : VectorSearchClient,
+    VectorSeedClient {
     private val documents = mutableListOf<DefaultVectorDocument>()
 
     init {
@@ -67,22 +68,28 @@ class DefaultVectorClient(
     override fun find(
         request: VectorSearchClientRequest,
         agentRoutingSpecs: Set<AgentRoutingSpec>,
-    ): Result<VectorSearchClientResponse?, VectorClientException> {
-        return try {
+    ): Result<VectorSearchClientResponse?, VectorClientException> =
+        try {
             val embeddings = embeddingClient.embed(request.query).getOrThrow()
             val result =
-                documents.filter { agentRoutingSpecs.any { agentRoutingSpec -> agentRoutingSpec.name == it.agentName } }
+                documents
+                    .filter { agentRoutingSpecs.any { agentRoutingSpec -> agentRoutingSpec.name == it.agentName } }
                     .sortedByDescending { embeddings.cosineSimilarity(it.vector) }
                     .take(vectorClientProperties.limit)
                     .map { VectorSearchClientResponse(it.text, it.agentName) }
-            Success(result.groupBy { it.agentName }.maxByOrNull { it.value.size }?.value?.first())
+            Success(
+                result
+                    .groupBy { it.agentName }
+                    .maxByOrNull { it.value.size }
+                    ?.value
+                    ?.first(),
+            )
         } catch (e: Exception) {
             Failure(VectorClientException("Failed to find documents", e))
         }
-    }
 
-    override fun seed(documents: List<VectorSeedRequest>): Result<Unit, VectorClientException> {
-        return try {
+    override fun seed(documents: List<VectorSeedRequest>): Result<Unit, VectorClientException> =
+        try {
             val batchEmbeddings = embeddingClient.batchEmbed(documents.map { it.text }).getOrThrow()
             Success(
                 batchEmbeddings.forEachIndexed { index, embeddings ->
@@ -98,7 +105,6 @@ class DefaultVectorClient(
         } catch (e: Exception) {
             Failure(VectorClientException("Failed to seed documents", e))
         }
-    }
 }
 
 /**

@@ -42,9 +42,7 @@ class LLMAgentRoutingSpecsResolver(
     override fun resolve(
         context: Context,
         input: UserMessage,
-    ): Result<AgentRoutingSpec?, AgentRoutingSpecResolverException> {
-        return resolve(emptySet(), context, input)
-    }
+    ): Result<AgentRoutingSpec?, AgentRoutingSpecResolverException> = resolve(emptySet(), context, input)
 
     override fun resolve(
         filters: Set<SpecFilter>,

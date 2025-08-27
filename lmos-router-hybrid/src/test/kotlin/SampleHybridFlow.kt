@@ -107,4 +107,6 @@ class SampleHybridFlow {
 }
 
 @Serializable
-data class ModelResponse(val primaryRequirements: List<String>)
+data class ModelResponse(
+    val primaryRequirements: List<String>,
+)

@@ -12,4 +12,6 @@ import kotlinx.serialization.Serializable
  * The [agentName] field contains the name of the agent.
  */
 @Serializable
-open class ModelClientResponse(val agentName: String)
+open class ModelClientResponse(
+    val agentName: String,
+)

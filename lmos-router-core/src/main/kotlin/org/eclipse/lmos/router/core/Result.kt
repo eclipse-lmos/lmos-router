@@ -19,9 +19,13 @@ import kotlin.contracts.contract
  */
 sealed class Result<out T, out E : Exception>
 
-data class Success<out T>(val value: T) : Result<T, Nothing>()
+data class Success<out T>(
+    val value: T,
+) : Result<T, Nothing>()
 
-data class Failure<out E : Exception>(val reason: E) : Result<Nothing, E>()
+data class Failure<out E : Exception>(
+    val reason: E,
+) : Result<Nothing, E>()
 
 /**
  * Returns the value produced by the [block] parameter as a [Result].
@@ -49,9 +53,7 @@ inline fun <R, reified E : Exception> Any.result(block: ResultBlock<R, E>.() -> 
 /**
  * Type safe way of throwing an exception.
  */
-fun <R, E : Exception> ResultBlock<R, E>.failWith(block: () -> E): Nothing {
-    throw block()
-}
+fun <R, E : Exception> ResultBlock<R, E>.failWith(block: () -> E): Nothing = throw block()
 
 /**
  * Defines a block of code that is always called after result block has finished.
@@ -81,24 +83,22 @@ infix fun <R, E : Exception, T> T.closeWith(block: (T) -> Unit): T {
  * This acts as a bridge to the standard [kotlin.Result].
  */
 context(ResultBlock<R, E>)
-inline infix fun <R, E : Exception> kotlin.Result<R>.failWith(block: (Exception) -> E): R {
-    return try {
+inline infix fun <R, E : Exception> kotlin.Result<R>.failWith(block: (Exception) -> E): R =
+    try {
         getOrThrow()
     } catch (ex: Exception) {
         throw block(ex)
     }
-}
 
 /**
  * Return the value of the success case or fail with the exception returned from the "block" block.
  */
 context(ResultBlock<R, E>)
-inline infix fun <R, E : Exception, R2, E2 : Exception> Result<R2, E2>.failWith(block: (E2) -> E): R2 {
-    return when (this) {
+inline infix fun <R, E : Exception, R2, E2 : Exception> Result<R2, E2>.failWith(block: (E2) -> E): R2 =
+    when (this) {
         is Success -> value
         is Failure -> throw block(reason)
     }
-}
 
 /**
  * If the predicate evaluates to true, then throw the exception form the body.
@@ -141,52 +141,47 @@ inline infix fun <R, E : Exception> Result<R, E>.onFailure(block: (E) -> Unit): 
 /**
  * Return the value of the success case or throws the exception.
  */
-fun <R, E : Exception> Result<R, E>.getOrThrow(): R {
-    return when (this) {
+fun <R, E : Exception> Result<R, E>.getOrThrow(): R =
+    when (this) {
         is Success -> value
         is Failure -> throw reason
     }
-}
 
 /**
  * Return the value of the success case or null.
  */
-fun <R, E : Exception> Result<R, E>.getOrNull(): R? {
-    return when (this) {
+fun <R, E : Exception> Result<R, E>.getOrNull(): R? =
+    when (this) {
         is Success -> value
         is Failure -> null
     }
-}
 
 /**
  * Return the exception to the failure case or null.
  */
-fun <R, E : Exception> Result<R, E>.exceptionOrNull(): E? {
-    return when (this) {
+fun <R, E : Exception> Result<R, E>.exceptionOrNull(): E? =
+    when (this) {
         is Success -> null
         is Failure -> reason
     }
-}
 
 /**
  * Creates a new Result with the exception mapped to a new type.
  */
-inline fun <R, E : Exception, T : Exception> Result<R, E>.mapFailure(transform: (E) -> T): Result<R, T> {
-    return when (this) {
+inline fun <R, E : Exception, T : Exception> Result<R, E>.mapFailure(transform: (E) -> T): Result<R, T> =
+    when (this) {
         is Success -> this
         is Failure -> Failure(transform(reason))
     }
-}
 
 /**
  * Creates a new Result with the value mapped to a new type.
  */
-inline fun <R, E : Exception, T> Result<R, E>.map(transform: (R) -> T): Result<T, E> {
-    return when (this) {
+inline fun <R, E : Exception, T> Result<R, E>.map(transform: (R) -> T): Result<T, E> =
+    when (this) {
         is Success -> Success(transform(value))
         is Failure -> this
     }
-}
 
 /**
  * Used to enforce that certain functions can only be called with the "result" block.

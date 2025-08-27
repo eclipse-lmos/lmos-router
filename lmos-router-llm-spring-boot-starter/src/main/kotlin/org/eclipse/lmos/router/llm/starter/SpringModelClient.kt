@@ -23,24 +23,30 @@ class SpringModelClient(
      * @param messages The messages.
      * @return The result of the call.
      */
-    override fun call(messages: List<ChatMessage>): Result<ChatMessage, AgentRoutingSpecResolverException> {
-        return try {
+    override fun call(messages: List<ChatMessage>): Result<ChatMessage, AgentRoutingSpecResolverException> =
+        try {
             val response =
-                chatModel.call(
-                    Prompt(
-                        messages.map {
-                            when (it) {
-                                is UserMessage -> org.springframework.ai.chat.messages.UserMessage(it.content)
-                                is AssistantMessage -> org.springframework.ai.chat.messages.AssistantMessage(it.content)
-                                is SystemMessage -> org.springframework.ai.chat.messages.SystemMessage(it.content)
-                                else -> throw IllegalArgumentException("Unsupported message type: ${it::class.simpleName}")
-                            }
-                        },
-                    ),
-                ).result.output.text
+                chatModel
+                    .call(
+                        Prompt(
+                            messages.map {
+                                when (it) {
+                                    is UserMessage ->
+                                        org.springframework.ai.chat.messages
+                                            .UserMessage(it.content)
+                                    is AssistantMessage ->
+                                        org.springframework.ai.chat.messages
+                                            .AssistantMessage(it.content)
+                                    is SystemMessage ->
+                                        org.springframework.ai.chat.messages
+                                            .SystemMessage(it.content)
+                                    else -> throw IllegalArgumentException("Unsupported message type: ${it::class.simpleName}")
+                                }
+                            },
+                        ),
+                    ).result.output.text
             Success(AssistantMessage(response))
         } catch (e: Exception) {
             Failure(AgentRoutingSpecResolverException(e.message ?: "An error occurred", e))
         }
-    }
 }
