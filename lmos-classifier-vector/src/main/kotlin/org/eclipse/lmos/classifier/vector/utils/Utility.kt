@@ -69,4 +69,4 @@ fun List<Embedding>.convertEmbeddingsToAgents(): List<Agent> =
             )
         }
 
-fun getQdrantCollectionName(context: SystemContext) = "${context.tenantId}-${context.channelId}"
+fun getQdrantCollectionName(context: SystemContext) = "${context.tenantId}-${context.channelId}-${context.subset}"

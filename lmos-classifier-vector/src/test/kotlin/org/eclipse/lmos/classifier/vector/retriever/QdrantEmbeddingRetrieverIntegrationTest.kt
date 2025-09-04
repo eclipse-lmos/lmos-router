@@ -130,7 +130,7 @@ class QdrantEmbeddingRetrieverIntegrationTest {
         val context = SystemContext("tenant-does-not-exist", "test-channel")
         assertThatThrownBy { underTest.retrieve(context, "some query") }
             .isInstanceOf(TenantNotSupportedException::class.java)
-            .hasMessage("No collection found for tenant '${context.tenantId}' and channel '${context.channelId}'.")
+            .hasMessage("Collection '${context.tenantId}-${context.channelId}-${context.subset}' not found.")
     }
 
     private fun createPoint(

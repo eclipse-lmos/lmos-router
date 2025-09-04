@@ -37,7 +37,7 @@ class QdrantEmbeddingRetriever(
             val embeddings = contents.mapNotNull { it.convert() }
             return embeddings
         } catch (e: RuntimeException) {
-            throw TenantNotSupportedException("No collection found for tenant '${context.tenantId}' and channel '${context.channelId}'.", e)
+            throw TenantNotSupportedException("Collection '$collection' not found.", e)
         }
     }
 

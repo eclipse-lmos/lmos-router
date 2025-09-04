@@ -46,10 +46,12 @@ data class InputContext(
  *
  * @property tenantId The identifier for the tenant.
  * @property channelId The identifier for the channel.
+ * @property channelId The identifier for the subset, default is 'stable'.
  */
 data class SystemContext(
     val tenantId: String,
     val channelId: String,
+    val subset: String = "stable",
 )
 
 /**
