@@ -65,7 +65,9 @@ class DefaultModelAgentClassifier(
         request: ClassificationRequest,
         chatResponse: ChatResponse,
     ): ClassificationResult {
-        val agentId = chatResponse.aiMessage()?.text()?.takeIf { it.isNotBlank() && it != "null" }
+        val responseMessage = chatResponse.aiMessage()?.text()
+        logger.info("[${javaClass.simpleName}] LLM response: $responseMessage")
+        val agentId = extractAgentId(responseMessage)
         val agent = request.inputContext.agents.find { it.id == agentId }
         return if (agent == null) {
             ClassificationResult(emptyList())
@@ -77,6 +79,31 @@ class DefaultModelAgentClassifier(
     companion object {
         fun builder(): ModelAgentClassifierBuilder = ModelAgentClassifierBuilder()
     }
+}
+
+/**
+ * Extracts the agent ID from a ChatResponse.
+ *
+ * This function takes the text of the AI message, trims leading and trailing whitespace,
+ * removes all characters that are not letters, digits, underscores, or hyphens,
+ * and returns the cleaned ID if it is not empty or "null".
+ *
+ * The regex "[^\\w-]" means:
+ *   - [^ ... ] : Negation, i.e., matches any character NOT in the following group
+ *   - \\w     : Word character (letters, digits, underscore)
+ *   - -       : Hyphen
+ * So the regex removes all characters except letters, digits, underscore, and hyphen.
+ *
+ * @param chatResponse The response from the chat model
+ * @return The extracted agent ID or null if no valid ID is found
+ */
+fun extractAgentId(chatResponse: String?): String? {
+    val agentId =
+        chatResponse
+            ?.trim()
+            ?.replace(Regex("[^\\w-]"), "")
+            ?.takeIf { it.isNotEmpty() && !it.equals("null", ignoreCase = true) }
+    return agentId
 }
 
 class ModelAgentClassifierBuilder {
