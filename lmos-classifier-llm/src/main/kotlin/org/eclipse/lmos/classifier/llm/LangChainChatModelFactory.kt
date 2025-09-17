@@ -33,6 +33,7 @@ class LangChainChatModelFactory private constructor() {
                         .temperature(properties.temperature)
                         .logRequests(properties.logRequestsAndResponses)
                         .logResponses(properties.logRequestsAndResponses)
+                        .strictJsonSchema(true)
                         .listeners(listOf(ModelConversationLogger()))
                         .build()
                 }
@@ -62,6 +63,7 @@ class LangChainChatModelFactory private constructor() {
                         .maxTokens(properties.maxTokens)
                         .temperature(properties.temperature)
                         .logRequestsAndResponses(properties.logRequestsAndResponses)
+                        .strictJsonSchema(true)
                         .listeners(listOf(ModelConversationLogger()))
                         .build()
                 }
@@ -76,6 +78,7 @@ class LangChainChatModelFactory private constructor() {
                         .maxTokens(properties.maxTokens)
                         .temperature(properties.temperature)
                         .logRequestsAndResponses(properties.logRequestsAndResponses)
+                        .strictJsonSchema(true)
                         .listeners(listOf(ModelConversationLogger()))
                         .build()
                 }

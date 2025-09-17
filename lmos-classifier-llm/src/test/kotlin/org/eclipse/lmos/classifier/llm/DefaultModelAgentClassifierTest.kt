@@ -4,11 +4,12 @@
 
 package org.eclipse.lmos.classifier.llm
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import dev.langchain4j.data.message.AiMessage
-import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
 import dev.langchain4j.model.chat.ChatModel
+import dev.langchain4j.model.chat.request.ChatRequest
 import dev.langchain4j.model.chat.response.ChatResponse
 import io.mockk.every
 import io.mockk.mockk
@@ -37,9 +38,10 @@ internal class DefaultModelAgentClassifierTest {
         // given
         val request = modelClassificationRequest()
 
+        val expectedAgentId = jacksonObjectMapper().writeValueAsString(LlmResponse("weather-bot"))
         val expectedAgent = ClassifiedAgent("weather-bot", "weather-bot-name", "weather-bot-address")
-        val chatResponse = ChatResponse.builder().aiMessage(AiMessage((expectedAgent.id))).build()
-        val messagesSlot = slot<List<ChatMessage>>()
+        val chatResponse = ChatResponse.builder().aiMessage(AiMessage((expectedAgentId))).build()
+        val messagesSlot = slot<ChatRequest>()
         every { chatModelMock.chat(capture(messagesSlot)) } returns chatResponse
 
         // when
@@ -47,21 +49,21 @@ internal class DefaultModelAgentClassifierTest {
 
         // then
         assertThat(classification.agents).isEqualTo(listOf(expectedAgent))
-        assertThat(messagesSlot.captured).hasSize(4)
+        assertThat(messagesSlot.captured.messages()).hasSize(4)
 
-        assertThat(messagesSlot.captured[0]).isInstanceOf(SystemMessage::class.java)
-        assertThat((messagesSlot.captured[0] as SystemMessage).text()).isEqualTo(
+        assertThat(messagesSlot.captured.messages()[0]).isInstanceOf(SystemMessage::class.java)
+        assertThat((messagesSlot.captured.messages()[0] as SystemMessage).text()).isEqualTo(
             systemPrompt.replace("{{agents}}", systemPromptAgents),
         )
 
-        assertThat(messagesSlot.captured[1]).isInstanceOf(UserMessage::class.java)
-        assertThat((messagesSlot.captured[1] as UserMessage).singleText()).isEqualTo("Hi")
+        assertThat(messagesSlot.captured.messages()[1]).isInstanceOf(UserMessage::class.java)
+        assertThat((messagesSlot.captured.messages()[1] as UserMessage).singleText()).isEqualTo("Hi")
 
-        assertThat(messagesSlot.captured[2]).isInstanceOf(AiMessage::class.java)
-        assertThat((messagesSlot.captured[2] as AiMessage).text()).isEqualTo("Hello, how can I help?")
+        assertThat(messagesSlot.captured.messages()[2]).isInstanceOf(AiMessage::class.java)
+        assertThat((messagesSlot.captured.messages()[2] as AiMessage).text()).isEqualTo("Hello, how can I help?")
 
-        assertThat(messagesSlot.captured[3]).isInstanceOf(UserMessage::class.java)
-        assertThat((messagesSlot.captured[3] as UserMessage).singleText()).isEqualTo("What's the weather today?")
+        assertThat(messagesSlot.captured.messages()[3]).isInstanceOf(UserMessage::class.java)
+        assertThat((messagesSlot.captured.messages()[3] as UserMessage).singleText()).isEqualTo("What's the weather today?")
     }
 
     @Test
@@ -69,9 +71,9 @@ internal class DefaultModelAgentClassifierTest {
         // given
         val request = modelClassificationRequest()
 
-        val expectedAgentId = "null"
+        val expectedAgentId = jacksonObjectMapper().writeValueAsString(LlmResponse(null))
         val chatResponse = ChatResponse.builder().aiMessage(AiMessage((expectedAgentId))).build()
-        val messagesSlot = slot<List<ChatMessage>>()
+        val messagesSlot = slot<ChatRequest>()
         every { chatModelMock.chat(capture(messagesSlot)) } returns chatResponse
 
         // when

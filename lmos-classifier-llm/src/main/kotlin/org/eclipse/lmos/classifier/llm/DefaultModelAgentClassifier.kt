@@ -4,12 +4,20 @@
 
 package org.eclipse.lmos.classifier.llm
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
 import dev.langchain4j.model.chat.ChatModel
+import dev.langchain4j.model.chat.request.ChatRequest
+import dev.langchain4j.model.chat.request.ResponseFormat
+import dev.langchain4j.model.chat.request.ResponseFormatType
 import dev.langchain4j.model.chat.response.ChatResponse
+import dev.langchain4j.service.output.JsonSchemas
+import org.eclipse.lmos.classifier.core.Agent
 import org.eclipse.lmos.classifier.core.ClassificationRequest
 import org.eclipse.lmos.classifier.core.ClassificationResult
 import org.eclipse.lmos.classifier.core.ClassifiedAgent
@@ -20,21 +28,40 @@ import org.slf4j.LoggerFactory
 class DefaultModelAgentClassifier(
     private val chatModel: ChatModel,
     private val systemPrompt: String,
+    private val objectMapper: ObjectMapper = jacksonObjectMapper(),
 ) : ModelAgentClassifier {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     override fun classify(request: ClassificationRequest): ClassificationResult {
+        val chatRequest = prepareChatRequest(request)
+        val chatResponse = chatModel.chat(chatRequest)
+        val classificationResult = prepareClassificationResult(chatResponse, request.inputContext.agents)
+        logger.info(
+            "[${javaClass.simpleName}] Classified agent '${classificationResult.agents}' for query '${request.inputContext.userMessage}'.",
+        )
+        return classificationResult
+    }
+
+    private fun prepareChatRequest(request: ClassificationRequest): ChatRequest {
+        val responseFormat =
+            ResponseFormat
+                .builder()
+                .type(ResponseFormatType.JSON)
+                .jsonSchema(JsonSchemas.jsonSchemaFrom(LlmResponse::class.java).get())
+                .build()
+
         val messages = mutableListOf<ChatMessage>()
         messages.add(prepareSystemMessage(request))
         messages.addAll(prepareHistoryMessages(request))
         messages.add(prepareUserMessage(request))
 
-        val response = chatModel.chat(messages)
-        val classificationResult = prepareResponse(request, response)
-        logger.info(
-            "[${javaClass.simpleName}] Classified agent '${classificationResult.agents}' for query '${request.inputContext.userMessage}'.",
-        )
-        return classificationResult
+        val chatRequest =
+            ChatRequest
+                .builder()
+                .responseFormat(responseFormat)
+                .messages(messages)
+                .build()
+        return chatRequest
     }
 
     private fun prepareSystemMessage(query: ClassificationRequest) =
@@ -61,14 +88,13 @@ class DefaultModelAgentClassifier(
 
     private fun prepareUserMessage(request: ClassificationRequest) = UserMessage(request.inputContext.userMessage)
 
-    private fun prepareResponse(
-        request: ClassificationRequest,
+    private fun prepareClassificationResult(
         chatResponse: ChatResponse,
+        agents: List<Agent>,
     ): ClassificationResult {
-        val responseMessage = chatResponse.aiMessage()?.text()
-        logger.info("[${javaClass.simpleName}] LLM response: $responseMessage")
-        val agentId = extractAgentId(responseMessage)
-        val agent = request.inputContext.agents.find { it.id == agentId }
+        val rawResponse = chatResponse.aiMessage().text()
+        val response = objectMapper.readValue<LlmResponse>(rawResponse)
+        val agent = agents.find { it.id == response.agentId }
         return if (agent == null) {
             ClassificationResult(emptyList())
         } else {
@@ -81,30 +107,9 @@ class DefaultModelAgentClassifier(
     }
 }
 
-/**
- * Extracts the agent ID from a ChatResponse.
- *
- * This function takes the text of the AI message, trims leading and trailing whitespace,
- * removes all characters that are not letters, digits, underscores, or hyphens,
- * and returns the cleaned ID if it is not empty or "null".
- *
- * The regex "[^\\w-]" means:
- *   - [^ ... ] : Negation, i.e., matches any character NOT in the following group
- *   - \\w     : Word character (letters, digits, underscore)
- *   - -       : Hyphen
- * So the regex removes all characters except letters, digits, underscore, and hyphen.
- *
- * @param chatResponse The response from the chat model
- * @return The extracted agent ID or null if no valid ID is found
- */
-fun extractAgentId(chatResponse: String?): String? {
-    val agentId =
-        chatResponse
-            ?.trim()
-            ?.replace(Regex("[^\\w-]"), "")
-            ?.takeIf { it.isNotEmpty() && !it.equals("null", ignoreCase = true) }
-    return agentId
-}
+data class LlmResponse(
+    val agentId: String?,
+)
 
 class ModelAgentClassifierBuilder {
     private var model: ChatModel? = null
