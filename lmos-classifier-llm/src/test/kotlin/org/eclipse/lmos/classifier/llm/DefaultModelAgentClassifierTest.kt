@@ -24,11 +24,7 @@ internal class DefaultModelAgentClassifierTest {
     private val systemPrompt = "This is the system prompt, listing some agents:\n{{agents}}"
     private val systemPromptAgents =
         """
-        Agent 'weather-bot':
-         - Provides weather forecasts
-
-        Agent 'news-bot':
-         - Provides latest news
+        [{"agentId":"weather-bot","descriptions":["Provides weather forecasts"]},{"agentId":"news-bot","descriptions":["Provides latest news"]}]
         """.trimIndent()
 
     private val underTest = DefaultModelAgentClassifier(chatModelMock, systemPrompt)
@@ -38,7 +34,7 @@ internal class DefaultModelAgentClassifierTest {
         // given
         val request = modelClassificationRequest()
 
-        val expectedAgentId = jacksonObjectMapper().writeValueAsString(LlmResponse("weather-bot"))
+        val expectedAgentId = jacksonObjectMapper().writeValueAsString(ClassifiedAgentResult("weather-bot", "customer wants weather info"))
         val expectedAgent = ClassifiedAgent("weather-bot", "weather-bot-name", "weather-bot-address")
         val chatResponse = ChatResponse.builder().aiMessage(AiMessage((expectedAgentId))).build()
         val messagesSlot = slot<ChatRequest>()
@@ -71,7 +67,7 @@ internal class DefaultModelAgentClassifierTest {
         // given
         val request = modelClassificationRequest()
 
-        val expectedAgentId = jacksonObjectMapper().writeValueAsString(LlmResponse(null))
+        val expectedAgentId = jacksonObjectMapper().writeValueAsString(ClassifiedAgentResult(null, "no suitable agent found"))
         val chatResponse = ChatResponse.builder().aiMessage(AiMessage((expectedAgentId))).build()
         val messagesSlot = slot<ChatRequest>()
         every { chatModelMock.chat(capture(messagesSlot)) } returns chatResponse

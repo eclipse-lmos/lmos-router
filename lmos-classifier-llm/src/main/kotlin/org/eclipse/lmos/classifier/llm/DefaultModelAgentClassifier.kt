@@ -47,7 +47,7 @@ class DefaultModelAgentClassifier(
             ResponseFormat
                 .builder()
                 .type(ResponseFormatType.JSON)
-                .jsonSchema(JsonSchemas.jsonSchemaFrom(LlmResponse::class.java).get())
+                .jsonSchema(JsonSchemas.jsonSchemaFrom(ClassifiedAgentResult::class.java).get())
                 .build()
 
         val messages = mutableListOf<ChatMessage>()
@@ -64,19 +64,19 @@ class DefaultModelAgentClassifier(
         return chatRequest
     }
 
-    private fun prepareSystemMessage(query: ClassificationRequest) =
-        SystemMessage(
-            systemPrompt.replace(
-                "{{agents}}",
-                query.inputContext.agents.joinToString("\n\n") { agent ->
-                    String.format(
-                        "Agent '%s':\n - %s",
-                        agent.id,
-                        agent.capabilities.joinToString("\n - ") { capability -> capability.description },
-                    )
-                },
-            ),
+    private fun prepareSystemMessage(query: ClassificationRequest): SystemMessage {
+        val agents =
+            query.inputContext.agents.map { agent ->
+                AgentDescription(
+                    agentId = agent.id,
+                    descriptions = agent.capabilities.map { it.description },
+                )
+            }
+        val json = objectMapper.writeValueAsString(agents)
+        return SystemMessage(
+            systemPrompt.replace("{{agents}}", json),
         )
+    }
 
     private fun prepareHistoryMessages(query: ClassificationRequest) =
         query.inputContext.historyMessages.map {
@@ -93,7 +93,7 @@ class DefaultModelAgentClassifier(
         agents: List<Agent>,
     ): ClassificationResult {
         val rawResponse = chatResponse.aiMessage().text()
-        val response = objectMapper.readValue<LlmResponse>(rawResponse)
+        val response = objectMapper.readValue<ClassifiedAgentResult>(rawResponse)
         val agent = agents.find { it.id == response.agentId }
         return if (agent == null) {
             ClassificationResult(emptyList())
@@ -107,8 +107,14 @@ class DefaultModelAgentClassifier(
     }
 }
 
-data class LlmResponse(
+data class ClassifiedAgentResult(
     val agentId: String?,
+    val reason: String,
+)
+
+data class AgentDescription(
+    val agentId: String,
+    val descriptions: List<String>,
 )
 
 class ModelAgentClassifierBuilder {
