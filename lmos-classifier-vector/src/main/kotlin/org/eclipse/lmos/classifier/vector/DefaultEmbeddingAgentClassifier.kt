@@ -50,7 +50,6 @@ class DefaultEmbeddingAgentClassifier(
             .atInfo()
             .addKeyValue("classifier-type", "Vector")
             .addKeyValue("classifier-user-message", request.inputContext.userMessage)
-            .addKeyValue("classifier-history-messages", request.inputContext.historyMessages)
             .addKeyValue("classifier-embedding-search-query", searchQuery)
             .addKeyValue("classifier-embedding-search-result", searchResult)
             .addKeyValue("classifier-selected-agent", classifiedAgentId)

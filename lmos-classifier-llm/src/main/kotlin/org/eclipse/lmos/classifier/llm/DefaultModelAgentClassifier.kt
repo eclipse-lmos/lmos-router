@@ -37,7 +37,7 @@ class DefaultModelAgentClassifier(
         val chatRequest = prepareChatRequest(request)
         val chatResponse = chatModel.chat(chatRequest)
         val classificationResult = prepareClassificationResult(chatResponse, request.inputContext.agents)
-        logger.logClassificationResult(request, classificationResult, chatRequest, chatResponse)
+        logger.logClassificationResult(request, classificationResult)
         return classificationResult
     }
 
@@ -104,18 +104,17 @@ class DefaultModelAgentClassifier(
     private fun Logger.logClassificationResult(
         request: ClassificationRequest,
         result: ClassificationResult,
-        chatRequest: ChatRequest,
-        chatResponse: ChatResponse,
     ) {
+        val candidateAgents =
+            request.inputContext.agents.map { agent ->
+                LlmCandidateAgent(agent.id, agent.capabilities.map { cap -> LlmCandidateCapability(cap.id, cap.description) })
+            }
         val classifiedAgentId = result.agents.firstOrNull()?.id ?: "none"
         this
             .atInfo()
             .addKeyValue("classifier-type", "LLM")
             .addKeyValue("classifier-user-message", request.inputContext.userMessage)
-            .addKeyValue("classifier-history-messages", request.inputContext.historyMessages)
-            .addKeyValue("classifier-candidate-agents", request.inputContext.agents)
-            .addKeyValue("classifier-llm-request", chatRequest.toString())
-            .addKeyValue("classifier-llm-response", chatResponse.toString())
+            .addKeyValue("classifier-candidate-agents", candidateAgents)
             .addKeyValue("classifier-selected-agent", classifiedAgentId)
             .addKeyValue("event", "CLASSIFICATION_LLM_DONE")
             .log(
@@ -138,6 +137,16 @@ data class ClassifiedAgentResult(
 data class AgentDescription(
     val agentId: String,
     val descriptions: List<String>,
+)
+
+data class LlmCandidateAgent(
+    val id: String,
+    val capabilities: List<LlmCandidateCapability>,
+)
+
+data class LlmCandidateCapability(
+    val id: String,
+    val description: String,
 )
 
 class ModelAgentClassifierBuilder {
