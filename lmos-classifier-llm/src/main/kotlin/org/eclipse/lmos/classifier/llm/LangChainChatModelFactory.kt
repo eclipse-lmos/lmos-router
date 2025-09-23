@@ -154,14 +154,14 @@ class ModelConversationLogger : ChatModelListener {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     override fun onRequest(requestContext: ChatModelRequestContext) {
-        logger.info("onRequest(): {}", requestContext.chatRequest())
+        logger.debug("onRequest(): {}", requestContext.chatRequest())
     }
 
     override fun onResponse(responseContext: ChatModelResponseContext) {
-        logger.info("onResponse(): {}", responseContext.chatResponse())
+        logger.debug("onResponse(): {}", responseContext.chatResponse())
     }
 
     override fun onError(errorContext: ChatModelErrorContext) {
-        logger.info("onError(): {}", errorContext.error().message)
+        logger.error("onError(): {}", errorContext.error().message)
     }
 }

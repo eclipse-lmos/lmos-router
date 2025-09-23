@@ -6,6 +6,7 @@ package org.eclipse.lmos.classifier.vector.ranker
 
 import org.eclipse.lmos.classifier.core.semantic.Embedding
 import org.eclipse.lmos.classifier.core.semantic.EmbeddingRanker
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 /**
@@ -28,7 +29,6 @@ class SingleAgentEmbeddingRanker(
         embeddings: List<Embedding>,
         maxResults: Int,
     ): List<String> {
-        logger.info("Start ranking for ${embeddings.size} embeddings, using $thresholds.")
         if (embeddings.isEmpty()) return emptyList()
         if (embeddings.size == 1) return listOf(embeddings[0].agentId)
 
@@ -48,27 +48,50 @@ class SingleAgentEmbeddingRanker(
         val firstRankedAgent = sortedRanking[0]
         val secondRankedAgent = sortedRanking[1]
 
-        val highestScoreWeight = firstRankedAgent.value.first
-        val distance = highestScoreWeight - secondRankedAgent.value.first
-        val meanScore = highestScoreWeight / firstRankedAgent.value.second
+        val score = firstRankedAgent.value.first
+        val distance = score - secondRankedAgent.value.first
+        val meanScore = score / firstRankedAgent.value.second
         val relDistance = distance / firstRankedAgent.value.second
 
+        val rankingEvaluation = EmbeddingRankingEvaluation(score, distance, meanScore, relDistance)
         return if (
-            highestScoreWeight >= thresholds.minWeight &&
-            distance >= thresholds.minDistance &&
-            meanScore >= thresholds.minMeanScore &&
-            relDistance >= thresholds.minRealDistance
+            rankingEvaluation.score >= thresholds.minScore &&
+            rankingEvaluation.distance >= thresholds.minDistance &&
+            rankingEvaluation.meanScore >= thresholds.minMeanScore &&
+            rankingEvaluation.relDistance >= thresholds.minRelDistance
         ) {
+            logger.logRankingEvaluation(rankingEvaluation, true)
             listOf(firstRankedAgent.key)
         } else {
+            logger.logRankingEvaluation(rankingEvaluation, false)
             emptyList()
         }
+    }
+
+    private fun Logger.logRankingEvaluation(
+        embeddingRankingEvaluation: EmbeddingRankingEvaluation,
+        rankingMatch: Boolean,
+    ) {
+        this
+            .atInfo()
+            .addKeyValue("classifier-embedding-ranking-thresholds", thresholds)
+            .addKeyValue("classifier-embedding-ranking-evaluation", embeddingRankingEvaluation)
+            .addKeyValue("classifier-embedding-thresholds-match", rankingMatch)
+            .addKeyValue("event", "CLASSIFICATION_VECTOR_METRICS")
+            .log("Executed embedding ranker. Thresholds matched: {}", rankingMatch)
     }
 }
 
 data class EmbeddingRankingThreshold(
-    val minWeight: Double = 5.0,
+    val minScore: Double = 5.0,
     val minDistance: Double = 4.0,
     val minMeanScore: Double = 0.8,
-    val minRealDistance: Double = 0.3,
+    val minRelDistance: Double = 0.3,
+)
+
+data class EmbeddingRankingEvaluation(
+    val score: Double,
+    val distance: Double,
+    val meanScore: Double,
+    val relDistance: Double,
 )

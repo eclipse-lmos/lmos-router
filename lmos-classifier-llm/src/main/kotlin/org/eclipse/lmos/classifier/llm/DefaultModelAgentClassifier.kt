@@ -23,6 +23,7 @@ import org.eclipse.lmos.classifier.core.ClassificationResult
 import org.eclipse.lmos.classifier.core.ClassifiedAgent
 import org.eclipse.lmos.classifier.core.HistoryMessageRole.*
 import org.eclipse.lmos.classifier.core.llm.ModelAgentClassifier
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 class DefaultModelAgentClassifier(
@@ -36,9 +37,7 @@ class DefaultModelAgentClassifier(
         val chatRequest = prepareChatRequest(request)
         val chatResponse = chatModel.chat(chatRequest)
         val classificationResult = prepareClassificationResult(chatResponse, request.inputContext.agents)
-        logger.info(
-            "[${javaClass.simpleName}] Classified agent '${classificationResult.agents}' for query '${request.inputContext.userMessage}'.",
-        )
+        logger.logClassificationResult(request, classificationResult, chatRequest, chatResponse)
         return classificationResult
     }
 
@@ -100,6 +99,30 @@ class DefaultModelAgentClassifier(
         } else {
             ClassificationResult(listOf(ClassifiedAgent(agent.id, agent.name, agent.address)))
         }
+    }
+
+    private fun Logger.logClassificationResult(
+        request: ClassificationRequest,
+        result: ClassificationResult,
+        chatRequest: ChatRequest,
+        chatResponse: ChatResponse,
+    ) {
+        val classifiedAgentId = result.agents.firstOrNull()?.id ?: "none"
+        this
+            .atInfo()
+            .addKeyValue("classifier-type", "LLM")
+            .addKeyValue("classifier-user-message", request.inputContext.userMessage)
+            .addKeyValue("classifier-history-messages", request.inputContext.historyMessages)
+            .addKeyValue("classifier-candidate-agents", request.inputContext.agents)
+            .addKeyValue("classifier-llm-request", chatRequest.toString())
+            .addKeyValue("classifier-llm-response", chatResponse.toString())
+            .addKeyValue("classifier-selected-agent", classifiedAgentId)
+            .addKeyValue("event", "CLASSIFICATION_LLM_DONE")
+            .log(
+                "Executed classification using the LLM. Query: '{}', classified agent: '{}'.",
+                request.inputContext.userMessage,
+                classifiedAgentId,
+            )
     }
 
     companion object {

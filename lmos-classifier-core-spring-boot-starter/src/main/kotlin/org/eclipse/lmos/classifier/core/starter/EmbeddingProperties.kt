@@ -27,10 +27,10 @@ data class EmbeddingStoreProperties(
 @ConfigurationProperties(prefix = "lmos.router.embedding.ranking")
 data class EmbeddingRankingProperties(
     val maxEmbeddings: Int = 10,
-    val minWeight: Double = 5.0,
+    val minScore: Double = 5.0,
     val minDistance: Double = 4.0,
     val minMeanScore: Double = 0.8,
-    val minRealDistance: Double = 0.3,
+    val minRelDistance: Double = 0.3,
 )
 
 @ConfigurationProperties(prefix = "lmos.router.embedding.rephraser")

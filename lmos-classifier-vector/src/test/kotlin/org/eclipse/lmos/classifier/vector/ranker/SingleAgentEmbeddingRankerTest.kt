@@ -11,10 +11,10 @@ import org.junit.jupiter.api.Test
 internal class SingleAgentEmbeddingRankerTest {
     private val thresholds =
         EmbeddingRankingThreshold(
-            minWeight = 5.0,
+            minScore = 5.0,
             minDistance = 4.0,
             minMeanScore = 0.8,
-            minRealDistance = 0.3,
+            minRelDistance = 0.3,
         )
 
     private val underTest = SingleAgentEmbeddingRanker(thresholds)
@@ -66,7 +66,7 @@ internal class SingleAgentEmbeddingRankerTest {
     @Test
     fun `findQualifiedAgent returns no agent when minimum score weight is below threshold`() {
         // given
-        val thresholds = EmbeddingRankingThreshold(minWeight = 10.0)
+        val thresholds = EmbeddingRankingThreshold(minScore = 10.0)
         val ranker = SingleAgentEmbeddingRanker(thresholds)
         val embeddings =
             listOf(
@@ -117,7 +117,7 @@ internal class SingleAgentEmbeddingRankerTest {
     @Test
     fun `findQualifiedAgent returns no agent when relative distance is below threshold`() {
         // given
-        val thresholds = EmbeddingRankingThreshold(minRealDistance = 1.0)
+        val thresholds = EmbeddingRankingThreshold(minRelDistance = 1.0)
         val ranker = SingleAgentEmbeddingRanker(thresholds)
         val embeddings =
             listOf(

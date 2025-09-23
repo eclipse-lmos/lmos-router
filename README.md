@@ -561,8 +561,8 @@ lmos:
     embedding:
       ranking:
         maxEmbeddings: 15
-        minWeight: 5.0
+        minScore: 5.0
         minDistance: 4.0
         minMeanScore: 0.5
-        minRealDistance: 0.3
+        minRelDistance: 0.3
 ```

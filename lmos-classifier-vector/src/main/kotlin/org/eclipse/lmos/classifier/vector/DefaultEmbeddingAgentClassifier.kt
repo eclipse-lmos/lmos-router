@@ -13,6 +13,7 @@ import org.eclipse.lmos.classifier.vector.ranker.EmbeddingRankingThreshold
 import org.eclipse.lmos.classifier.vector.ranker.SingleAgentEmbeddingRanker
 import org.eclipse.lmos.classifier.vector.rephrase.SimpleConcatenationRephraser
 import org.eclipse.lmos.classifier.vector.utils.convertEmbeddingsToAgents
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 class DefaultEmbeddingAgentClassifier(
@@ -33,15 +34,32 @@ class DefaultEmbeddingAgentClassifier(
                     val embedding = embeddings.find { it.agentId == agentId }
                     embedding?.let { ClassifiedAgent(it.agentId, it.agentName, it.agentAddress) }
                 }
+        val classificationResult = ClassificationResult(listOfNotNull(agent), embeddings.convertEmbeddingsToAgents())
+        logger.logClassificationResult(request, classificationResult, rephrasedMessage, embeddings)
+        return classificationResult
+    }
 
-        logger.info(
-            "[${javaClass.simpleName}] Classified agent '${qualifiedAgentsIds.firstOrNull()}' " +
-                "for rephrased message '$rephrasedMessage', based on embeddings $embeddings.",
-        )
-        return ClassificationResult(
-            listOfNotNull(agent),
-            embeddings.convertEmbeddingsToAgents(),
-        )
+    private fun Logger.logClassificationResult(
+        request: ClassificationRequest,
+        result: ClassificationResult,
+        searchQuery: String,
+        searchResult: List<Embedding>,
+    ) {
+        val classifiedAgentId = result.agents.firstOrNull()?.id ?: "none"
+        this
+            .atInfo()
+            .addKeyValue("classifier-type", "Vector")
+            .addKeyValue("classifier-user-message", request.inputContext.userMessage)
+            .addKeyValue("classifier-history-messages", request.inputContext.historyMessages)
+            .addKeyValue("classifier-embedding-search-query", searchQuery)
+            .addKeyValue("classifier-embedding-search-result", searchResult)
+            .addKeyValue("classifier-selected-agent", classifiedAgentId)
+            .addKeyValue("event", "CLASSIFICATION_VECTOR_DONE")
+            .log(
+                "Executed classification using the vector search. Query: '{}', classified agent: '{}'.",
+                request.inputContext.userMessage,
+                classifiedAgentId,
+            )
     }
 
     companion object {

@@ -31,10 +31,10 @@ lmos:
         apiKey:  ${EMBEDDING_STORE_API_KEY:my-api-key}
       ranking:
         maxEmbeddings: ${EMBEDDING_RANKING_MAX_EMBEDDINGS:15}
-        minWeight: ${EMBEDDING_RANKING_MIN_WEIGHT:5.0}
+        minScore: ${EMBEDDING_RANKING_MIN_WEIGHT:5.0}
         minDistance: ${EMBEDDING_RANKING_MIN_DISTANCE:4.0}
         minMeanScore: ${EMBEDDING_RANKING_MIN_MEAN_SCORE:0.5}
-        minRealDistance: ${EMBEDDING_RANKING_MIN_REAL_DISTANCE:0.3}
+        minRelDistance: ${EMBEDDING_RANKING_MIN_REAL_DISTANCE:0.3}
       model:
         provider: ${EMBEDDING_MODEL_PROVIDER:openai} # Options: openai, huggingface, local_onnx
         base-url: ${EMBEDDING_MODEL_OPENAI_BASE_URL:https://api.openai.com/v1/embeddings} # Only required for provider openai

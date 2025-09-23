@@ -16,6 +16,7 @@ import org.eclipse.lmos.classifier.llm.defaultSystemPrompt
 import org.eclipse.lmos.classifier.vector.DefaultEmbeddingAgentClassifier
 import org.eclipse.lmos.classifier.vector.ranker.EmbeddingRankingThreshold
 import org.eclipse.lmos.classifier.vector.ranker.SingleAgentEmbeddingRanker
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 /**
@@ -48,17 +49,32 @@ class FastTrackAgentClassifier(
                         request.systemContext,
                     ),
                 )
-            logger.info(
-                "[${javaClass.simpleName}] Classified agent '${modelClassification.agents}' by LLM for " +
-                    "query '${request.inputContext.userMessage}'. Top scored embeddings: ${embeddingClassification.topRankedEmbeddings}.",
-            )
+            logger.logClassificationResult(request, modelClassification, false)
             return ClassificationResult(modelClassification.agents, embeddingClassification.topRankedEmbeddings)
         }
-        logger.info(
-            "[${javaClass.simpleName}] Classified agent '${embeddingClassification.agents}' by semantic search for " +
-                "query '${request.inputContext.userMessage}'. Top scored embeddings: ${embeddingClassification.topRankedEmbeddings}.",
-        )
+
+        logger.logClassificationResult(request, embeddingClassification, true)
         return ClassificationResult(embeddingClassification.agents, embeddingClassification.topRankedEmbeddings)
+    }
+
+    private fun Logger.logClassificationResult(
+        request: ClassificationRequest,
+        result: ClassificationResult,
+        isFastTrack: Boolean,
+    ) {
+        val classifiedAgentId = result.agents.firstOrNull()?.id ?: "none"
+        this
+            .atInfo()
+            .addKeyValue("classifier-type", "Hybrid-Fasttrack")
+            .addKeyValue("classifier-user-message", request.inputContext.userMessage)
+            .addKeyValue("classifier-is-fasttrack", isFastTrack)
+            .addKeyValue("classifier-selected-agent", classifiedAgentId)
+            .addKeyValue("event", "CLASSIFICATION_FASTTRACK_DONE")
+            .log(
+                "Executed classification using the hybrid fast-track approach. Query: '{}', classified agent: '{}'.",
+                request.inputContext.userMessage,
+                classifiedAgentId,
+            )
     }
 
     companion object {

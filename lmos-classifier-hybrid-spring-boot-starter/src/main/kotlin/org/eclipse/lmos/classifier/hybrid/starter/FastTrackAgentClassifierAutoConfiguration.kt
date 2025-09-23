@@ -45,10 +45,10 @@ open class FastTrackAgentClassifierAutoConfiguration {
             .withEmbeddingRanker(
                 SingleAgentEmbeddingRanker(
                     EmbeddingRankingThreshold(
-                        minWeight = embeddingRankingProperties.minWeight,
+                        minScore = embeddingRankingProperties.minScore,
                         minDistance = embeddingRankingProperties.minDistance,
                         minMeanScore = embeddingRankingProperties.minMeanScore,
-                        minRealDistance = embeddingRankingProperties.minRealDistance,
+                        minRelDistance = embeddingRankingProperties.minRelDistance,
                     ),
                 ),
             ).build()
