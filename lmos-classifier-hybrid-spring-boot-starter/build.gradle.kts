@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 val springBootVersion: String by project
-val langChain4jOpenAiVersion: String by project
+val langChain4jVersion: String by project
 
 dependencies {
     api(project(":lmos-classifier-hybrid"))
@@ -13,5 +13,5 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-configuration-processor:$springBootVersion")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
-    testImplementation("dev.langchain4j:langchain4j-open-ai:$langChain4jOpenAiVersion")
+    testImplementation("dev.langchain4j:langchain4j-open-ai:$langChain4jVersion")
 }
