@@ -24,6 +24,7 @@ import org.springframework.context.annotation.Configuration
 @EnableConfigurationProperties(
     ChatModelProperties::class,
     EmbeddingRankingProperties::class,
+    EmbeddingRephraserProperties::class,
 )
 @ConditionalOnProperty(
     prefix = "lmos.router.classifier.hybrid-fast-track",
