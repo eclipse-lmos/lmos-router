@@ -16,7 +16,7 @@ dependencies {
     implementation("dev.langchain4j:langchain4j-anthropic:$langChain4jVersion")
     implementation("dev.langchain4j:langchain4j-google-ai-gemini:$langChain4jVersion")
     implementation("dev.langchain4j:langchain4j-ollama:$langChain4jVersion")
-    implementation("com.azure:azure-identity:1.17.0")
+    implementation("com.azure:azure-identity:1.18.0")
 
     implementation("org.springframework.boot:spring-boot-starter:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
