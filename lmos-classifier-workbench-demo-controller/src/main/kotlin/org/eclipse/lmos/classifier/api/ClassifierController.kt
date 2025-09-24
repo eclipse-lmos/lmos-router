@@ -72,12 +72,12 @@ class ClassifierController(
         return embeddingRetriever.retrieve(request.systemContext, request.inputContext.userMessage)
     }
 
-    @ExceptionHandler(TenantNotSupportedException::class)
-    fun handleTenantNotSupported(ex: TenantNotSupportedException): ResponseEntity<ErrorResponse> {
+    @ExceptionHandler(RetrievalFailedException::class)
+    fun handleTenantNotSupported(ex: RetrievalFailedException): ResponseEntity<ErrorResponse> {
         val response =
             ErrorResponse(
-                error = "TENANT_NOT_SUPPORTED",
-                message = ex.message ?: "Unsupported tenant",
+                error = "RETRIEVAL_FAILED",
+                message = ex.message ?: "Failed to retrieve relevant data.",
             )
         return ResponseEntity.badRequest().body(response)
     }

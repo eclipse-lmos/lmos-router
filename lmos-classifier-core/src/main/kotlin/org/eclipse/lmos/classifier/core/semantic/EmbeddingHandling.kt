@@ -95,9 +95,9 @@ data class Embedding(
 )
 
 /**
- * Exception indicating that the current tenant is not handled by the [EmbeddingRetriever].
+ * Exception indicating that the retrieval of embeddings has failed.
  */
-class TenantNotSupportedException(
+class RetrievalFailedException(
     message: String,
     cause: Throwable? = null,
 ) : RuntimeException(message, cause)

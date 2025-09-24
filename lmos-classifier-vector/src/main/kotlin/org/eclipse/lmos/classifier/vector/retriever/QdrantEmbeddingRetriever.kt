@@ -15,7 +15,7 @@ import org.eclipse.lmos.classifier.core.SystemContext
 import org.eclipse.lmos.classifier.core.semantic.EMBEDDING_METADATA_CAPABILITY_EXAMPLE
 import org.eclipse.lmos.classifier.core.semantic.Embedding
 import org.eclipse.lmos.classifier.core.semantic.EmbeddingRetriever
-import org.eclipse.lmos.classifier.core.semantic.TenantNotSupportedException
+import org.eclipse.lmos.classifier.core.semantic.RetrievalFailedException
 import org.eclipse.lmos.classifier.vector.utils.convert
 import org.eclipse.lmos.classifier.vector.utils.getQdrantCollectionName
 
@@ -37,7 +37,7 @@ class QdrantEmbeddingRetriever(
             val embeddings = contents.mapNotNull { it.convert() }
             return embeddings
         } catch (e: RuntimeException) {
-            throw TenantNotSupportedException("Collection '$collection' not found.", e)
+            throw RetrievalFailedException("Failed to retrieve embeddings. Reason: ${e.message}.", e)
         }
     }
 

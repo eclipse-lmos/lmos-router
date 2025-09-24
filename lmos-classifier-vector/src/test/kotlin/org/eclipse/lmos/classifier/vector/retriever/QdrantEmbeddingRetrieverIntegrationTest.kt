@@ -126,11 +126,11 @@ class QdrantEmbeddingRetrieverIntegrationTest {
     }
 
     @Test
-    fun `retrieve throws exception for unknown tenant`() {
+    fun `retrieve throws RetrievalFailedException when retrieval fails`() {
         val context = SystemContext("tenant-does-not-exist", "test-channel")
         assertThatThrownBy { underTest.retrieve(context, "some query") }
-            .isInstanceOf(TenantNotSupportedException::class.java)
-            .hasMessage("Collection '${context.tenantId}-${context.channelId}-${context.subset}' not found.")
+            .isInstanceOf(RetrievalFailedException::class.java)
+            .hasMessageContaining("Failed to retrieve embeddings. Reason:")
     }
 
     private fun createPoint(
