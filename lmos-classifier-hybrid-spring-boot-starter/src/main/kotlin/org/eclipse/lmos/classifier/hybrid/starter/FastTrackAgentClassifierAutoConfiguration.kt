@@ -5,12 +5,15 @@
 package org.eclipse.lmos.classifier.hybrid.starter
 
 import dev.langchain4j.model.chat.ChatModel
+import org.eclipse.lmos.classifier.core.rephrase.Rephraser
 import org.eclipse.lmos.classifier.core.semantic.EmbeddingRetriever
 import org.eclipse.lmos.classifier.core.starter.ChatModelProperties
 import org.eclipse.lmos.classifier.core.starter.EmbeddingRankingProperties
+import org.eclipse.lmos.classifier.core.starter.EmbeddingRephraserProperties
 import org.eclipse.lmos.classifier.hybrid.FastTrackAgentClassifier
 import org.eclipse.lmos.classifier.vector.ranker.EmbeddingRankingThreshold
 import org.eclipse.lmos.classifier.vector.ranker.SingleAgentEmbeddingRanker
+import org.eclipse.lmos.classifier.vector.rephrase.SimpleConcatenationRephraser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -30,12 +33,18 @@ import org.springframework.context.annotation.Configuration
 )
 open class FastTrackAgentClassifierAutoConfiguration {
     @Bean
+    @ConditionalOnMissingBean(Rephraser::class)
+    open fun rephraser(embeddingRephraserProperties: EmbeddingRephraserProperties): Rephraser =
+        SimpleConcatenationRephraser(embeddingRephraserProperties.maxHistoryMessages)
+
+    @Bean
     @ConditionalOnMissingBean(FastTrackAgentClassifier::class)
     open fun fastTrackAgentClassifier(
         chatModel: ChatModel,
         chatModelProperties: ChatModelProperties,
         embeddingRetriever: EmbeddingRetriever,
         embeddingRankingProperties: EmbeddingRankingProperties,
+        rephraser: Rephraser,
     ): FastTrackAgentClassifier =
         FastTrackAgentClassifier
             .builder()
@@ -51,5 +60,6 @@ open class FastTrackAgentClassifierAutoConfiguration {
                         minRelDistance = embeddingRankingProperties.minRelDistance,
                     ),
                 ),
-            ).build()
+            ).withRephraser(rephraser)
+            .build()
 }

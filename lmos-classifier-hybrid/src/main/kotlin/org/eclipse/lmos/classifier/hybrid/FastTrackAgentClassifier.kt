@@ -10,12 +10,14 @@ import org.eclipse.lmos.classifier.core.ClassificationResult
 import org.eclipse.lmos.classifier.core.InputContext
 import org.eclipse.lmos.classifier.core.hybrid.HybridAgentClassifier
 import org.eclipse.lmos.classifier.core.llm.ModelAgentClassifier
+import org.eclipse.lmos.classifier.core.rephrase.Rephraser
 import org.eclipse.lmos.classifier.core.semantic.*
 import org.eclipse.lmos.classifier.llm.DefaultModelAgentClassifier
 import org.eclipse.lmos.classifier.llm.defaultSystemPrompt
 import org.eclipse.lmos.classifier.vector.DefaultEmbeddingAgentClassifier
 import org.eclipse.lmos.classifier.vector.ranker.EmbeddingRankingThreshold
 import org.eclipse.lmos.classifier.vector.ranker.SingleAgentEmbeddingRanker
+import org.eclipse.lmos.classifier.vector.rephrase.SimpleConcatenationRephraser
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -87,6 +89,7 @@ class FastTrackAgentClassifierBuilder {
     private var systemPrompt: String? = null
     private var embeddingRetriever: EmbeddingRetriever? = null
     private var embeddingRanker: EmbeddingRanker = SingleAgentEmbeddingRanker(EmbeddingRankingThreshold())
+    private var rephraser: Rephraser = SimpleConcatenationRephraser(10)
 
     fun withChatModel(model: ChatModel) =
         apply {
@@ -108,6 +111,11 @@ class FastTrackAgentClassifierBuilder {
             this.embeddingRanker = embeddingRanker
         }
 
+    fun withRephraser(rephraser: Rephraser) =
+        apply {
+            this.rephraser = rephraser
+        }
+
     fun build(): FastTrackAgentClassifier {
         if (model == null) throw IllegalStateException("ChatModel must be set")
         if (embeddingRetriever == null) throw IllegalStateException("EmbeddingRetriever must be set")
@@ -118,6 +126,7 @@ class FastTrackAgentClassifierBuilder {
                 .builder()
                 .withEmbeddingRetriever(embeddingRetriever!!)
                 .withEmbeddingRanker(embeddingRanker)
+                .withRephraser(rephraser)
                 .build()
 
         val modelClassifier =

@@ -70,7 +70,7 @@ class EmbeddingAgentClassifierBuilder {
     private var embeddingRetriever: EmbeddingRetriever? = null
     private var embeddingRankingThreshold: EmbeddingRankingThreshold = EmbeddingRankingThreshold()
     private var embeddingRanker: EmbeddingRanker = SingleAgentEmbeddingRanker(embeddingRankingThreshold)
-    private var rephraser: Rephraser = SimpleConcatenationRephraser(15)
+    private var rephraser: Rephraser = SimpleConcatenationRephraser(10)
 
     fun withEmbeddingRetriever(embeddingRetriever: EmbeddingRetriever) =
         apply {

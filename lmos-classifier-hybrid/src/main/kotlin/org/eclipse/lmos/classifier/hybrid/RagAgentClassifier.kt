@@ -63,7 +63,7 @@ class RagAgentClassifierBuilder {
     private var model: ChatModel? = null
     private var systemPrompt: String? = null
     private var embeddingRetriever: EmbeddingRetriever? = null
-    private var rephraser: Rephraser = SimpleConcatenationRephraser(15)
+    private var rephraser: Rephraser = SimpleConcatenationRephraser(10)
 
     fun withChatModel(model: ChatModel) =
         apply {
