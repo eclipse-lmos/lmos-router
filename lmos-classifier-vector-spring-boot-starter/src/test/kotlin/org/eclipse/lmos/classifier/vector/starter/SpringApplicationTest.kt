@@ -6,7 +6,7 @@ package org.eclipse.lmos.classifier.vector.starter
 
 import dev.langchain4j.model.embedding.EmbeddingModel
 import org.assertj.core.api.Assertions.assertThat
-import org.eclipse.lmos.classifier.core.rephrase.Rephraser
+import org.eclipse.lmos.classifier.core.rephrase.QueryRephraser
 import org.eclipse.lmos.classifier.core.semantic.EmbeddingAgentClassifier
 import org.eclipse.lmos.classifier.core.semantic.EmbeddingHandler
 import org.eclipse.lmos.classifier.core.semantic.EmbeddingRetriever
@@ -29,7 +29,7 @@ class SpringApplicationTest {
     private lateinit var embeddingHandler: EmbeddingHandler
 
     @Autowired
-    private lateinit var rephraser: Rephraser
+    private lateinit var queryRephraser: QueryRephraser
 
     @Test
     fun `bean EmbeddingModel ist loaded if classifier is enabled by property`() {
@@ -52,7 +52,7 @@ class SpringApplicationTest {
     }
 
     @Test
-    fun `bean Rephraser ist loaded if classifier is enabled by property`() {
-        assertThat(rephraser).isNotNull()
+    fun `bean QueryRephraser ist loaded if classifier is enabled by property`() {
+        assertThat(queryRephraser).isNotNull()
     }
 }

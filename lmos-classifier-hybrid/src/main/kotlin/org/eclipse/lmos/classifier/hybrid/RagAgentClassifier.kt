@@ -10,7 +10,7 @@ import org.eclipse.lmos.classifier.core.ClassificationResult
 import org.eclipse.lmos.classifier.core.InputContext
 import org.eclipse.lmos.classifier.core.hybrid.HybridAgentClassifier
 import org.eclipse.lmos.classifier.core.llm.ModelAgentClassifier
-import org.eclipse.lmos.classifier.core.rephrase.Rephraser
+import org.eclipse.lmos.classifier.core.rephrase.QueryRephraser
 import org.eclipse.lmos.classifier.core.semantic.EmbeddingRetriever
 import org.eclipse.lmos.classifier.llm.DefaultModelAgentClassifier
 import org.eclipse.lmos.classifier.llm.defaultSystemPrompt
@@ -28,12 +28,12 @@ import org.slf4j.LoggerFactory
 class RagAgentClassifier(
     private val embeddingRetriever: EmbeddingRetriever,
     private val modelAgentClassifier: ModelAgentClassifier,
-    private var rephraser: Rephraser,
+    private var queryRephraser: QueryRephraser,
 ) : HybridAgentClassifier {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     override fun classify(request: ClassificationRequest): ClassificationResult {
-        val rephrasedMessage = rephraser.rephrase(request.inputContext)
+        val rephrasedMessage = queryRephraser.rephrase(request.inputContext)
         val topScoredEmbeddings = embeddingRetriever.retrieve(request.systemContext, rephrasedMessage)
         val topScoredAgents = topScoredEmbeddings.convertEmbeddingsToAgents()
         val modelClassification =
@@ -63,7 +63,7 @@ class RagAgentClassifierBuilder {
     private var model: ChatModel? = null
     private var systemPrompt: String? = null
     private var embeddingRetriever: EmbeddingRetriever? = null
-    private var rephraser: Rephraser = SimpleConcatenationRephraser(10)
+    private var queryRephraser: QueryRephraser = SimpleConcatenationRephraser(10)
 
     fun withChatModel(model: ChatModel) =
         apply {
@@ -80,9 +80,9 @@ class RagAgentClassifierBuilder {
             this.embeddingRetriever = embeddingRetriever
         }
 
-    fun withRephraser(rephraser: Rephraser) =
+    fun withQueryRephraser(queryRephraser: QueryRephraser) =
         apply {
-            this.rephraser = rephraser
+            this.queryRephraser = queryRephraser
         }
 
     fun build(): RagAgentClassifier {
@@ -97,6 +97,6 @@ class RagAgentClassifierBuilder {
                 .withSystemPrompt(systemPrompt!!)
                 .build()
 
-        return RagAgentClassifier(embeddingRetriever!!, modelClassifier, rephraser)
+        return RagAgentClassifier(embeddingRetriever!!, modelClassifier, queryRephraser)
     }
 }

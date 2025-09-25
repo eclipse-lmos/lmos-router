@@ -5,14 +5,14 @@
 package org.eclipse.lmos.classifier.vector.rephrase
 
 import org.eclipse.lmos.classifier.core.InputContext
-import org.eclipse.lmos.classifier.core.rephrase.Rephraser
+import org.eclipse.lmos.classifier.core.rephrase.QueryRephraser
 
 /**
- * A simple implementation of [Rephraser] that concatenates message contents instead of performing true rephrasing.
+ * A simple implementation of [QueryRephraser] that concatenates message contents instead of performing true rephrasing.
  */
 class SimpleConcatenationRephraser(
     private val maxHistoryMessages: Int,
-) : Rephraser {
+) : QueryRephraser {
     override fun rephrase(context: InputContext) =
         (
             context.historyMessages

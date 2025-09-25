@@ -7,9 +7,9 @@ package org.eclipse.lmos.classifier.core.rephrase
 import org.eclipse.lmos.classifier.core.InputContext
 
 /**
- * Interface for rephrasing a message in the context of a conversation.
+ * Interface for rephrasing a user query including the conversation history.
  */
-interface Rephraser {
+interface QueryRephraser {
     /**
      * Rephrases the given user message considering the conversation history.
      *

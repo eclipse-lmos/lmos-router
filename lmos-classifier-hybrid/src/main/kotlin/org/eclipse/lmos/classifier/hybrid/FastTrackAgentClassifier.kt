@@ -10,7 +10,7 @@ import org.eclipse.lmos.classifier.core.ClassificationResult
 import org.eclipse.lmos.classifier.core.InputContext
 import org.eclipse.lmos.classifier.core.hybrid.HybridAgentClassifier
 import org.eclipse.lmos.classifier.core.llm.ModelAgentClassifier
-import org.eclipse.lmos.classifier.core.rephrase.Rephraser
+import org.eclipse.lmos.classifier.core.rephrase.QueryRephraser
 import org.eclipse.lmos.classifier.core.semantic.*
 import org.eclipse.lmos.classifier.llm.DefaultModelAgentClassifier
 import org.eclipse.lmos.classifier.llm.defaultSystemPrompt
@@ -89,7 +89,7 @@ class FastTrackAgentClassifierBuilder {
     private var systemPrompt: String? = null
     private var embeddingRetriever: EmbeddingRetriever? = null
     private var embeddingRanker: EmbeddingRanker = SingleAgentEmbeddingRanker(EmbeddingRankingThreshold())
-    private var rephraser: Rephraser = SimpleConcatenationRephraser(10)
+    private var queryRephraser: QueryRephraser = SimpleConcatenationRephraser(10)
 
     fun withChatModel(model: ChatModel) =
         apply {
@@ -111,9 +111,9 @@ class FastTrackAgentClassifierBuilder {
             this.embeddingRanker = embeddingRanker
         }
 
-    fun withRephraser(rephraser: Rephraser) =
+    fun withQueryRephraser(queryRephraser: QueryRephraser) =
         apply {
-            this.rephraser = rephraser
+            this.queryRephraser = queryRephraser
         }
 
     fun build(): FastTrackAgentClassifier {
@@ -126,7 +126,7 @@ class FastTrackAgentClassifierBuilder {
                 .builder()
                 .withEmbeddingRetriever(embeddingRetriever!!)
                 .withEmbeddingRanker(embeddingRanker)
-                .withRephraser(rephraser)
+                .withQueryRephraser(queryRephraser)
                 .build()
 
         val modelClassifier =

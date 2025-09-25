@@ -7,7 +7,7 @@ package org.eclipse.lmos.classifier.hybrid.starter
 import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.embedding.EmbeddingModel
 import org.assertj.core.api.Assertions.assertThat
-import org.eclipse.lmos.classifier.core.rephrase.Rephraser
+import org.eclipse.lmos.classifier.core.rephrase.QueryRephraser
 import org.eclipse.lmos.classifier.core.semantic.EmbeddingRetriever
 import org.eclipse.lmos.classifier.hybrid.FastTrackAgentClassifier
 import org.eclipse.lmos.classifier.hybrid.RagAgentClassifier
@@ -27,7 +27,7 @@ class SpringApplicationTest {
     private lateinit var chatModel: ChatModel
 
     @Autowired
-    private lateinit var rephraser: Rephraser
+    private lateinit var queryRephraser: QueryRephraser
 
     @Autowired
     private lateinit var fastTrackAgentClassifier: FastTrackAgentClassifier
@@ -51,8 +51,8 @@ class SpringApplicationTest {
     }
 
     @Test
-    fun `bean Rephraser ist loaded if classifier is enabled by property`() {
-        assertThat(rephraser).isNotNull()
+    fun `bean QueryRephraser ist loaded if classifier is enabled by property`() {
+        assertThat(queryRephraser).isNotNull()
     }
 
     @Test

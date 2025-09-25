@@ -6,7 +6,7 @@ package org.eclipse.lmos.classifier.hybrid.starter
 
 import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.embedding.EmbeddingModel
-import org.eclipse.lmos.classifier.core.rephrase.Rephraser
+import org.eclipse.lmos.classifier.core.rephrase.QueryRephraser
 import org.eclipse.lmos.classifier.core.semantic.EmbeddingRetriever
 import org.eclipse.lmos.classifier.core.starter.ChatModelProperties
 import org.eclipse.lmos.classifier.core.starter.EmbeddingRephraserProperties
@@ -35,18 +35,18 @@ class RagAgentClassifierAutoConfiguration {
         chatModelProperties: ChatModelProperties,
         embeddingModel: EmbeddingModel,
         embeddingRetriever: EmbeddingRetriever,
-        rephraser: Rephraser,
+        queryRephraser: QueryRephraser,
     ): RagAgentClassifier =
         RagAgentClassifier
             .builder()
             .withChatModel(chatModel)
             .withSystemPrompt(chatModelProperties.systemPrompt)
             .withEmbeddingRetriever(embeddingRetriever)
-            .withRephraser(rephraser)
+            .withQueryRephraser(queryRephraser)
             .build()
 
     @Bean
-    @ConditionalOnMissingBean(Rephraser::class)
-    fun rephraser(embeddingRephraserProperties: EmbeddingRephraserProperties): Rephraser =
+    @ConditionalOnMissingBean(QueryRephraser::class)
+    fun queryRephraser(embeddingRephraserProperties: EmbeddingRephraserProperties): QueryRephraser =
         SimpleConcatenationRephraser(embeddingRephraserProperties.maxHistoryMessages)
 }

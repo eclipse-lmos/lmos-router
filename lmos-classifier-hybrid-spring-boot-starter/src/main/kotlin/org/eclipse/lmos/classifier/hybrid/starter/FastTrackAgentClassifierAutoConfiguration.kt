@@ -5,7 +5,7 @@
 package org.eclipse.lmos.classifier.hybrid.starter
 
 import dev.langchain4j.model.chat.ChatModel
-import org.eclipse.lmos.classifier.core.rephrase.Rephraser
+import org.eclipse.lmos.classifier.core.rephrase.QueryRephraser
 import org.eclipse.lmos.classifier.core.semantic.EmbeddingRetriever
 import org.eclipse.lmos.classifier.core.starter.ChatModelProperties
 import org.eclipse.lmos.classifier.core.starter.EmbeddingRankingProperties
@@ -34,8 +34,8 @@ import org.springframework.context.annotation.Configuration
 )
 open class FastTrackAgentClassifierAutoConfiguration {
     @Bean
-    @ConditionalOnMissingBean(Rephraser::class)
-    open fun rephraser(embeddingRephraserProperties: EmbeddingRephraserProperties): Rephraser =
+    @ConditionalOnMissingBean(QueryRephraser::class)
+    open fun queryRephraser(embeddingRephraserProperties: EmbeddingRephraserProperties): QueryRephraser =
         SimpleConcatenationRephraser(embeddingRephraserProperties.maxHistoryMessages)
 
     @Bean
@@ -45,7 +45,7 @@ open class FastTrackAgentClassifierAutoConfiguration {
         chatModelProperties: ChatModelProperties,
         embeddingRetriever: EmbeddingRetriever,
         embeddingRankingProperties: EmbeddingRankingProperties,
-        rephraser: Rephraser,
+        queryRephraser: QueryRephraser,
     ): FastTrackAgentClassifier =
         FastTrackAgentClassifier
             .builder()
@@ -61,6 +61,6 @@ open class FastTrackAgentClassifierAutoConfiguration {
                         minRelDistance = embeddingRankingProperties.minRelDistance,
                     ),
                 ),
-            ).withRephraser(rephraser)
+            ).withQueryRephraser(queryRephraser)
             .build()
 }

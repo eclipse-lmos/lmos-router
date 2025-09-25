@@ -5,7 +5,7 @@
 package org.eclipse.lmos.classifier.vector.starter
 
 import dev.langchain4j.model.embedding.EmbeddingModel
-import org.eclipse.lmos.classifier.core.rephrase.Rephraser
+import org.eclipse.lmos.classifier.core.rephrase.QueryRephraser
 import org.eclipse.lmos.classifier.core.semantic.EmbeddingAgentClassifier
 import org.eclipse.lmos.classifier.core.semantic.EmbeddingRetriever
 import org.eclipse.lmos.classifier.core.starter.EmbeddingModelProperties
@@ -70,8 +70,8 @@ open class EmbeddingAgentClassifierAutoConfiguration {
             .build()
 
     @Bean
-    @ConditionalOnMissingBean(Rephraser::class)
-    open fun rephraser(embeddingRephraserProperties: EmbeddingRephraserProperties): Rephraser =
+    @ConditionalOnMissingBean(QueryRephraser::class)
+    open fun queryRephraser(embeddingRephraserProperties: EmbeddingRephraserProperties): QueryRephraser =
         SimpleConcatenationRephraser(embeddingRephraserProperties.maxHistoryMessages)
 
     @Bean
@@ -79,7 +79,7 @@ open class EmbeddingAgentClassifierAutoConfiguration {
     open fun embeddingAgentClassifier(
         embeddingRetriever: EmbeddingRetriever,
         embeddingRankingProperties: EmbeddingRankingProperties,
-        rephraser: Rephraser,
+        queryRephraser: QueryRephraser,
     ): EmbeddingAgentClassifier =
         DefaultEmbeddingAgentClassifier
             .builder()
@@ -93,6 +93,6 @@ open class EmbeddingAgentClassifierAutoConfiguration {
                         minRelDistance = embeddingRankingProperties.minRelDistance,
                     ),
                 ),
-            ).withRephraser(rephraser)
+            ).withQueryRephraser(queryRephraser)
             .build()
 }

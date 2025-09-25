@@ -7,7 +7,7 @@ package org.eclipse.lmos.classifier.vector
 import org.eclipse.lmos.classifier.core.ClassificationRequest
 import org.eclipse.lmos.classifier.core.ClassificationResult
 import org.eclipse.lmos.classifier.core.ClassifiedAgent
-import org.eclipse.lmos.classifier.core.rephrase.Rephraser
+import org.eclipse.lmos.classifier.core.rephrase.QueryRephraser
 import org.eclipse.lmos.classifier.core.semantic.*
 import org.eclipse.lmos.classifier.vector.ranker.EmbeddingRankingThreshold
 import org.eclipse.lmos.classifier.vector.ranker.SingleAgentEmbeddingRanker
@@ -19,12 +19,12 @@ import org.slf4j.LoggerFactory
 class DefaultEmbeddingAgentClassifier(
     private val embeddingRetriever: EmbeddingRetriever,
     private val embeddingRanker: EmbeddingRanker,
-    private var rephraser: Rephraser,
+    private var queryRephraser: QueryRephraser,
 ) : EmbeddingAgentClassifier {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     override fun classify(request: ClassificationRequest): ClassificationResult {
-        val rephrasedMessage = rephraser.rephrase(request.inputContext)
+        val rephrasedMessage = queryRephraser.rephrase(request.inputContext)
         val embeddings = embeddingRetriever.retrieve(request.systemContext, rephrasedMessage)
         val qualifiedAgentsIds = embeddingRanker.findMostQualifiedAgents(embeddings)
         val agent =
@@ -70,7 +70,7 @@ class EmbeddingAgentClassifierBuilder {
     private var embeddingRetriever: EmbeddingRetriever? = null
     private var embeddingRankingThreshold: EmbeddingRankingThreshold = EmbeddingRankingThreshold()
     private var embeddingRanker: EmbeddingRanker = SingleAgentEmbeddingRanker(embeddingRankingThreshold)
-    private var rephraser: Rephraser = SimpleConcatenationRephraser(10)
+    private var queryRephraser: QueryRephraser = SimpleConcatenationRephraser(10)
 
     fun withEmbeddingRetriever(embeddingRetriever: EmbeddingRetriever) =
         apply {
@@ -82,13 +82,13 @@ class EmbeddingAgentClassifierBuilder {
             this.embeddingRanker = embeddingRanker
         }
 
-    fun withRephraser(rephraser: Rephraser) =
+    fun withQueryRephraser(queryRephraser: QueryRephraser) =
         apply {
-            this.rephraser = rephraser
+            this.queryRephraser = queryRephraser
         }
 
     fun build(): DefaultEmbeddingAgentClassifier {
         if (embeddingRetriever == null) throw IllegalStateException("EmbeddingRetriever must be set")
-        return DefaultEmbeddingAgentClassifier(embeddingRetriever!!, embeddingRanker, rephraser)
+        return DefaultEmbeddingAgentClassifier(embeddingRetriever!!, embeddingRanker, queryRephraser)
     }
 }
