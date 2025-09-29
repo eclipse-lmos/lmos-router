@@ -10,15 +10,18 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 /**
- * Ranks a set of embeddings to identify the most qualified single agent
- * based on similarity scoring and configurable ranking thresholds.
+ * Ranks a set of embeddings to determine the most qualified single agent
+ * based on aggregated similarity scores and configurable threshold criteria.
  *
- * The agent with the highest cumulative score is only selected if:
- * - the score difference to the second-best agent exceeds a minimum distance,
- * - the total and mean scores exceed predefined thresholds,
- * - and the relative score difference is sufficiently large.
+ * For each agent, all embedding scores are accumulated and averaged.
+ * The top-ranked agent is only selected if:
+ * - the total and mean scores exceed the configured threshold minimums, and
+ * - in case a second candidate exists, the absolute and relative score differences
+ *   compared to that candidate also exceed the threshold minimums.
  *
- * @param thresholds Configuration defining the score-based selection criteria.
+ * If any threshold check fails, no agent is returned.
+ *
+ * @param thresholds Configuration object defining the minimum score and distance criteria.
  */
 class SingleAgentEmbeddingRanker(
     private val thresholds: EmbeddingRankingThreshold,
@@ -32,40 +35,42 @@ class SingleAgentEmbeddingRanker(
         if (embeddings.isEmpty()) return emptyList()
         if (embeddings.size == 1) return listOf(embeddings[0].agentId)
 
-        // Create ranking
-        val ranking = mutableMapOf<String, Pair<Double, Int>>() // <agent, (scoreSum, hitCount)>
+        // Aggregate metrics per agent: accumulate total score and number of embeddings
+        val agentMetrics = mutableMapOf<String, AgentMetric>()
         embeddings.forEach {
-            val (scoreSum, hitCount) = ranking.getOrDefault(it.agentId, Pair(0.0, 0))
-            ranking[it.agentId] = Pair(scoreSum + it.score, hitCount + 1)
+            val metric = agentMetrics.getOrPut(it.agentId) { AgentMetric() }
+            metric.totalScore += it.score
+            metric.hitCount++
         }
 
-        // Sort ranking descending based on scoreSum
-        val sortedRanking =
-            ranking.entries
-                .sortedByDescending { it.value.first }
-        if (sortedRanking.size == 1) return listOf(sortedRanking[0].key)
+        // Rank agents by their total score
+        val agentMetricsSortedByScore = agentMetrics.entries.sortedByDescending { it.value.totalScore }
 
-        val firstRankedAgent = sortedRanking[0]
-        val secondRankedAgent = sortedRanking[1]
-
-        val score = firstRankedAgent.value.first
-        val distance = score - secondRankedAgent.value.first
-        val meanScore = score / firstRankedAgent.value.second
-        val relDistance = distance / firstRankedAgent.value.second
-
-        val rankingEvaluation = EmbeddingRankingEvaluation(score, distance, meanScore, relDistance)
-        return if (
-            rankingEvaluation.score >= thresholds.minScore &&
-            rankingEvaluation.distance >= thresholds.minDistance &&
-            rankingEvaluation.meanScore >= thresholds.minMeanScore &&
-            rankingEvaluation.relDistance >= thresholds.minRelDistance
-        ) {
-            logger.logRankingEvaluation(rankingEvaluation, true)
-            listOf(firstRankedAgent.key)
-        } else {
-            logger.logRankingEvaluation(rankingEvaluation, false)
-            emptyList()
+        // First threshold check: overall score and mean score must exceed minimums
+        val firstAgent = agentMetricsSortedByScore[0]
+        val score = firstAgent.value.totalScore
+        val meanScore = score / firstAgent.value.hitCount
+        if (score < thresholds.minScore || meanScore < thresholds.minMeanScore) {
+            logger.logRankingEvaluation(EmbeddingRankingEvaluation(score, meanScore), false)
+            return emptyList()
         }
+
+        // Second threshold check: if a neighboring exists, distance and relative distance must exceed minimums
+        var distance: Double? = null
+        var relDistance: Double? = null
+        if (agentMetricsSortedByScore.size > 1) {
+            val secondAgent = agentMetricsSortedByScore[1]
+            distance = score - secondAgent.value.totalScore
+            relDistance = distance / firstAgent.value.hitCount
+            if (distance < thresholds.minDistance || relDistance < thresholds.minRelDistance) {
+                logger.logRankingEvaluation(EmbeddingRankingEvaluation(score, meanScore, distance, relDistance), false)
+                return emptyList()
+            }
+        }
+
+        // All thresholds passed, return the best-ranked agent
+        logger.logRankingEvaluation(EmbeddingRankingEvaluation(score, meanScore, distance, relDistance), true)
+        return listOf(firstAgent.key)
     }
 
     private fun Logger.logRankingEvaluation(
@@ -82,16 +87,21 @@ class SingleAgentEmbeddingRanker(
     }
 }
 
+data class AgentMetric(
+    var totalScore: Double = 0.0,
+    var hitCount: Int = 0,
+)
+
 data class EmbeddingRankingThreshold(
     val minScore: Double = 5.0,
-    val minDistance: Double = 4.0,
     val minMeanScore: Double = 0.8,
+    val minDistance: Double = 4.0,
     val minRelDistance: Double = 0.3,
 )
 
 data class EmbeddingRankingEvaluation(
     val score: Double,
-    val distance: Double,
     val meanScore: Double,
-    val relDistance: Double,
+    val distance: Double? = null,
+    val relDistance: Double? = null,
 )

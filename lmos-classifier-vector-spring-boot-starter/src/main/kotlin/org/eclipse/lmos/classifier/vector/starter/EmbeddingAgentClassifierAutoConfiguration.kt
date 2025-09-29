@@ -88,8 +88,8 @@ open class EmbeddingAgentClassifierAutoConfiguration {
                 SingleAgentEmbeddingRanker(
                     EmbeddingRankingThreshold(
                         minScore = embeddingRankingProperties.minScore,
-                        minDistance = embeddingRankingProperties.minDistance,
                         minMeanScore = embeddingRankingProperties.minMeanScore,
+                        minDistance = embeddingRankingProperties.minDistance,
                         minRelDistance = embeddingRankingProperties.minRelDistance,
                     ),
                 ),
