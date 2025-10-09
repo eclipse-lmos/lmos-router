@@ -35,59 +35,67 @@ class SingleAgentEmbeddingRanker(
         if (embeddings.isEmpty()) return emptyList()
         if (embeddings.size == 1) return listOf(embeddings[0].agentId)
 
-        // Aggregate metrics per agent: accumulate total score and number of embeddings
-        val agentMetrics = mutableMapOf<String, AgentMetric>()
-        embeddings.forEach {
-            val metric = agentMetrics.getOrPut(it.agentId) { AgentMetric() }
-            metric.totalScore += it.score
-            metric.hitCount++
-        }
+        // Aggregate metrics per agent: accumulate total score and number of embeddings, sorted by total score
+        val agentMetricsSortedByScore =
+            embeddings
+                .groupBy { it.agentId }
+                .mapValues { (_, items) ->
+                    AgentMetric(
+                        agentId = items[0].agentId,
+                        totalScore = items.sumOf { it.score },
+                        hitCount = items.size,
+                    )
+                }.values
+                .sortedByDescending { it.totalScore }
 
-        // Rank agents by their total score
-        val agentMetricsSortedByScore = agentMetrics.entries.sortedByDescending { it.value.totalScore }
-
-        // First threshold check: overall score and mean score must exceed minimums
+        // Calculate score, mean score, distance and relative distance
         val firstAgent = agentMetricsSortedByScore[0]
-        val score = firstAgent.value.totalScore
-        val meanScore = score / firstAgent.value.hitCount
-        if (score < thresholds.minScore || meanScore < thresholds.minMeanScore) {
-            logger.logRankingEvaluation(EmbeddingRankingEvaluation(score, meanScore), false)
-            return emptyList()
-        }
+        val score = firstAgent.totalScore
+        val meanScore = score / firstAgent.hitCount
 
-        // Second threshold check: if a neighboring exists, distance and relative distance must exceed minimums
-        var distance: Double? = null
-        var relDistance: Double? = null
-        if (agentMetricsSortedByScore.size > 1) {
-            val secondAgent = agentMetricsSortedByScore[1]
-            distance = score - secondAgent.value.totalScore
-            relDistance = distance / firstAgent.value.hitCount
-            if (distance < thresholds.minDistance || relDistance < thresholds.minRelDistance) {
-                logger.logRankingEvaluation(EmbeddingRankingEvaluation(score, meanScore, distance, relDistance), false)
-                return emptyList()
+        val secondAgentExists = agentMetricsSortedByScore.size > 1
+        val distance = if (secondAgentExists) score - agentMetricsSortedByScore[1].totalScore else -1.0
+        val relDistance = if (secondAgentExists) distance / firstAgent.hitCount else -1.0
+
+        // Check thresholds
+        val passesThresholds =
+            if (secondAgentExists) {
+                distance >= thresholds.minDistance &&
+                    relDistance >= thresholds.minRelDistance &&
+                    score >= thresholds.minScore &&
+                    meanScore >= thresholds.minMeanScore
+            } else {
+                score >= thresholds.minScore &&
+                    meanScore >= thresholds.minMeanScore
             }
-        }
 
-        // All thresholds passed, return the best-ranked agent
-        logger.logRankingEvaluation(EmbeddingRankingEvaluation(score, meanScore, distance, relDistance), true)
-        return listOf(firstAgent.key)
+        logger.logRankingEvaluation(
+            EmbeddingRankingEvaluation(score, meanScore, distance, relDistance),
+            firstAgent.agentId,
+            passesThresholds,
+        )
+
+        return if (passesThresholds) listOf(firstAgent.agentId) else emptyList()
     }
 
     private fun Logger.logRankingEvaluation(
         embeddingRankingEvaluation: EmbeddingRankingEvaluation,
+        topAgent: String,
         rankingMatch: Boolean,
     ) {
         this
             .atInfo()
             .addKeyValue("classifier-embedding-ranking-thresholds", thresholds)
             .addKeyValue("classifier-embedding-ranking-evaluation", embeddingRankingEvaluation)
-            .addKeyValue("classifier-embedding-thresholds-match", rankingMatch)
+            .addKeyValue("classifier-embedding-ranking-top-agent", topAgent)
+            .addKeyValue("classifier-embedding-ranking-thresholds-matched", rankingMatch)
             .addKeyValue("event", "CLASSIFICATION_VECTOR_METRICS")
             .log("Executed embedding ranker. Thresholds matched: {}", rankingMatch)
     }
 }
 
 data class AgentMetric(
+    val agentId: String,
     var totalScore: Double = 0.0,
     var hitCount: Int = 0,
 )

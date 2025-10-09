@@ -30,7 +30,7 @@ internal class SingleAgentEmbeddingRankerTest {
     }
 
     @Test
-    fun `findQualifiedAgent returns agent directly when only one embedding is given`() {
+    fun `findQualifiedAgent returns agent directly if only one embedding is given`() {
         // given
         val embedding =
             Embedding(
@@ -49,7 +49,7 @@ internal class SingleAgentEmbeddingRankerTest {
     }
 
     @Test
-    fun `findQualifiedAgent returns most qualified agent when thresholds met`() {
+    fun `findQualifiedAgent returns an agent if all thresholds match and embeddings for more than one agent exist`() {
         // given
         val embeddings =
             listOf(
@@ -64,7 +64,21 @@ internal class SingleAgentEmbeddingRankerTest {
     }
 
     @Test
-    fun `findQualifiedAgent returns no agent when minimum score weight is below threshold`() {
+    fun `findQualifiedAgent returns an agent if all thresholds match and embeddings for only one agent exist`() {
+        // given
+        val embeddings =
+            listOf(
+                Embedding("a1", 3.0, "A", "A-Agent-Name", "A-Agent-Address", "c1", "desc"),
+                Embedding("a2", 3.0, "A", "A-Agent-Name", "A-Agent-Address", "c1", "desc"),
+                Embedding("a3", 2.0, "A", "A-Agent-Name", "A-Agent-Address", "c1", "desc"),
+            )
+        // when
+        val result = underTest.findMostQualifiedAgents(embeddings)
+        assertThat(result).isEqualTo(listOf("A"))
+    }
+
+    @Test
+    fun `findQualifiedAgent returns no agent if score is below threshold`() {
         // given
         val thresholds = EmbeddingRankingThreshold(minScore = 10.0)
         val ranker = SingleAgentEmbeddingRanker(thresholds)
@@ -82,23 +96,7 @@ internal class SingleAgentEmbeddingRankerTest {
     }
 
     @Test
-    fun `findQualifiedAgent returns no agent when minimum distance to neighbour agent is below threshold`() {
-        // given
-        val thresholds = EmbeddingRankingThreshold(minDistance = 5.0)
-        val ranker = SingleAgentEmbeddingRanker(thresholds)
-        val embeddings =
-            listOf(
-                Embedding("a1", 6.0, "A", "A-Agent-Name", "A-Agent-Address", "c1", "desc"),
-                Embedding("b1", 2.5, "B", "B-Agent-Name", "B-Agent-Address", "c2", "desc"),
-            )
-        // when
-        val result = ranker.findMostQualifiedAgents(embeddings)
-        // then
-        assertThat(result).isEmpty()
-    }
-
-    @Test
-    fun `findQualifiedAgent returns no agent when mean score is below threshold`() {
+    fun `findQualifiedAgent returns no agent if mean score is below threshold`() {
         // given
         val thresholds = EmbeddingRankingThreshold(minMeanScore = 3.0)
         val ranker = SingleAgentEmbeddingRanker(thresholds)
@@ -115,7 +113,23 @@ internal class SingleAgentEmbeddingRankerTest {
     }
 
     @Test
-    fun `findQualifiedAgent returns no agent when relative distance is below threshold`() {
+    fun `findQualifiedAgent returns no agent if distance to neighbour is below threshold`() {
+        // given
+        val thresholds = EmbeddingRankingThreshold(minDistance = 5.0)
+        val ranker = SingleAgentEmbeddingRanker(thresholds)
+        val embeddings =
+            listOf(
+                Embedding("a1", 6.0, "A", "A-Agent-Name", "A-Agent-Address", "c1", "desc"),
+                Embedding("b1", 2.5, "B", "B-Agent-Name", "B-Agent-Address", "c2", "desc"),
+            )
+        // when
+        val result = ranker.findMostQualifiedAgents(embeddings)
+        // then
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun `findQualifiedAgent returns no agent if relative distance to neighbour is below threshold`() {
         // given
         val thresholds = EmbeddingRankingThreshold(minRelDistance = 1.0)
         val ranker = SingleAgentEmbeddingRanker(thresholds)
