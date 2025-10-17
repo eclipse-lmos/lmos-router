@@ -19,8 +19,8 @@ dependencies {
 
     implementation("dev.langchain4j:langchain4j-open-ai:$langChain4jVersion")
 
-    testImplementation("org.testcontainers:testcontainers:1.21.3")
-    testImplementation("org.testcontainers:junit-jupiter:1.21.3")
-    testImplementation("org.testcontainers:qdrant:1.21.3")
+    testImplementation("org.testcontainers:testcontainers:2.0.1")
+    testImplementation("org.testcontainers:junit-jupiter:2.0.1")
+    testImplementation("org.testcontainers:qdrant:2.0.1")
     testImplementation("org.awaitility:awaitility:4.3.0")
 }
