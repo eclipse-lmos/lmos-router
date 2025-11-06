@@ -9,9 +9,6 @@ import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.eclipse.lmos.classifier.core.Agent
 import org.eclipse.lmos.classifier.core.Capability
 import org.eclipse.lmos.classifier.core.ClassificationRequest
-import org.eclipse.lmos.classifier.core.HistoryMessage
-import org.eclipse.lmos.classifier.core.HistoryMessageRole.ASSISTANT
-import org.eclipse.lmos.classifier.core.HistoryMessageRole.USER
 import org.eclipse.lmos.classifier.core.InputContext
 import org.eclipse.lmos.classifier.core.SystemContext
 import org.eclipse.lmos.classifier.core.llm.SystemPromptContentProvider
