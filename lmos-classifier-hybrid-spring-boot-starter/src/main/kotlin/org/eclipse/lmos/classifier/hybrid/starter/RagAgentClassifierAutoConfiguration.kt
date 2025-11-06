@@ -40,7 +40,7 @@ class RagAgentClassifierAutoConfiguration {
         RagAgentClassifier
             .builder()
             .withChatModel(chatModel)
-            .withSystemPrompt(chatModelProperties.systemPrompt)
+            .withSystemPromptTemplate(chatModelProperties.systemPrompt)
             .withEmbeddingRetriever(embeddingRetriever)
             .withQueryRephraser(queryRephraser)
             .build()

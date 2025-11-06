@@ -5,6 +5,7 @@
 package org.eclipse.lmos.classifier.hybrid.starter
 
 import dev.langchain4j.model.chat.ChatModel
+import org.eclipse.lmos.classifier.core.llm.SystemPromptContentProvider
 import org.eclipse.lmos.classifier.core.rephrase.QueryRephraser
 import org.eclipse.lmos.classifier.core.semantic.EmbeddingRetriever
 import org.eclipse.lmos.classifier.core.starter.ChatModelProperties
@@ -43,6 +44,7 @@ open class FastTrackAgentClassifierAutoConfiguration {
     open fun fastTrackAgentClassifier(
         chatModel: ChatModel,
         chatModelProperties: ChatModelProperties,
+        systemPromptContentProviders: List<SystemPromptContentProvider>,
         embeddingRetriever: EmbeddingRetriever,
         embeddingRankingProperties: EmbeddingRankingProperties,
         queryRephraser: QueryRephraser,
@@ -50,7 +52,8 @@ open class FastTrackAgentClassifierAutoConfiguration {
         FastTrackAgentClassifier
             .builder()
             .withChatModel(chatModel)
-            .withSystemPrompt(chatModelProperties.systemPrompt)
+            .withSystemPromptTemplate(chatModelProperties.systemPrompt)
+            .withSystemPromptContentProviders(systemPromptContentProviders)
             .withEmbeddingRetriever(embeddingRetriever)
             .withEmbeddingRanker(
                 SingleAgentEmbeddingRanker(

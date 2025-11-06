@@ -17,17 +17,31 @@ import io.mockk.slot
 import org.assertj.core.api.Assertions.assertThat
 import org.eclipse.lmos.classifier.core.*
 import org.eclipse.lmos.classifier.core.HistoryMessageRole.*
+import org.eclipse.lmos.classifier.core.llm.SystemPromptContentProvider
 import org.junit.jupiter.api.Test
 
 internal class DefaultModelAgentClassifierTest {
     private val chatModelMock = mockk<ChatModel>()
-    private val systemPrompt = "This is the system prompt, listing some agents:\n{{agents}}"
-    private val systemPromptAgents =
-        """
-        [{"agentId":"weather-bot","descriptions":["Provides weather forecasts"]},{"agentId":"news-bot","descriptions":["Provides latest news"]}]
-        """.trimIndent()
+    private val systemPromptTemplate =
+        "This is the system prompt, listing some agents: @foreach{agent : agents}@{agent.id}@end{', '} " +
+            "and additional context: @{additionalContext}"
+    private val expectedSystemPrompt =
+        "This is the system prompt, listing some agents: weather-bot, news-bot " +
+            "and additional context: This is some additional context"
+    private val systemPromptContentProvider =
+        object : SystemPromptContentProvider {
+            override fun key() = "additionalContext"
 
-    private val underTest = DefaultModelAgentClassifier(chatModelMock, systemPrompt)
+            override fun content(request: ClassificationRequest) = "This is some additional context"
+        }
+
+    private val underTest =
+        DefaultModelAgentClassifier(
+            chatModelMock,
+            systemPromptTemplate,
+            DefaultSystemPromptRenderer(),
+            listOf(systemPromptContentProvider),
+        )
 
     @Test
     fun `classify should return classification result with expected agent`() {
@@ -48,9 +62,7 @@ internal class DefaultModelAgentClassifierTest {
         assertThat(messagesSlot.captured.messages()).hasSize(4)
 
         assertThat(messagesSlot.captured.messages()[0]).isInstanceOf(SystemMessage::class.java)
-        assertThat((messagesSlot.captured.messages()[0] as SystemMessage).text()).isEqualTo(
-            systemPrompt.replace("{{agents}}", systemPromptAgents),
-        )
+        assertThat((messagesSlot.captured.messages()[0] as SystemMessage).text()).isEqualTo(expectedSystemPrompt)
 
         assertThat(messagesSlot.captured.messages()[1]).isInstanceOf(UserMessage::class.java)
         assertThat((messagesSlot.captured.messages()[1] as UserMessage).singleText()).isEqualTo("Hi")

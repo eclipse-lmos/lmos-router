@@ -5,6 +5,7 @@
 val langChain4jVersion: String by project
 val jacksonVersion: String by project
 val assertjVersion: String by project
+val mvelVersion: String by project
 
 dependencies {
     api(project(":lmos-classifier-core"))
@@ -20,6 +21,7 @@ dependencies {
 
     implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+    implementation("org.mvel:mvel2:$mvelVersion")
 
     testImplementation("org.assertj:assertj-core:$assertjVersion")
     testImplementation("dev.langchain4j:langchain4j-open-ai:$langChain4jVersion")

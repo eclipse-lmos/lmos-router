@@ -11,7 +11,14 @@ fun defaultSystemPrompt(): String =
     Your task is to forward messages to the appropriate customer agent.
 
     The following customer agents are available to process the customer conversation further:    
-    {{agents}}
+    [ @foreach{agent : agents} 
+        {
+            "agentId": "@{agent.id}",
+            "descriptions": [ @foreach{capability : agent.capabilities} 
+                "@{capability.description}"@end{','}
+            ]       
+        }@end{','}
+    ]
         
     Please choose the most suitable customer agent.
     For very short or ambiguous customer utterances, consider choosing `"agent": null`.
@@ -41,7 +48,14 @@ fun defaultGermanSystemPrompt(): String =
     sofern eine Beurteilung möglich ist.
         
     Die folgenden Agenten stehen zur Bearbeitung der weiter unten genannten Kundenkonversation zur Verfügung:
-    {{agents}}
+    [ @foreach{agent : agents} 
+        {
+            "agentId": "@{agent.id}",
+            "descriptions": [ @foreach{capability : agent.capabilities} 
+                "@{capability.description}"@end{','}
+            ]       
+        }@end{','}
+    ]
         
     Bitte wähle den richtigen Ansprechpartner für den Kunden aus. 
     Sei bei kurzen Äußerungen des Kunden besonders vorsichtig und ziehe `"agent": null` eher in Betracht. Berücksichtige, dass außer `"agent": null` die Agenten nur innerhalb ihres Zuständigkeitsbereichs arbeiten können, und keine Agenten-übergreifende Klärung vornehmen können.

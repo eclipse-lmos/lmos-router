@@ -10,6 +10,7 @@ import org.eclipse.lmos.classifier.core.ClassificationResult
 import org.eclipse.lmos.classifier.core.InputContext
 import org.eclipse.lmos.classifier.core.hybrid.HybridAgentClassifier
 import org.eclipse.lmos.classifier.core.llm.ModelAgentClassifier
+import org.eclipse.lmos.classifier.core.llm.SystemPromptContentProvider
 import org.eclipse.lmos.classifier.core.rephrase.QueryRephraser
 import org.eclipse.lmos.classifier.core.semantic.*
 import org.eclipse.lmos.classifier.llm.DefaultModelAgentClassifier
@@ -86,7 +87,8 @@ class FastTrackAgentClassifier(
 
 class FastTrackAgentClassifierBuilder {
     private var model: ChatModel? = null
-    private var systemPrompt: String? = null
+    private var systemPromptTemplate = defaultSystemPrompt()
+    private var systemPromptContentProviders: List<SystemPromptContentProvider> = emptyList()
     private var embeddingRetriever: EmbeddingRetriever? = null
     private var embeddingRanker: EmbeddingRanker = SingleAgentEmbeddingRanker(EmbeddingRankingThreshold())
     private var queryRephraser: QueryRephraser = SimpleConcatenationRephraser(10)
@@ -96,9 +98,14 @@ class FastTrackAgentClassifierBuilder {
             this.model = model
         }
 
-    fun withSystemPrompt(systemPrompt: String) =
+    fun withSystemPromptTemplate(systemPromptTemplate: String) =
         apply {
-            this.systemPrompt = systemPrompt
+            if (systemPromptTemplate.isNotEmpty()) this.systemPromptTemplate = systemPromptTemplate
+        }
+
+    fun withSystemPromptContentProviders(providers: List<SystemPromptContentProvider>) =
+        apply {
+            systemPromptContentProviders = providers
         }
 
     fun withEmbeddingRetriever(embeddingRetriever: EmbeddingRetriever) =
@@ -119,7 +126,6 @@ class FastTrackAgentClassifierBuilder {
     fun build(): FastTrackAgentClassifier {
         if (model == null) throw IllegalStateException("ChatModel must be set")
         if (embeddingRetriever == null) throw IllegalStateException("EmbeddingRetriever must be set")
-        if (systemPrompt.isNullOrEmpty()) systemPrompt = defaultSystemPrompt()
 
         val embeddingClassifier =
             DefaultEmbeddingAgentClassifier
@@ -133,7 +139,8 @@ class FastTrackAgentClassifierBuilder {
             DefaultModelAgentClassifier
                 .builder()
                 .withChatModel(model!!)
-                .withSystemPrompt(systemPrompt!!)
+                .withSystemPromptTemplate(systemPromptTemplate)
+                .withSystemPromptContentProviders(systemPromptContentProviders)
                 .build()
 
         return FastTrackAgentClassifier(embeddingClassifier, modelClassifier)
