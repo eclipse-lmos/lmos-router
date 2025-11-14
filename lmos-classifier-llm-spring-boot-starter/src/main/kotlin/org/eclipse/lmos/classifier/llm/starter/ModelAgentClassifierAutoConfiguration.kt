@@ -5,8 +5,8 @@
 package org.eclipse.lmos.classifier.llm.starter
 
 import dev.langchain4j.model.chat.ChatModel
+import org.eclipse.lmos.classifier.core.llm.AgentProvider
 import org.eclipse.lmos.classifier.core.llm.ModelAgentClassifier
-import org.eclipse.lmos.classifier.core.llm.SystemPromptContentProvider
 import org.eclipse.lmos.classifier.core.starter.ChatModelProperties
 import org.eclipse.lmos.classifier.llm.ChatModelClientProperties
 import org.eclipse.lmos.classifier.llm.DefaultModelAgentClassifier
@@ -46,12 +46,12 @@ open class ModelAgentClassifierAutoConfiguration {
     open fun modelAgentClassifier(
         chatModel: ChatModel,
         chatModelProperties: ChatModelProperties,
-        systemPromptContentProviders: List<SystemPromptContentProvider>,
+        agentProviders: List<AgentProvider>,
     ): ModelAgentClassifier =
         DefaultModelAgentClassifier
             .builder()
             .withChatModel(chatModel)
             .withSystemPromptTemplate(chatModelProperties.systemPrompt)
-            .withSystemPromptContentProviders(systemPromptContentProviders)
+            .withAgentProviders(agentProviders)
             .build()
 }

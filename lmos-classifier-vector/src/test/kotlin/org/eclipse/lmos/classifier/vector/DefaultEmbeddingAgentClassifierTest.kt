@@ -54,9 +54,9 @@ class DefaultEmbeddingAgentClassifierTest {
         val result = underTest.classify(request)
 
         // then
-        assertThat(result.agents).isEqualTo(listOf(expectedAgent))
-        assertThat(result.topRankedEmbeddings).hasSize(1)
-        assertThat(result.topRankedEmbeddings[0].id).isEqualTo("agent-1")
+        assertThat(result.classifiedAgents).isEqualTo(listOf(expectedAgent))
+        assertThat(result.candidateAgents).hasSize(1)
+        assertThat(result.candidateAgents[0].id).isEqualTo("agent-1")
     }
 
     @Test
@@ -70,9 +70,9 @@ class DefaultEmbeddingAgentClassifierTest {
         val result = underTest.classify(request)
 
         // then
-        assertThat(result.agents).isEmpty()
-        assertThat(result.topRankedEmbeddings).hasSize(1)
-        assertThat(result.topRankedEmbeddings[0].id).isEqualTo("agent-1")
+        assertThat(result.classifiedAgents).isEmpty()
+        assertThat(result.candidateAgents).hasSize(1)
+        assertThat(result.candidateAgents[0].id).isEqualTo("agent-1")
     }
 
     @Test
@@ -85,7 +85,7 @@ class DefaultEmbeddingAgentClassifierTest {
         val result = underTest.classify(request)
 
         // then
-        assertThat(result.agents).isEmpty()
-        assertThat(result.topRankedEmbeddings).isEmpty()
+        assertThat(result.classifiedAgents).isEmpty()
+        assertThat(result.candidateAgents).isEmpty()
     }
 }

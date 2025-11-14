@@ -5,8 +5,6 @@
 lmos:
   router:
     classifier:
-      hybrid-rag:
-        enabled: true
       hybrid-fast-track:
         enabled: true
     llm:

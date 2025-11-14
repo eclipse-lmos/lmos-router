@@ -16,8 +16,8 @@ import org.eclipse.lmos.classifier.llm.LangChainChatModelFactory
 import org.eclipse.lmos.classifier.vector.retriever.QdrantEmbeddingRetriever
 import org.eclipse.lmos.classifier.vector.utils.EmbeddingModelClientProperties
 import org.eclipse.lmos.classifier.vector.utils.LangChainEmbeddingModelFactory
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -29,9 +29,11 @@ import org.springframework.context.annotation.Configuration
     EmbeddingModelProperties::class,
     EmbeddingRankingProperties::class,
 )
-@ConditionalOnExpression(
-    "\${lmos.router.classifier.hybrid-fast-track.enabled:false} == true " +
-        "|| \${lmos.router.classifier.hybrid-rag.enabled:false} == true",
+@ConditionalOnProperty(
+    prefix = "lmos.router.classifier.hybrid-fast-track",
+    name = ["enabled"],
+    havingValue = "true",
+    matchIfMissing = false,
 )
 open class ModelAutoConfiguration {
     @Bean

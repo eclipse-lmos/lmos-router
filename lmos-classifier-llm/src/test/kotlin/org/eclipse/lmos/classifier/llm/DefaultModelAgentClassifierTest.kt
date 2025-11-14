@@ -17,30 +17,40 @@ import io.mockk.slot
 import org.assertj.core.api.Assertions.assertThat
 import org.eclipse.lmos.classifier.core.*
 import org.eclipse.lmos.classifier.core.HistoryMessageRole.*
-import org.eclipse.lmos.classifier.core.llm.SystemPromptContentProvider
+import org.eclipse.lmos.classifier.core.llm.AgentProvider
 import org.junit.jupiter.api.Test
 
 internal class DefaultModelAgentClassifierTest {
     private val chatModelMock = mockk<ChatModel>()
     private val systemPromptTemplate =
-        "This is the system prompt, listing some agents: @foreach{agent : agents}@{agent.id}@end{', '} " +
-            "and additional context: @{additionalContext}"
+        "This is the system prompt, listing some agents: @foreach{agent : agents}@{agent.id}@end{', '}"
     private val expectedSystemPrompt =
-        "This is the system prompt, listing some agents: weather-bot, news-bot " +
-            "and additional context: This is some additional context"
-    private val systemPromptContentProvider =
-        object : SystemPromptContentProvider {
-            override fun key() = "additionalContext"
-
-            override fun content(request: ClassificationRequest) = "This is some additional context"
+        "This is the system prompt, listing some agents: weather-bot, news-bot"
+    private val agentProvider =
+        object : AgentProvider {
+            override fun provide(request: ClassificationRequest) =
+                listOf(
+                    Agent(
+                        id = "weather-bot",
+                        name = "weather-bot-name",
+                        address = "weather-bot-address",
+                        capabilities = listOf(Capability(id = "weather", description = "Provides weather forecasts")),
+                    ),
+                    Agent(
+                        id = "news-bot",
+                        name = "weather-bot-name",
+                        address = "weather-bot-address",
+                        capabilities = listOf(Capability(id = "news", description = "Provides latest news")),
+                    ),
+                )
         }
 
     private val underTest =
         DefaultModelAgentClassifier(
             chatModelMock,
             systemPromptTemplate,
-            DefaultSystemPromptRenderer(),
-            listOf(systemPromptContentProvider),
+            MvelSystemPromptRenderer(),
+            DefaultAgentAggregator(listOf(agentProvider)),
         )
 
     @Test
@@ -49,7 +59,8 @@ internal class DefaultModelAgentClassifierTest {
         val request = modelClassificationRequest()
 
         val expectedAgentId = jacksonObjectMapper().writeValueAsString(ClassifiedAgentResult("weather-bot", "customer wants weather info"))
-        val expectedAgent = ClassifiedAgent("weather-bot", "weather-bot-name", "weather-bot-address")
+        val expectedClassifiedAgent = ClassifiedAgent("weather-bot", "weather-bot-name", "weather-bot-address")
+        val expectedCandidateAgents = agentProvider.provide(request)
         val chatResponse = ChatResponse.builder().aiMessage(AiMessage((expectedAgentId))).build()
         val messagesSlot = slot<ChatRequest>()
         every { chatModelMock.chat(capture(messagesSlot)) } returns chatResponse
@@ -58,7 +69,8 @@ internal class DefaultModelAgentClassifierTest {
         val classification = underTest.classify(request)
 
         // then
-        assertThat(classification.agents).isEqualTo(listOf(expectedAgent))
+        assertThat(classification.classifiedAgents).isEqualTo(listOf(expectedClassifiedAgent))
+        assertThat(classification.candidateAgents).isEqualTo(expectedCandidateAgents)
         assertThat(messagesSlot.captured.messages()).hasSize(4)
 
         assertThat(messagesSlot.captured.messages()[0]).isInstanceOf(SystemMessage::class.java)
@@ -80,6 +92,7 @@ internal class DefaultModelAgentClassifierTest {
         val request = modelClassificationRequest()
 
         val expectedAgentId = jacksonObjectMapper().writeValueAsString(ClassifiedAgentResult(null, "no suitable agent found"))
+        val expectedCandidateAgents = agentProvider.provide(request)
         val chatResponse = ChatResponse.builder().aiMessage(AiMessage((expectedAgentId))).build()
         val messagesSlot = slot<ChatRequest>()
         every { chatModelMock.chat(capture(messagesSlot)) } returns chatResponse
@@ -88,7 +101,8 @@ internal class DefaultModelAgentClassifierTest {
         val classification = underTest.classify(request)
 
         // then
-        assertThat(classification.agents).isEmpty()
+        assertThat(classification.classifiedAgents).isEmpty()
+        assertThat(classification.candidateAgents).isEqualTo(expectedCandidateAgents)
     }
 
     private fun modelClassificationRequest() =
@@ -100,21 +114,6 @@ internal class DefaultModelAgentClassifierTest {
                         listOf(
                             HistoryMessage(role = USER, content = "Hi"),
                             HistoryMessage(role = ASSISTANT, content = "Hello, how can I help?"),
-                        ),
-                    agents =
-                        listOf(
-                            Agent(
-                                id = "weather-bot",
-                                name = "weather-bot-name",
-                                address = "weather-bot-address",
-                                capabilities = listOf(Capability(id = "weather", description = "Provides weather forecasts")),
-                            ),
-                            Agent(
-                                id = "news-bot",
-                                name = "weather-bot-name",
-                                address = "weather-bot-address",
-                                capabilities = listOf(Capability(id = "news", description = "Provides latest news")),
-                            ),
                         ),
                 ),
             systemContext =

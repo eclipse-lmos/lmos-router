@@ -10,7 +10,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.eclipse.lmos.classifier.core.rephrase.QueryRephraser
 import org.eclipse.lmos.classifier.core.semantic.EmbeddingRetriever
 import org.eclipse.lmos.classifier.hybrid.FastTrackAgentClassifier
-import org.eclipse.lmos.classifier.hybrid.RagAgentClassifier
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -31,9 +30,6 @@ class SpringApplicationTest {
 
     @Autowired
     private lateinit var fastTrackAgentClassifier: FastTrackAgentClassifier
-
-    @Autowired
-    private lateinit var ragAgentClassifier: RagAgentClassifier
 
     @Test
     fun `bean EmbeddingModel ist loaded if classifier is enabled by property`() {
@@ -58,10 +54,5 @@ class SpringApplicationTest {
     @Test
     fun `bean FastTrackAgentClassifier ist loaded if classifier is enabled by property`() {
         assertThat(fastTrackAgentClassifier).isNotNull()
-    }
-
-    @Test
-    fun `bean RagAgentClassifier ist loaded if classifier is enabled by property`() {
-        assertThat(ragAgentClassifier).isNotNull()
     }
 }
