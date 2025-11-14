@@ -17,7 +17,7 @@ class FastTrackAgentClassifierTest {
     private val modelClassifierMock = mockk<ModelAgentClassifier>()
     private val underTest: FastTrackAgentClassifier = FastTrackAgentClassifier(embeddingClassifierMock, modelClassifierMock)
 
-    private val givenAgent =
+    private val candidateAgent =
         Agent(
             id = "agent-1",
             name = "agent-1-name",
@@ -31,13 +31,14 @@ class FastTrackAgentClassifierTest {
                     ),
                 ),
         )
+    private val candidateAgents = listOf(candidateAgent)
+
     private val classifiedAgent =
         ClassifiedAgent(
-            id = givenAgent.id,
-            name = givenAgent.name,
-            address = givenAgent.address,
+            id = candidateAgent.id,
+            name = candidateAgent.name,
+            address = candidateAgent.address,
         )
-    private val topScoredEmbeddings = listOf(givenAgent)
 
     private val request =
         ClassificationRequest(
@@ -61,16 +62,16 @@ class FastTrackAgentClassifierTest {
         // given
         every { embeddingClassifierMock.classify(request) } returns
             ClassificationResult(
-                agents = listOf(classifiedAgent),
-                topRankedEmbeddings = topScoredEmbeddings,
+                classifiedAgents = listOf(classifiedAgent),
+                candidateAgents = candidateAgents,
             )
 
         // when
         val result = underTest.classify(request)
 
         // then
-        assertThat(result.agents).isEqualTo(listOf(classifiedAgent))
-        assertThat(result.topRankedEmbeddings).isEqualTo(topScoredEmbeddings)
+        assertThat(result.classifiedAgents).isEqualTo(listOf(classifiedAgent))
+        assertThat(result.candidateAgents).isEqualTo(candidateAgents)
     }
 
     @Test
@@ -78,22 +79,22 @@ class FastTrackAgentClassifierTest {
         // given
         every { embeddingClassifierMock.classify(request) } returns
             ClassificationResult(
-                agents = emptyList(),
-                topRankedEmbeddings = topScoredEmbeddings,
+                classifiedAgents = emptyList(),
+                candidateAgents = candidateAgents,
             )
 
-        every { modelClassifierMock.classify(any()) } answers {
+        every { modelClassifierMock.classify(any(), listOf(candidateAgent)) } answers {
             val req = it.invocation.args[0] as ClassificationRequest
             assertThat(req.inputContext.userMessage).isEqualTo(request.inputContext.userMessage)
             assertThat(req.inputContext.historyMessages).isEqualTo(request.inputContext.historyMessages)
-            assertThat(req.inputContext.agents).isEqualTo(topScoredEmbeddings)
-            ClassificationResult(agents = listOf(classifiedAgent), topScoredEmbeddings)
+            ClassificationResult(classifiedAgents = listOf(classifiedAgent), candidateAgents)
         }
 
         // when
         val result = underTest.classify(request)
 
         // then
-        assertThat(result.agents).isEqualTo(listOf(classifiedAgent))
+        assertThat(result.classifiedAgents).isEqualTo(listOf(classifiedAgent))
+        assertThat(result.candidateAgents).isEqualTo(candidateAgents)
     }
 }

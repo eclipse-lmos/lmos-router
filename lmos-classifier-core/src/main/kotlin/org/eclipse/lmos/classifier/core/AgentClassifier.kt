@@ -33,12 +33,10 @@ data class ClassificationRequest(
  *
  * @property userMessage The last user message to be classified.
  * @property historyMessages An optional list of history messages, providing additional context for classification.
- * @property agents An optional list of agents, providing additional context when purely LLM classification is used.
  */
 data class InputContext(
     val userMessage: String,
     val historyMessages: List<HistoryMessage> = emptyList(),
-    val agents: List<Agent> = emptyList(),
 )
 
 /**
@@ -55,15 +53,16 @@ data class SystemContext(
 )
 
 /**
- *  Classification result containing the classified agents.
+ * Represents the result of an agent classification process.
  *
- * @property agents The classified agents.
- * @property topRankedEmbeddings Optional list of top ranked agents returned from a semantic (vector-based) search.
- * This field is only populated when the classification includes embedding-based retrieval.
+ * @property classifiedAgents The agents that were classified as the best matches for a given [ClassificationRequest].
+ * @property candidateAgents The agents considered during classification, depending on the classification strategy:
+ * - **Embedding-based classifier**; candidates originate from semantic search.
+ * - **LLM-based classifier**; candidates derived from [AgentProvider]s.
  */
 open class ClassificationResult(
-    var agents: List<ClassifiedAgent>,
-    val topRankedEmbeddings: List<Agent> = emptyList(),
+    var classifiedAgents: List<ClassifiedAgent>,
+    val candidateAgents: List<Agent> = emptyList(),
 )
 
 /**

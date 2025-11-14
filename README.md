@@ -372,9 +372,7 @@ The LMOS Agent Classifier library allows you to set up an agent classification s
 
 - **Embedding-based Classification**: Finds the most qualified agent using a semantic vector search and a ranking algorithm.
 - **LLM-based Classification**: Utilizes a LLM to select the most appropriate agent based on the conversation context.
-- **Hybrid Classification:** Combines semantic retrieval with LLM-based reasoning:
-  - **Fast-Track Strategy**: First performs the Embedding-based Classification to find a matching agent. If no confident match is found, the system falls back to an LLM. The agents retrieved during the semantic search are passed to the LLM, enabling it to make an informed decision. 
-  - **RAG Strategy**: This strategy follows the classic RAG approach. It first retrieves a relevant subset of agents using semantic search. Then, an LLM selects the most appropriate agent from this set.
+- **Fast-Track Classification**: First performs the Embedding-based Classification to find a matching agent. If no confident match is found, the system falls back to an LLM. The agents retrieved during the semantic search are passed to the LLM, enabling it to make an informed decision. 
 
 In the initial version, classification returns a single best-matching agent. A future extension could allow multiple candidates to be considered, including coordination patterns if needed.
 
@@ -399,7 +397,7 @@ Spring Boot Integration: `lmos-classifier-llm-spring-boot-starter`
 
 ### `lmos-classifier-hybrid`
 
-Implements the **hybrid strategies** `FastTrackAgentClassifier` and `RagAgentClassifier`.
+Implements the **fast-track strategy**.
 
 Spring Boot Integration: `lmos-classifier-hybrid-spring-boot-starter`
 
@@ -442,7 +440,7 @@ val classifier = DefaultModelAgentClassifier
 ```
 
 Further examples on how to use the builders and their related components can be found in the Spring Boot starter auto-configuration classes:
-`ModelAgentClassifierAutoConfiguration`, `EmbeddingAgentClassifierAutoConfiguration`, `FastTrackAgentClassifierAutoConfiguration`, and `RagAgentClassifierAutoConfiguration`.
+`ModelAgentClassifierAutoConfiguration`, `EmbeddingAgentClassifierAutoConfiguration` and `FastTrackAgentClassifierAutoConfiguration`.
 
 Details on available configuration options for LLMs and embedding models can be found in the Spring Boot Starter chapter.
 
@@ -458,8 +456,6 @@ lmos:
       llm:
         enabled: true
       vector:
-        enabled: false
-      hybrid-rag:
         enabled: false
       hybrid-fast-track:
         enabled: false

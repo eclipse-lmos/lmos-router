@@ -4,6 +4,7 @@
 
 package org.eclipse.lmos.classifier.core.llm
 
+import org.eclipse.lmos.classifier.core.Agent
 import org.eclipse.lmos.classifier.core.AgentClassifier
 import org.eclipse.lmos.classifier.core.ClassificationRequest
 import org.eclipse.lmos.classifier.core.ClassificationResult
@@ -14,10 +15,23 @@ import org.eclipse.lmos.classifier.core.ClassificationResult
  */
 interface ModelAgentClassifier : AgentClassifier {
     /**
-     * Classifies the given request using an LLM.
+     * Classifies the given request using agents provided by the configured [AgentProvider]s.
      *
-     * @param request the classification request containing user message, history messages, and agents that should be considered
-     * @return The classification result with the most appropriate agents
+     * @param request The classification request containing input and system context information.
+     * @return A [ClassificationResult] representing the agents identified as most relevant.
      */
     override fun classify(request: ClassificationRequest): ClassificationResult
+
+    /**
+     * Classifies the given request using both the provided [agents], and the agents
+     * from the configured [AgentProvider]s.
+     *
+     * @param request The classification request containing input and system context information.
+     * @param agents Additional candidate agents to consider during classification.
+     * @return A [ClassificationResult] representing the agents identified as most relevant.
+     */
+    fun classify(
+        request: ClassificationRequest,
+        agents: List<Agent>,
+    ): ClassificationResult
 }

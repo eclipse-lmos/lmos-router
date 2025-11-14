@@ -45,7 +45,7 @@ class DefaultEmbeddingAgentClassifier(
         searchQuery: String,
         searchResult: List<Embedding>,
     ) {
-        val classifiedAgentId = result.agents.firstOrNull()?.id ?: "none"
+        val classifiedAgentId = result.classifiedAgents.firstOrNull()?.id ?: "none"
         this
             .atInfo()
             .addKeyValue("classifier-type", "Vector")

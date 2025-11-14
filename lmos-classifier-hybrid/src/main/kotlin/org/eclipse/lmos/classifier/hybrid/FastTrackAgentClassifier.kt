@@ -9,8 +9,8 @@ import org.eclipse.lmos.classifier.core.ClassificationRequest
 import org.eclipse.lmos.classifier.core.ClassificationResult
 import org.eclipse.lmos.classifier.core.InputContext
 import org.eclipse.lmos.classifier.core.hybrid.HybridAgentClassifier
+import org.eclipse.lmos.classifier.core.llm.AgentProvider
 import org.eclipse.lmos.classifier.core.llm.ModelAgentClassifier
-import org.eclipse.lmos.classifier.core.llm.SystemPromptContentProvider
 import org.eclipse.lmos.classifier.core.rephrase.QueryRephraser
 import org.eclipse.lmos.classifier.core.semantic.*
 import org.eclipse.lmos.classifier.llm.DefaultModelAgentClassifier
@@ -40,24 +40,24 @@ class FastTrackAgentClassifier(
 
     override fun classify(request: ClassificationRequest): ClassificationResult {
         val embeddingClassification = embeddingAgentClassifier.classify(request)
-        if (embeddingClassification.agents.isEmpty()) {
+        if (embeddingClassification.classifiedAgents.isEmpty()) {
             val modelClassification =
                 modelAgentClassifier.classify(
                     ClassificationRequest(
                         InputContext(
                             request.inputContext.userMessage,
                             request.inputContext.historyMessages,
-                            embeddingClassification.topRankedEmbeddings,
                         ),
                         request.systemContext,
                     ),
+                    embeddingClassification.candidateAgents,
                 )
             logger.logClassificationResult(request, modelClassification, false)
-            return ClassificationResult(modelClassification.agents, embeddingClassification.topRankedEmbeddings)
+            return ClassificationResult(modelClassification.classifiedAgents, modelClassification.candidateAgents)
         }
 
         logger.logClassificationResult(request, embeddingClassification, true)
-        return ClassificationResult(embeddingClassification.agents, embeddingClassification.topRankedEmbeddings)
+        return ClassificationResult(embeddingClassification.classifiedAgents, embeddingClassification.candidateAgents)
     }
 
     private fun Logger.logClassificationResult(
@@ -65,7 +65,7 @@ class FastTrackAgentClassifier(
         result: ClassificationResult,
         isFastTrack: Boolean,
     ) {
-        val classifiedAgentId = result.agents.firstOrNull()?.id ?: "none"
+        val classifiedAgentId = result.classifiedAgents.firstOrNull()?.id ?: "none"
         this
             .atInfo()
             .addKeyValue("classifier-type", "Hybrid-Fasttrack")
@@ -88,7 +88,7 @@ class FastTrackAgentClassifier(
 class FastTrackAgentClassifierBuilder {
     private var model: ChatModel? = null
     private var systemPromptTemplate = defaultSystemPrompt()
-    private var systemPromptContentProviders: List<SystemPromptContentProvider> = emptyList()
+    private var agentProviders: List<AgentProvider> = emptyList()
     private var embeddingRetriever: EmbeddingRetriever? = null
     private var embeddingRanker: EmbeddingRanker = SingleAgentEmbeddingRanker(EmbeddingRankingThreshold())
     private var queryRephraser: QueryRephraser = SimpleConcatenationRephraser(10)
@@ -103,9 +103,9 @@ class FastTrackAgentClassifierBuilder {
             if (systemPromptTemplate.isNotEmpty()) this.systemPromptTemplate = systemPromptTemplate
         }
 
-    fun withSystemPromptContentProviders(providers: List<SystemPromptContentProvider>) =
+    fun withAgentProviders(providers: List<AgentProvider>) =
         apply {
-            systemPromptContentProviders = providers
+            agentProviders = providers
         }
 
     fun withEmbeddingRetriever(embeddingRetriever: EmbeddingRetriever) =
@@ -140,7 +140,7 @@ class FastTrackAgentClassifierBuilder {
                 .builder()
                 .withChatModel(model!!)
                 .withSystemPromptTemplate(systemPromptTemplate)
-                .withSystemPromptContentProviders(systemPromptContentProviders)
+                .withAgentProviders(agentProviders)
                 .build()
 
         return FastTrackAgentClassifier(embeddingClassifier, modelClassifier)

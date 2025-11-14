@@ -12,8 +12,6 @@ lmos:
         enabled: true
       llm:
         enabled: true
-      hybrid-rag:
-        enabled: true
       hybrid-fast-track:
         enabled: true
     llm:
@@ -46,8 +44,18 @@ lmos:
         maxHistoryMessages: 10
       enabled: ${EMBEDDING_ENABLED:true}
       document-path: ${EMBEDDING_MODEL_DOCUMENT_PATH:/path/to/your/capabilities/directory}
+    agent-provider:
+      embedding:
+        enabled: false
+      weather:
+        enabled: false
 
 logging:
   level:
     sun:
       rmi: ERROR
+    org:
+      eclipse:
+        lmos:
+          classifier:
+            llm: DEBUG

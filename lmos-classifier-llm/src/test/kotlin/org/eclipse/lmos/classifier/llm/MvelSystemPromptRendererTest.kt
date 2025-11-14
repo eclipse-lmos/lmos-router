@@ -11,12 +11,11 @@ import org.eclipse.lmos.classifier.core.Capability
 import org.eclipse.lmos.classifier.core.ClassificationRequest
 import org.eclipse.lmos.classifier.core.InputContext
 import org.eclipse.lmos.classifier.core.SystemContext
-import org.eclipse.lmos.classifier.core.llm.SystemPromptContentProvider
 import org.eclipse.lmos.classifier.core.llm.SystemPromptRendererException
 import org.junit.jupiter.api.Test
 
-class DefaultSystemPromptRendererTest {
-    private val underTest = DefaultSystemPromptRenderer()
+class MvelSystemPromptRendererTest {
+    private val underTest = MvelSystemPromptRenderer()
     private val request =
         ClassificationRequest(
             inputContext =
@@ -37,8 +36,7 @@ class DefaultSystemPromptRendererTest {
         val out =
             underTest.render(
                 template,
-                listOf(provider("agent", "sim-agent")),
-                request,
+                mapOf("agent" to "sim-agent"),
             )
 
         assertThat(out).isEqualTo("Agents: sim-agent")
@@ -70,8 +68,7 @@ class DefaultSystemPromptRendererTest {
         val out =
             underTest.render(
                 template,
-                listOf(provider("agents", agents)),
-                request,
+                mapOf("agents" to agents),
             )
 
         assertThat(out).isEqualTo(
@@ -82,35 +79,13 @@ class DefaultSystemPromptRendererTest {
     }
 
     @Test
-    fun `render throws SystemPromptRendererException when provider fails`() {
-        val template = "Agents: @{firstAgent}, @{secondAgent}"
-
-        assertThatThrownBy {
-            underTest.render(
-                template,
-                listOf(
-                    provider("firstAgent", "sim-agent"),
-                    object : SystemPromptContentProvider {
-                        override fun key() = "secondAgent"
-
-                        override fun content(request: ClassificationRequest): Any = throw RuntimeException("Some Error")
-                    },
-                ),
-                request,
-            )
-        }.isInstanceOf(SystemPromptRendererException::class.java)
-            .hasMessageContaining("Failed to resolve variable 'secondAgent' from provider")
-    }
-
-    @Test
     fun `render throws SystemPromptRendererException on MVEL syntax error`() {
         val template = "Hello @{user"
 
         assertThatThrownBy {
             underTest.render(
                 template,
-                listOf(provider("user", "Stefan")),
-                request,
+                mapOf("user" to "Stefan"),
             )
         }.isInstanceOf(SystemPromptRendererException::class.java)
             .hasMessageContaining("Failed to render prompt template")
@@ -123,19 +98,9 @@ class DefaultSystemPromptRendererTest {
         assertThatThrownBy {
             underTest.render(
                 template,
-                emptyList(),
-                request,
+                emptyMap(),
             )
         }.isInstanceOf(SystemPromptRendererException::class.java)
             .hasMessageContaining("Failed to render prompt template")
-    }
-
-    private fun provider(
-        name: String,
-        value: Any,
-    ) = object : SystemPromptContentProvider {
-        override fun key() = name
-
-        override fun content(request: ClassificationRequest) = value
     }
 }

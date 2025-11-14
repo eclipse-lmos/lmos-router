@@ -9,7 +9,6 @@ import org.eclipse.lmos.classifier.core.ClassificationResult
 import org.eclipse.lmos.classifier.core.llm.ModelAgentClassifier
 import org.eclipse.lmos.classifier.core.semantic.*
 import org.eclipse.lmos.classifier.hybrid.FastTrackAgentClassifier
-import org.eclipse.lmos.classifier.hybrid.RagAgentClassifier
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController
 class ClassifierController(
     private val embeddingAgentClassifier: EmbeddingAgentClassifier,
     private val modelAgentClassifier: ModelAgentClassifier,
-    private val raqAgentClassifier: RagAgentClassifier,
     private val fastTrackAgentClassifier: FastTrackAgentClassifier,
     private val embeddingRetriever: EmbeddingRetriever,
 ) {
@@ -36,14 +34,6 @@ class ClassifierController(
     ): ClassificationResult {
         logger.info("Route user query '$request' by ModelAgentClassifier.")
         return modelAgentClassifier.classify(request)
-    }
-
-    @PostMapping("/hybrid-rag")
-    fun hybridRag(
-        @RequestBody request: ClassificationRequest,
-    ): ClassificationResult {
-        logger.info("Route user query '$request' by RagAgentClassifier.")
-        return raqAgentClassifier.classify(request)
     }
 
     @PostMapping("/hybrid-fast-track")
