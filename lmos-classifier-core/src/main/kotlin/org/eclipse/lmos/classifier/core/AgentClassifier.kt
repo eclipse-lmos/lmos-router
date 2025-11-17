@@ -33,10 +33,12 @@ data class ClassificationRequest(
  *
  * @property userMessage The last user message to be classified.
  * @property historyMessages An optional list of history messages, providing additional context for classification.
+ * @property metadata Optional metadata with additional contextual information related to the input context.
  */
 data class InputContext(
     val userMessage: String,
     val historyMessages: List<HistoryMessage> = emptyList(),
+    val metadata: Map<String, Any> = emptyMap(),
 )
 
 /**
