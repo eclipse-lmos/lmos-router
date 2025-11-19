@@ -116,7 +116,7 @@ class DefaultModelAgentClassifier(
             result.candidateAgents.map { agent ->
                 LlmCandidateAgent(agent.id, agent.capabilities.map { cap -> LlmCandidateCapability(cap.id, cap.description) })
             }
-        val classifiedAgentId = result.candidateAgents.firstOrNull()?.id ?: "none"
+        val classifiedAgentId = result.classifiedAgents.firstOrNull()?.id ?: "none"
         this
             .atInfo()
             .addKeyValue("classifier-type", "LLM")
