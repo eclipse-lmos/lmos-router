@@ -41,6 +41,15 @@ class QdrantEmbeddingRetriever(
         }
     }
 
+    override fun retrieve(
+        context: SystemContext,
+        userMessages: List<String>,
+    ): List<Embedding> =
+        userMessages
+            .flatMap {
+                retrieve(context, it)
+            }.distinct()
+
     private fun createRetriever(tenant: String): EmbeddingStoreContentRetriever {
         val embeddingStore =
             QdrantEmbeddingStore

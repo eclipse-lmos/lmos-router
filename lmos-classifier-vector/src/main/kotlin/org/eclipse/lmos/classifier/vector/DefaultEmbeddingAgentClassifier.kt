@@ -24,8 +24,8 @@ class DefaultEmbeddingAgentClassifier(
     private val logger = LoggerFactory.getLogger(javaClass)
 
     override fun classify(request: ClassificationRequest): ClassificationResult {
-        val rephrasedMessage = queryRephraser.rephrase(request.inputContext)
-        val embeddings = embeddingRetriever.retrieve(request.systemContext, rephrasedMessage)
+        val rephrasedMessages = queryRephraser.rephrase(request)
+        val embeddings = embeddingRetriever.retrieve(request.systemContext, rephrasedMessages)
         val qualifiedAgentsIds = embeddingRanker.findMostQualifiedAgents(embeddings)
         val agent =
             qualifiedAgentsIds
@@ -35,14 +35,14 @@ class DefaultEmbeddingAgentClassifier(
                     embedding?.let { ClassifiedAgent(it.agentId, it.agentName, it.agentAddress) }
                 }
         val classificationResult = ClassificationResult(listOfNotNull(agent), embeddings.convertEmbeddingsToAgents())
-        logger.logClassificationResult(request, classificationResult, rephrasedMessage, embeddings)
+        logger.logClassificationResult(request, classificationResult, rephrasedMessages, embeddings)
         return classificationResult
     }
 
     private fun Logger.logClassificationResult(
         request: ClassificationRequest,
         result: ClassificationResult,
-        searchQuery: String,
+        searchQueries: List<String>,
         searchResult: List<Embedding>,
     ) {
         val classifiedAgentId = result.classifiedAgents.firstOrNull()?.id ?: "none"
@@ -50,7 +50,7 @@ class DefaultEmbeddingAgentClassifier(
             .atInfo()
             .addKeyValue("classifier-type", "Vector")
             .addKeyValue("classifier-user-message", request.inputContext.userMessage)
-            .addKeyValue("classifier-embedding-search-query", searchQuery)
+            .addKeyValue("classifier-embedding-search-queries", searchQueries)
             .addKeyValue("classifier-embedding-search-result", searchResult)
             .addKeyValue("classifier-selected-agent", classifiedAgentId)
             .addKeyValue("event", "CLASSIFICATION_VECTOR_DONE")

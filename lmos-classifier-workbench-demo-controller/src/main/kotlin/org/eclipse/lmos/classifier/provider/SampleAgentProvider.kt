@@ -26,8 +26,8 @@ class EmbeddingAgentProvider(
     private var queryRephraser: QueryRephraser,
 ) : AgentProvider {
     override fun provide(request: ClassificationRequest): List<Agent> {
-        val rephrasedMessage = queryRephraser.rephrase(request.inputContext)
-        val embeddings = embeddingRetriever.retrieve(request.systemContext, rephrasedMessage)
+        val rephrasedMessages = queryRephraser.rephrase(request)
+        val embeddings = embeddingRetriever.retrieve(request.systemContext, rephrasedMessages)
         return embeddings.convertEmbeddingsToAgents()
     }
 }

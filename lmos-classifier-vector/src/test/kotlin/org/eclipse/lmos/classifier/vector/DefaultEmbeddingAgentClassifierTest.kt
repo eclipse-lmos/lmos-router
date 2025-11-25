@@ -46,7 +46,7 @@ class DefaultEmbeddingAgentClassifierTest {
     fun `classify should return classification result with expected agent`() {
         // given
         val expectedAgent = ClassifiedAgent(embedding.agentId, embedding.agentName, embedding.agentAddress)
-        every { embeddingRetrieverMock.retrieve(request.systemContext, request.inputContext.userMessage) } returns
+        every { embeddingRetrieverMock.retrieve(request.systemContext, listOf(request.inputContext.userMessage)) } returns
             listOf(embedding)
         every { embeddingRankerMock.findMostQualifiedAgents(listOf(embedding)) } returns listOf(expectedAgent.id)
 
@@ -62,7 +62,7 @@ class DefaultEmbeddingAgentClassifierTest {
     @Test
     fun `classify should return empty list if no agent is found`() {
         // given
-        every { embeddingRetrieverMock.retrieve(request.systemContext, request.inputContext.userMessage) } returns
+        every { embeddingRetrieverMock.retrieve(request.systemContext, listOf(request.inputContext.userMessage)) } returns
             listOf(embedding)
         every { embeddingRankerMock.findMostQualifiedAgents(listOf(embedding)) } returns emptyList()
 
@@ -78,7 +78,7 @@ class DefaultEmbeddingAgentClassifierTest {
     @Test
     fun `classify can handle empty list of embeddings`() {
         // given
-        every { embeddingRetrieverMock.retrieve(request.systemContext, request.inputContext.userMessage) } returns emptyList()
+        every { embeddingRetrieverMock.retrieve(request.systemContext, listOf(request.inputContext.userMessage)) } returns emptyList()
         every { embeddingRankerMock.findMostQualifiedAgents(emptyList()) } returns emptyList()
 
         // when

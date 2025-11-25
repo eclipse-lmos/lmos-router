@@ -4,7 +4,7 @@
 
 package org.eclipse.lmos.classifier.vector.rephrase
 
-import org.eclipse.lmos.classifier.core.InputContext
+import org.eclipse.lmos.classifier.core.ClassificationRequest
 import org.eclipse.lmos.classifier.core.rephrase.QueryRephraser
 
 /**
@@ -13,10 +13,12 @@ import org.eclipse.lmos.classifier.core.rephrase.QueryRephraser
 class SimpleConcatenationRephraser(
     private val maxHistoryMessages: Int,
 ) : QueryRephraser {
-    override fun rephrase(context: InputContext) =
-        (
-            context.historyMessages
-                .takeLast(maxHistoryMessages)
-                .map { it.content } + context.userMessage
-        ).joinToString("\n")
+    override fun rephrase(request: ClassificationRequest) =
+        listOf(
+            (
+                request.inputContext.historyMessages
+                    .takeLast(maxHistoryMessages)
+                    .map { it.content } + request.inputContext.userMessage
+            ).joinToString("\n"),
+        )
 }

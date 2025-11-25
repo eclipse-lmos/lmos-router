@@ -73,6 +73,18 @@ interface EmbeddingRetriever {
         context: SystemContext,
         userMessage: String,
     ): List<Embedding>
+
+    /**
+     * Retrieves embeddings for the given context and multiple user messages sorted by relevance.
+     *
+     * @param context The context under which the embeddings are stored.
+     * @param userMessages The list of user messages.
+     * @return A list of [Embedding]s sorted by relevance.
+     */
+    fun retrieve(
+        context: SystemContext,
+        userMessages: List<String>,
+    ): List<Embedding>
 }
 
 /**

@@ -4,17 +4,18 @@
 
 package org.eclipse.lmos.classifier.core.rephrase
 
-import org.eclipse.lmos.classifier.core.InputContext
+import org.eclipse.lmos.classifier.core.ClassificationRequest
 
 /**
- * Interface for rephrasing a user query including the conversation history.
+ * Rephrases a conversation to generate alternative formulations of the user's intent. The rephrased
+ * output can be used to enhance retrieval or classification accuracy.
  */
 interface QueryRephraser {
     /**
-     * Rephrases the given user message considering the conversation history.
+     * Rephrases the given classification request.
      *
-     * @param context The context with the user message and the conversation history.
-     * @return A rephrased version of the given messages.
+     * @param request The classification request containing the conversation and system context.
+     * @return A list of messages rephrasing the user's intent
      */
-    fun rephrase(context: InputContext): String
+    fun rephrase(request: ClassificationRequest): List<String>
 }

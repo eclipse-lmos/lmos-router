@@ -18,7 +18,8 @@ interface AgentClassifier {
 }
 
 /**
- * The classification request containing context information for selecting the most appropriate agent.
+ * The classification request containing contextual information of a conversation
+ * to select the most appropriate agent.
  *
  * @property inputContext Input context used for classification.
  * @property systemContext System context used for classification.
@@ -29,10 +30,11 @@ data class ClassificationRequest(
 )
 
 /**
- * Input context used for classification.
+ * Provides the context of a conversation used for classification.
  *
- * @property userMessage The last user message to be classified.
- * @property historyMessages An optional list of history messages, providing additional context for classification.
+ * @property userMessage The last user message of the conversation.
+ * @property historyMessages An optional list of messages representing the conversation history,
+ * including user and assistant messages, providing additional context for classification.
  * @property metadata Optional metadata with additional contextual information related to the input context.
  */
 data class InputContext(
@@ -42,7 +44,7 @@ data class InputContext(
 )
 
 /**
- * System context used for classification.
+ * Provides the context of the system's tenant and channel used for classification.
  *
  * @property tenantId The identifier for the tenant.
  * @property channelId The identifier for the channel.
