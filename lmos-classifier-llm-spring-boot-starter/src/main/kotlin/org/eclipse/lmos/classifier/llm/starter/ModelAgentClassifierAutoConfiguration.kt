@@ -9,6 +9,7 @@ import org.eclipse.lmos.classifier.core.llm.AgentProvider
 import org.eclipse.lmos.classifier.core.llm.ModelAgentClassifier
 import org.eclipse.lmos.classifier.core.starter.ChatModelProperties
 import org.eclipse.lmos.classifier.llm.ChatModelClientProperties
+import org.eclipse.lmos.classifier.llm.ClassifierChatModelListener
 import org.eclipse.lmos.classifier.llm.DefaultModelAgentClassifier
 import org.eclipse.lmos.classifier.llm.LangChainChatModelFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -28,7 +29,10 @@ import org.springframework.context.annotation.Bean
 open class ModelAgentClassifierAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(ChatModel::class)
-    open fun chatModel(chatModelProperties: ChatModelProperties): ChatModel =
+    open fun chatModel(
+        chatModelProperties: ChatModelProperties,
+        chatModelListeners: List<ClassifierChatModelListener>,
+    ): ChatModel =
         LangChainChatModelFactory.createClient(
             ChatModelClientProperties(
                 provider = chatModelProperties.provider,
@@ -39,6 +43,7 @@ open class ModelAgentClassifierAutoConfiguration {
                 temperature = chatModelProperties.temperature,
                 logRequestsAndResponses = chatModelProperties.logRequestsAndResponses,
             ),
+            chatModelListeners,
         )
 
     @Bean

@@ -13,6 +13,7 @@ import io.qdrant.client.ValueFactory.value
 import io.qdrant.client.VectorsFactory.vectors
 import io.qdrant.client.grpc.Collections.Distance
 import io.qdrant.client.grpc.Collections.VectorParams
+import io.qdrant.client.grpc.Common.*
 import io.qdrant.client.grpc.Points.*
 import org.eclipse.lmos.classifier.core.Agent
 import org.eclipse.lmos.classifier.core.Capability

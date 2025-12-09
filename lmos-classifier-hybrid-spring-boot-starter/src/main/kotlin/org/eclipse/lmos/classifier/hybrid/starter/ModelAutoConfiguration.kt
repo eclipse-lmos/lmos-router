@@ -12,6 +12,7 @@ import org.eclipse.lmos.classifier.core.starter.EmbeddingModelProperties
 import org.eclipse.lmos.classifier.core.starter.EmbeddingRankingProperties
 import org.eclipse.lmos.classifier.core.starter.EmbeddingStoreProperties
 import org.eclipse.lmos.classifier.llm.ChatModelClientProperties
+import org.eclipse.lmos.classifier.llm.ClassifierChatModelListener
 import org.eclipse.lmos.classifier.llm.LangChainChatModelFactory
 import org.eclipse.lmos.classifier.vector.retriever.QdrantEmbeddingRetriever
 import org.eclipse.lmos.classifier.vector.utils.EmbeddingModelClientProperties
@@ -38,7 +39,10 @@ import org.springframework.context.annotation.Configuration
 open class ModelAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(ChatModel::class)
-    open fun chatModel(chatModelProperties: ChatModelProperties): ChatModel =
+    open fun chatModel(
+        chatModelProperties: ChatModelProperties,
+        chatModelListeners: List<ClassifierChatModelListener>,
+    ): ChatModel =
         LangChainChatModelFactory.createClient(
             ChatModelClientProperties(
                 provider = chatModelProperties.provider,
@@ -49,6 +53,7 @@ open class ModelAutoConfiguration {
                 temperature = chatModelProperties.temperature,
                 logRequestsAndResponses = chatModelProperties.logRequestsAndResponses,
             ),
+            chatModelListeners,
         )
 
     @Bean

@@ -7,6 +7,7 @@ package org.eclipse.lmos.classifier.vector.handler
 import io.qdrant.client.ConditionFactory
 import io.qdrant.client.QdrantClient
 import io.qdrant.client.QdrantGrpcClient
+import io.qdrant.client.grpc.Common.*
 import io.qdrant.client.grpc.Points.*
 import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.Awaitility
