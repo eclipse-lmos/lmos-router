@@ -53,7 +53,7 @@ class ClassifierController(
     }
 
     @PostMapping("/vector/plain")
-    fun vectorPlain(
+    suspend fun vectorPlain(
         @RequestBody request: ClassificationRequest,
     ): List<Embedding> {
         logger.info(

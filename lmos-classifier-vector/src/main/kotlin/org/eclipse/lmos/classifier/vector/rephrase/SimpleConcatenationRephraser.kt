@@ -13,7 +13,7 @@ import org.eclipse.lmos.classifier.core.rephrase.QueryRephraser
 class SimpleConcatenationRephraser(
     private val maxHistoryMessages: Int,
 ) : QueryRephraser {
-    override fun rephrase(request: ClassificationRequest) =
+    override suspend fun rephrase(request: ClassificationRequest) =
         listOf(
             (
                 request.inputContext.historyMessages

@@ -57,9 +57,9 @@ class DefaultModelAgentClassifier(
     private suspend fun doClassify(
         request: ClassificationRequest,
         agents: List<Agent>,
-    ): ClassificationResult =
-        classifierTracer.withSpan("llm") { tags ->
-            val candidateAgents = agentAggregator.aggregate(request) + agents
+    ): ClassificationResult {
+        val candidateAgents = agentAggregator.aggregate(request) + agents
+        return classifierTracer.withSpan("llm") { tags ->
             val chatRequest = prepareChatRequest(request, candidateAgents)
             val chatResponse = chatModel.chat(chatRequest)
             val classificationResult = prepareClassificationResult(chatResponse, candidateAgents)
@@ -67,6 +67,7 @@ class DefaultModelAgentClassifier(
             logger.logClassificationResult(request, classificationResult)
             classificationResult
         }
+    }
 
     private fun prepareChatRequest(
         request: ClassificationRequest,

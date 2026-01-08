@@ -4,6 +4,7 @@
 
 package org.eclipse.lmos.classifier.vector
 
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
@@ -48,7 +49,7 @@ class DefaultEmbeddingAgentClassifierTest {
         runBlocking {
             // given
             val expectedAgent = ClassifiedAgent(embedding.agentId, embedding.agentName, embedding.agentAddress)
-            every { embeddingRetrieverMock.retrieve(request.systemContext, listOf(request.inputContext.userMessage)) } returns
+            coEvery { embeddingRetrieverMock.retrieve(request.systemContext, listOf(request.inputContext.userMessage)) } returns
                 listOf(embedding)
             every { embeddingRankerMock.findMostQualifiedAgents(listOf(embedding)) } returns listOf(expectedAgent.id)
 
@@ -65,7 +66,7 @@ class DefaultEmbeddingAgentClassifierTest {
     fun `classify should return empty list if no agent is found`(): Unit =
         runBlocking {
             // given
-            every { embeddingRetrieverMock.retrieve(request.systemContext, listOf(request.inputContext.userMessage)) } returns
+            coEvery { embeddingRetrieverMock.retrieve(request.systemContext, listOf(request.inputContext.userMessage)) } returns
                 listOf(embedding)
             every { embeddingRankerMock.findMostQualifiedAgents(listOf(embedding)) } returns emptyList()
 
@@ -82,7 +83,7 @@ class DefaultEmbeddingAgentClassifierTest {
     fun `classify can handle empty list of embeddings`(): Unit =
         runBlocking {
             // given
-            every { embeddingRetrieverMock.retrieve(request.systemContext, listOf(request.inputContext.userMessage)) } returns emptyList()
+            coEvery { embeddingRetrieverMock.retrieve(request.systemContext, listOf(request.inputContext.userMessage)) } returns emptyList()
             every { embeddingRankerMock.findMostQualifiedAgents(emptyList()) } returns emptyList()
 
             // when

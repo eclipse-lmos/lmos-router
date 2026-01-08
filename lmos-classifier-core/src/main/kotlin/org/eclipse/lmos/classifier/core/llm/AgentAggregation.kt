@@ -18,7 +18,7 @@ interface AgentAggregator {
      * @param request The classification request containing input and system context information.
      * @return A consolidated list of candidate agents aggregated from all providers.
      */
-    fun aggregate(request: ClassificationRequest): List<Agent>
+    suspend fun aggregate(request: ClassificationRequest): List<Agent>
 }
 
 /**
@@ -35,5 +35,5 @@ interface AgentProvider {
      * @param request The classification request containing input and system context for agent selection.
      * @return A list of agent candidates to be considered for classification.
      */
-    fun provide(request: ClassificationRequest): List<Agent>
+    suspend fun provide(request: ClassificationRequest): List<Agent>
 }

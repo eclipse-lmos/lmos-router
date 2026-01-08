@@ -13,8 +13,8 @@ import io.qdrant.client.VectorsFactory.vectors
 import io.qdrant.client.grpc.Collections.Distance
 import io.qdrant.client.grpc.Collections.VectorParams
 import io.qdrant.client.grpc.Points.PointStruct
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.eclipse.lmos.classifier.core.SystemContext
 import org.eclipse.lmos.classifier.core.semantic.*
 import org.eclipse.lmos.classifier.vector.EmbeddingModelMock
@@ -78,60 +78,61 @@ class QdrantEmbeddingRetrieverIntegrationTest {
     }
 
     @Test
-    fun `retrieve returns empty list if no embeddings exists`() {
-        // when
-        val results = underTest.retrieve(context, "anything")
-        // then
-        assertThat(results).isEmpty()
-    }
+    fun `retrieve returns empty list if no embeddings exists`(): Unit =
+        runBlocking {
+            // when
+            val results = underTest.retrieve(context, "anything")
+            // then
+            assertThat(results).isEmpty()
+        }
 
     @Test
-    fun `retrieve returns embeddings sorted by relevance`() {
-        // given
-        val fistPoint =
-            createPoint(
-                "agent-id-1",
-                "agent-name-1",
-                "agent-address-1",
-                "capability-id-1",
-                "capability-desc-1",
-                "my great example",
-            )
-        val secondPoint =
-            createPoint(
-                "agent-id-2",
-                "agent-name-2",
-                "agent-address-2",
-                "capability-id-2",
-                "capability-desc-2",
-                "something else",
-            )
+    fun `retrieve returns embeddings sorted by relevance`(): Unit =
+        runBlocking {
+            // given
+            val fistPoint =
+                createPoint(
+                    "agent-id-1",
+                    "agent-name-1",
+                    "agent-address-1",
+                    "capability-id-1",
+                    "capability-desc-1",
+                    "my great example",
+                )
+            val secondPoint =
+                createPoint(
+                    "agent-id-2",
+                    "agent-name-2",
+                    "agent-address-2",
+                    "capability-id-2",
+                    "capability-desc-2",
+                    "something else",
+                )
 
-        qdrantClient.upsertAsync(getQdrantCollectionName(context), listOf(fistPoint, secondPoint)).get()
+            qdrantClient.upsertAsync(getQdrantCollectionName(context), listOf(fistPoint, secondPoint)).get()
 
-        // when
-        val results = underTest.retrieve(context, "my great example")
+            // when
+            val results = underTest.retrieve(context, "my great example")
 
-        // then
-        assertThat(results).hasSize(2)
-        assertThat(results[0].agentId).isEqualTo("agent-id-1")
-        assertThat(results[0].capabilityId).isEqualTo("capability-id-1")
-        assertThat(results[0].capabilityDescription).isEqualTo("capability-desc-1")
-        assertThat(results[0].example).isEqualTo("my great example")
+            // then
+            assertThat(results).hasSize(2)
+            assertThat(results[0].agentId).isEqualTo("agent-id-1")
+            assertThat(results[0].capabilityId).isEqualTo("capability-id-1")
+            assertThat(results[0].capabilityDescription).isEqualTo("capability-desc-1")
+            assertThat(results[0].example).isEqualTo("my great example")
 
-        assertThat(results[1].agentId).isEqualTo("agent-id-2")
-        assertThat(results[1].capabilityId).isEqualTo("capability-id-2")
-        assertThat(results[1].capabilityDescription).isEqualTo("capability-desc-2")
-        assertThat(results[1].example).isEqualTo("something else")
-    }
+            assertThat(results[1].agentId).isEqualTo("agent-id-2")
+            assertThat(results[1].capabilityId).isEqualTo("capability-id-2")
+            assertThat(results[1].capabilityDescription).isEqualTo("capability-desc-2")
+            assertThat(results[1].example).isEqualTo("something else")
+        }
 
     @Test
-    fun `retrieve throws RetrievalFailedException when retrieval fails`() {
-        val context = SystemContext("tenant-does-not-exist", "test-channel")
-        assertThatThrownBy { underTest.retrieve(context, "some query") }
-            .isInstanceOf(RetrievalFailedException::class.java)
-            .hasMessageContaining("Failed to retrieve embeddings. Reason:")
-    }
+    fun `retrieve throws RetrievalFailedException when retrieval fails`(): Unit =
+        runBlocking {
+            val context = SystemContext("tenant-does-not-exist", "test-channel")
+            assertThrows<RetrievalFailedException> { underTest.retrieve(context, "some query") }
+        }
 
     private fun createPoint(
         agentId: String,

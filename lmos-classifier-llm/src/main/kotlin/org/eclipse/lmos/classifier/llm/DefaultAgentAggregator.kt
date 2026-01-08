@@ -15,7 +15,7 @@ class DefaultAgentAggregator(
 ) : AgentAggregator {
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    override fun aggregate(request: ClassificationRequest): List<Agent> =
+    override suspend fun aggregate(request: ClassificationRequest): List<Agent> =
         agentProviders
             .flatMap { provider ->
                 runCatching { provider.provide(request) }

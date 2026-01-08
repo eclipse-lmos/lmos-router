@@ -17,5 +17,5 @@ interface QueryRephraser {
      * @param request The classification request containing the conversation and system context.
      * @return A list of messages rephrasing the user's intent
      */
-    fun rephrase(request: ClassificationRequest): List<String>
+    suspend fun rephrase(request: ClassificationRequest): List<String>
 }

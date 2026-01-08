@@ -26,7 +26,7 @@ class QdrantEmbeddingRetriever(
 ) : EmbeddingRetriever {
     private val retrieverByCollection = mutableMapOf<String, ContentRetriever>()
 
-    override fun retrieve(
+    override suspend fun retrieve(
         context: SystemContext,
         userMessage: String,
     ): List<Embedding> {
@@ -41,7 +41,7 @@ class QdrantEmbeddingRetriever(
         }
     }
 
-    override fun retrieve(
+    override suspend fun retrieve(
         context: SystemContext,
         userMessages: List<String>,
     ): List<Embedding> =

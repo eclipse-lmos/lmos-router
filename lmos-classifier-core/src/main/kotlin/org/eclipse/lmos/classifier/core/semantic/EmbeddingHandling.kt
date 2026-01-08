@@ -69,7 +69,7 @@ interface EmbeddingRetriever {
      * @param userMessage The user message.
      * @return A list of [Embedding]s sorted by relevance.
      */
-    fun retrieve(
+    suspend fun retrieve(
         context: SystemContext,
         userMessage: String,
     ): List<Embedding>
@@ -81,7 +81,7 @@ interface EmbeddingRetriever {
      * @param userMessages The list of user messages.
      * @return A list of [Embedding]s sorted by relevance.
      */
-    fun retrieve(
+    suspend fun retrieve(
         context: SystemContext,
         userMessages: List<String>,
     ): List<Embedding>

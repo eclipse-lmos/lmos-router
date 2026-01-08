@@ -31,7 +31,7 @@ internal class DefaultModelAgentClassifierTest {
         "This is the system prompt, listing some agents: weather-bot, news-bot"
     private val agentProvider =
         object : AgentProvider {
-            override fun provide(request: ClassificationRequest) =
+            override suspend fun provide(request: ClassificationRequest) =
                 listOf(
                     Agent(
                         id = "weather-bot",

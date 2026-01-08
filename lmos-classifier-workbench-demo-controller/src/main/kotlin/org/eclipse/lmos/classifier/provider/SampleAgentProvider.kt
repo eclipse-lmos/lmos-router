@@ -25,7 +25,7 @@ class EmbeddingAgentProvider(
     private val embeddingRetriever: EmbeddingRetriever,
     private var queryRephraser: QueryRephraser,
 ) : AgentProvider {
-    override fun provide(request: ClassificationRequest): List<Agent> {
+    override suspend fun provide(request: ClassificationRequest): List<Agent> {
         val rephrasedMessages = queryRephraser.rephrase(request)
         val embeddings = embeddingRetriever.retrieve(request.systemContext, rephrasedMessages)
         return embeddings.convertEmbeddingsToAgents()
@@ -40,7 +40,7 @@ class EmbeddingAgentProvider(
     matchIfMissing = false,
 )
 class WeatherAgentProvider : AgentProvider {
-    override fun provide(request: ClassificationRequest): List<Agent> =
+    override suspend fun provide(request: ClassificationRequest): List<Agent> =
         listOf(
             Agent(
                 id = "weather-bot",
