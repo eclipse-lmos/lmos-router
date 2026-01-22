@@ -13,7 +13,7 @@ plugins {
     val kotlinVersion = "2.3.0"
     kotlin("jvm") version kotlinVersion apply false
     kotlin("plugin.serialization") version kotlinVersion apply false
-    id("org.jlleitschuh.gradle.ktlint") version "13.1.0"
+    id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
     id("org.jetbrains.kotlinx.kover") version "0.9.2"
     id("org.jetbrains.dokka") version "2.1.0"
     id("org.cyclonedx.bom") version "2.4.1" apply false
