@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import com.vanniktech.maven.publish.DeploymentValidation
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.BufferedReader
@@ -18,7 +19,7 @@ plugins {
     id("org.jetbrains.dokka") version "2.1.0"
     id("org.cyclonedx.bom") version "3.1.0" apply false
     id("net.researchgate.release") version "3.1.0"
-    id("com.vanniktech.maven.publish") version "0.34.0"
+    id("com.vanniktech.maven.publish") version "0.36.0"
 }
 
 subprojects {
@@ -80,7 +81,7 @@ subprojects {
     }
 
     mavenPublishing {
-        publishToMavenCentral(automaticRelease = true)
+        publishToMavenCentral(automaticRelease = true, DeploymentValidation.PUBLISHED)
         signAllPublications()
 
         pom {
