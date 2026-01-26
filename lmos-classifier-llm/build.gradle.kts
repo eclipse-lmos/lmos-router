@@ -17,7 +17,7 @@ dependencies {
     compileOnly("dev.langchain4j:langchain4j-anthropic:$langChain4jVersion")
     compileOnly("dev.langchain4j:langchain4j-google-ai-gemini:$langChain4jVersion")
     compileOnly("dev.langchain4j:langchain4j-ollama:$langChain4jVersion")
-    compileOnly("com.azure:azure-identity:1.18.0")
+    compileOnly("com.azure:azure-identity:1.18.2")
 
     implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
@@ -29,6 +29,6 @@ dependencies {
     testImplementation("dev.langchain4j:langchain4j-anthropic:$langChain4jVersion")
     testImplementation("dev.langchain4j:langchain4j-google-ai-gemini:$langChain4jVersion")
     testImplementation("dev.langchain4j:langchain4j-ollama:$langChain4jVersion")
-    testImplementation("com.azure:azure-identity:1.18.0")
+    testImplementation("com.azure:azure-identity:1.18.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
 }
