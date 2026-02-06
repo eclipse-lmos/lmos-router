@@ -11,7 +11,7 @@ import java.lang.System.getenv
 import java.net.URI
 
 plugins {
-    val kotlinVersion = "2.3.0"
+    val kotlinVersion = "2.3.10"
     kotlin("jvm") version kotlinVersion apply false
     kotlin("plugin.serialization") version kotlinVersion apply false
     id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
