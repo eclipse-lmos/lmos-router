@@ -50,7 +50,9 @@ subprojects {
     }
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_25
+        toolchain {
+             languageVersion = JavaLanguageVersion.of(25)
+        }
     }
 
     val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
