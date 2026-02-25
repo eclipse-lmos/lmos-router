@@ -45,12 +45,12 @@ subprojects {
     tasks.withType<KotlinCompile> {
         compilerOptions {
             freeCompilerArgs = listOf("-Xjsr305=strict", "-Xcontext-receivers")
-            jvmTarget = JvmTarget.JVM_21
+            jvmTarget = JvmTarget.JVM_25
         }
     }
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_25
     }
 
     val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
