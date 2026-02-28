@@ -19,9 +19,9 @@ dependencies {
 
     implementation("dev.langchain4j:langchain4j-open-ai:$langChain4jVersion")
 
-    testImplementation("org.testcontainers:testcontainers:1.21.4")
-    testImplementation("org.testcontainers:junit-jupiter:1.21.4")
-    testImplementation("org.testcontainers:qdrant:1.21.4")
+    testImplementation("org.testcontainers:testcontainers")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:qdrant")
     testImplementation("org.awaitility:awaitility:4.3.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
 }

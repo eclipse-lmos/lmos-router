@@ -10,5 +10,5 @@ dependencies {
     implementation("com.azure:azure-ai-openai:1.0.0-beta.16")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.10.0")
     implementation("io.ktor:ktor-client-cio-jvm:3.4.0")
-    testImplementation("org.testcontainers:ollama:1.21.4")
+    testImplementation("org.testcontainers:ollama")
 }
