@@ -36,11 +36,11 @@ import java.util.Properties
     ],
 )
 class SpringVectorAgentRoutingSpecsResolverFlow(
-    @Autowired
+    @param:Autowired
     private val vectorAgentRoutingSpecsResolver: VectorAgentRoutingSpecsResolver,
-    @Autowired
+    @param:Autowired
     private val vectorSeedClient: VectorSeedClient,
-    @Autowired
+    @param:Autowired
     private val qdrantClient: QdrantClient,
 ) {
     @Test

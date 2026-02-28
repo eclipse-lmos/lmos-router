@@ -2,29 +2,25 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-val springBootVersion: String by project
-val langChain4jVersion: String by project
-val jacksonVersion: String by project
-
 dependencies {
     implementation(project(":lmos-classifier-llm-spring-boot-starter"))
     implementation(project(":lmos-classifier-vector-spring-boot-starter"))
     implementation(project(":lmos-classifier-hybrid-spring-boot-starter"))
 
-    implementation("dev.langchain4j:langchain4j-open-ai:$langChain4jVersion")
-    implementation("dev.langchain4j:langchain4j-azure-open-ai:$langChain4jVersion")
-    implementation("dev.langchain4j:langchain4j-anthropic:$langChain4jVersion")
-    implementation("dev.langchain4j:langchain4j-google-ai-gemini:$langChain4jVersion")
-    implementation("dev.langchain4j:langchain4j-ollama:$langChain4jVersion")
-    implementation("com.azure:azure-identity:1.18.2")
+    implementation("dev.langchain4j:langchain4j-open-ai")
+    implementation("dev.langchain4j:langchain4j-azure-open-ai")
+    implementation("dev.langchain4j:langchain4j-anthropic")
+    implementation("dev.langchain4j:langchain4j-google-ai-gemini")
+    implementation("dev.langchain4j:langchain4j-ollama")
+    implementation("com.azure:azure-identity")
 
-    implementation("org.springframework.boot:spring-boot-starter:$springBootVersion")
-    implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
-    implementation("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
-    implementation("net.logstash.logback:logstash-logback-encoder:9.0")
-    implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
-    implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
-    implementation("com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.10.2")
+    implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+
+    implementation("net.logstash.logback:logstash-logback-encoder")
+    implementation("com.fasterxml.jackson.core:jackson-core")
+    implementation("com.fasterxml.jackson.core:jackson-databind")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("com.fasterxml.jackson.core:jackson-annotations")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 }

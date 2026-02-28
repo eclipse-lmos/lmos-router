@@ -2,12 +2,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-val springBootVersion: String by rootProject.extra
-
 dependencies {
     api(project(":lmos-router-core"))
     api(project(":lmos-router-llm"))
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.10.0")
-    implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
-    implementation("org.springframework.cloud:spring-cloud-starter-gateway:4.3.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.cloud:spring-cloud-starter-gateway")
 }

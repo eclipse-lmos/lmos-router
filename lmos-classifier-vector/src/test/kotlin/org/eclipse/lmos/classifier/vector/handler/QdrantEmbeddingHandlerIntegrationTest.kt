@@ -39,7 +39,7 @@ internal class QdrantEmbeddingHandlerIntegrationTest {
 
     @BeforeAll
     fun setup() {
-        val qdrantContainer = QdrantContainer("qdrant/qdrant")
+        val qdrantContainer = QdrantContainer("qdrant/qdrant:v1.16.0-unprivileged")
         qdrantContainer.start()
 
         qdrantClient =

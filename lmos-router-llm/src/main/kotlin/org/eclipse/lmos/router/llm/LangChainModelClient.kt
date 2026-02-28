@@ -37,7 +37,6 @@ class LangChainModelClient(
                             is SystemMessage ->
                                 dev.langchain4j.data.message
                                     .SystemMessage(it.content)
-                            else -> throw AgentRoutingSpecResolverException("Unknown message type")
                         }
                     },
                 )

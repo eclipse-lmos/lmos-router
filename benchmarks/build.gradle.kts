@@ -3,10 +3,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 dependencies {
-    implementation("org.apache.commons:commons-csv:1.14.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.10.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-    implementation("io.ktor:ktor-client-cio-jvm:3.4.0")
+    implementation("org.apache.commons:commons-csv")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+    implementation("io.ktor:ktor-client-cio-jvm")
     implementation(project(":lmos-router-core"))
     implementation(project(":lmos-router-llm"))
     implementation(project(":lmos-router-vector"))

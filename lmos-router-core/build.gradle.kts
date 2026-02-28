@@ -3,6 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 dependencies {
-    implementation("org.slf4j:slf4j-api:2.0.17")
-    api("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.10.0")
+    implementation("org.slf4j:slf4j-api")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm")
 }

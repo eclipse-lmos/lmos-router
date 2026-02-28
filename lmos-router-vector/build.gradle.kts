@@ -4,8 +4,8 @@
 
 dependencies {
     api(project(":lmos-router-core"))
-    implementation("org.slf4j:slf4j-api:2.0.17")
-    implementation("io.ktor:ktor-client-cio-jvm:3.4.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.10.0")
-    testImplementation("org.testcontainers:ollama:1.21.4")
+    implementation("org.slf4j:slf4j-api")
+    implementation("io.ktor:ktor-client-cio-jvm")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm")
+    testImplementation("org.testcontainers:testcontainers-ollama")
 }

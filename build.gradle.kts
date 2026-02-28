@@ -11,15 +11,17 @@ import java.lang.System.getenv
 import java.net.URI
 
 plugins {
-    val kotlinVersion = "2.3.10"
-    kotlin("jvm") version kotlinVersion apply false
-    kotlin("plugin.serialization") version kotlinVersion apply false
+    kotlin("jvm") apply false
+    kotlin("plugin.serialization") apply false
+    kotlin("plugin.spring") apply false
     id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
     id("org.jetbrains.kotlinx.kover") version "0.9.7"
     id("org.jetbrains.dokka") version "2.1.0"
     id("org.cyclonedx.bom") version "3.2.0" apply false
     id("net.researchgate.release") version "3.1.0"
     id("com.vanniktech.maven.publish") version "0.36.0"
+    id("org.springframework.boot") version "4.0.3"
+    id("io.spring.dependency-management") version "1.1.7"
 }
 
 subprojects {
@@ -32,6 +34,7 @@ subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
     apply(plugin = "org.jetbrains.dokka")
     apply(plugin = "com.vanniktech.maven.publish")
+    apply(plugin = "io.spring.dependency-management")
 
     version = rootProject.version
 
@@ -44,14 +47,14 @@ subprojects {
 
     tasks.withType<KotlinCompile> {
         compilerOptions {
-            freeCompilerArgs = listOf("-Xjsr305=strict", "-Xcontext-receivers")
+            freeCompilerArgs = listOf("-Xjsr305=strict", "-Xcontext-parameters")
             jvmTarget = JvmTarget.JVM_25
         }
     }
 
     java {
         toolchain {
-             languageVersion = JavaLanguageVersion.of(25)
+            languageVersion = JavaLanguageVersion.of(25)
         }
     }
 
@@ -61,11 +64,55 @@ subprojects {
         archiveClassifier.set("javadoc")
     }
 
+    dependencyManagement {
+        imports {
+            mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+        }
+        dependencies {
+            val langChain4jVersion = "1.9.1"
+            val langChain4jEmbeddingVersion = "1.9.1-beta17"
+            val springCloudVersion = "1.0.0-M6"
+
+            dependency("dev.langchain4j:langchain4j:$langChain4jVersion")
+            dependency("dev.langchain4j:langchain4j-open:$langChain4jVersion")
+            dependency("dev.langchain4j:langchain4j-open-ai:$langChain4jVersion")
+            dependency("dev.langchain4j:langchain4j-azure-open-ai:$langChain4jVersion")
+            dependency("dev.langchain4j:langchain4j-anthropic:$langChain4jVersion")
+            dependency("dev.langchain4j:langchain4j-google-ai-gemini:$langChain4jVersion")
+            dependency("dev.langchain4j:langchain4j-ollama:$langChain4jVersion")
+            dependency("dev.langchain4j:langchain4j-open-ai:$langChain4jVersion")
+            dependency("dev.langchain4j:langchain4j-azure-open-ai:$langChain4jVersion")
+            dependency("dev.langchain4j:langchain4j-anthropic:$langChain4jVersion")
+            dependency("dev.langchain4j:langchain4j-google-ai-gemini:$langChain4jVersion")
+            dependency("dev.langchain4j:langchain4j-ollama:$langChain4jVersion")
+
+            dependency("dev.langchain4j:langchain4j-embeddings:$langChain4jEmbeddingVersion")
+            dependency("dev.langchain4j:langchain4j-qdrant:$langChain4jEmbeddingVersion")
+            dependency("dev.langchain4j:langchain4j-hugging-face:$langChain4jEmbeddingVersion")
+
+            dependency("org.mvel:mvel2:2.5.2.Final")
+            dependency("io.ktor:ktor-client-cio-jvm:3.4.0")
+            dependency("org.apache.commons:commons-csv:1.14.1")
+            dependency("com.azure:azure-ai-openai:1.0.0-beta.16")
+            dependency("com.azure:azure-identity:1.18.2")
+            dependency("io.mockk:mockk:1.14.9")
+            dependency("net.logstash.logback:logstash-logback-encoder:9.0")
+            dependency("org.springframework.ai:spring-ai-core:$springCloudVersion")
+            dependency("org.springframework.ai:spring-ai-openai-spring-boot-starter:$springCloudVersion")
+            dependency("org.springframework.ai:spring-ai-qdrant-store-spring-boot-starter:$springCloudVersion")
+            dependency("org.springframework.cloud:spring-cloud-starter-gateway:4.3.3")
+        }
+    }
+
     dependencies {
-        "testImplementation"("org.junit.jupiter:junit-jupiter:6.0.3")
-        "testImplementation"("org.junit.platform:junit-platform-launcher:6.0.3")
-        "testImplementation"("org.assertj:assertj-core:3.27.7")
-        "testImplementation"("io.mockk:mockk:1.14.9")
+        "testImplementation"("org.junit.jupiter:junit-jupiter")
+        "testImplementation"("org.junit.platform:junit-platform-launcher")
+        "testImplementation"("org.assertj:assertj-core")
+        "testImplementation"("io.mockk:mockk")
+    }
+
+    ktlint {
+        version.set("1.5.0")
     }
 
     tasks.named("dokkaJavadoc") {

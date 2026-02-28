@@ -40,7 +40,6 @@ class SpringModelClient(
                                     is SystemMessage ->
                                         org.springframework.ai.chat.messages
                                             .SystemMessage(it.content)
-                                    else -> throw IllegalArgumentException("Unsupported message type: ${it::class.simpleName}")
                                 }
                             },
                         ),

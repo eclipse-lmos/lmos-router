@@ -16,7 +16,7 @@ import org.springframework.test.context.ContextConfiguration
 @SpringBootTest
 @ContextConfiguration(classes = [LLMAgentRoutingSpecsResolverAutoConfiguration::class, OpenAiAutoConfiguration::class])
 class SpringLLMAgentResolverFlow(
-    @Autowired private val agentResolver: AgentRoutingSpecsResolver,
+    @param:Autowired private val agentResolver: AgentRoutingSpecsResolver,
 ) {
     @Test
     fun `test agent detection using openai`() {

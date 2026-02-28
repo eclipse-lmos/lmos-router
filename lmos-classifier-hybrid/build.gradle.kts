@@ -6,5 +6,5 @@ dependencies {
     api(project(":lmos-classifier-core"))
     api(project(":lmos-classifier-vector"))
     api(project(":lmos-classifier-llm"))
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
 }
