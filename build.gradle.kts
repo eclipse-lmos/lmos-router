@@ -15,7 +15,7 @@ plugins {
     kotlin("plugin.serialization") apply false
     kotlin("plugin.spring") apply false
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
-    id("org.jetbrains.kotlinx.kover") version "0.9.7"
+    id("org.jetbrains.kotlinx.kover") version "0.9.8"
     id("org.jetbrains.dokka") version "2.1.0"
     id("org.cyclonedx.bom") version "3.2.2" apply false
     id("net.researchgate.release") version "3.1.0"
