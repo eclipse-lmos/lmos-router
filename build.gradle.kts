@@ -20,7 +20,7 @@ plugins {
     id("org.cyclonedx.bom") version "3.2.2" apply false
     id("net.researchgate.release") version "3.1.0"
     id("com.vanniktech.maven.publish") version "0.36.0"
-    id("org.springframework.boot") version "4.0.4"
+    id("org.springframework.boot") version "4.0.5"
     id("io.spring.dependency-management") version "1.1.7"
 }
 
