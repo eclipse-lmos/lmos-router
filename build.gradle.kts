@@ -100,7 +100,7 @@ subprojects {
             dependency("org.springframework.ai:spring-ai-core:$springCloudVersion")
             dependency("org.springframework.ai:spring-ai-openai-spring-boot-starter:$springCloudVersion")
             dependency("org.springframework.ai:spring-ai-qdrant-store-spring-boot-starter:$springCloudVersion")
-            dependency("org.springframework.cloud:spring-cloud-starter-gateway:4.3.3")
+            dependency("org.springframework.cloud:spring-cloud-starter-gateway:4.3.4")
         }
     }
 
