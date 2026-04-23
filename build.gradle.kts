@@ -70,7 +70,7 @@ subprojects {
         }
         dependencies {
             val langChain4jVersion = "1.9.1"
-            val langChain4jEmbeddingVersion = "1.13.0-beta23"
+            val langChain4jEmbeddingVersion = "1.13.1-beta23"
             val springCloudVersion = "1.0.0-M6"
 
             dependency("dev.langchain4j:langchain4j:$langChain4jVersion")
