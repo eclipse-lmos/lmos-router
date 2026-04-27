@@ -14,8 +14,8 @@ dependencies {
     compileOnly("dev.langchain4j:langchain4j-ollama")
     compileOnly("com.azure:azure-identity")
 
-    implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("tools.jackson.core:jackson-databind")
+    implementation("tools.jackson.module:jackson-module-kotlin")
     implementation("org.mvel:mvel2")
 
     testImplementation("org.assertj:assertj-core")

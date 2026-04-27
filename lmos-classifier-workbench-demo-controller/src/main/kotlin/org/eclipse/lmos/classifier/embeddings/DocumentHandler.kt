@@ -5,8 +5,6 @@
 package org.eclipse.lmos.classifier.embeddings
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.eclipse.lmos.classifier.config.EmbeddingDocumentProperties
 import org.eclipse.lmos.classifier.core.Agent
 import org.eclipse.lmos.classifier.core.SystemContext
@@ -15,6 +13,8 @@ import org.slf4j.LoggerFactory
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
+import tools.jackson.databind.DeserializationFeature
+import tools.jackson.module.kotlin.jacksonMapperBuilder
 import java.io.File
 
 @Component
@@ -33,7 +33,10 @@ open class DocumentHandler(
     }
 
     private fun loadJsonFilesAsChannelRoutings(directoryPath: String): List<ChannelRouting> {
-        val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        val objectMapper =
+            jacksonMapperBuilder()
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .build()
         return File(directoryPath)
             .listFiles { file -> file.isFile && file.extension == "json" }
             ?.mapNotNull { file ->

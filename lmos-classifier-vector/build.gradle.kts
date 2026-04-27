@@ -9,8 +9,8 @@ dependencies {
     api("dev.langchain4j:langchain4j-hugging-face")
     implementation("dev.langchain4j:langchain4j-qdrant")
 
-    implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("tools.jackson.core:jackson-databind")
+    implementation("tools.jackson.module:jackson-module-kotlin")
     implementation("com.fasterxml.jackson.core:jackson-annotations")
 
     implementation("dev.langchain4j:langchain4j-open-ai")

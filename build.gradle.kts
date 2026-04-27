@@ -71,8 +71,12 @@ subprojects {
         dependencies {
             val langChain4jVersion = "1.9.1"
             val langChain4jEmbeddingVersion = "1.13.1-beta23"
+            val jacksonVersion = "3.1.2"
             val springCloudVersion = "1.0.0-M6"
 
+            dependency("tools.jackson.core:jackson-core:$jacksonVersion")
+            dependency("tools.jackson.core:jackson-databind:$jacksonVersion")
+            dependency("tools.jackson.module:jackson-module-kotlin:$jacksonVersion")
             dependency("dev.langchain4j:langchain4j:$langChain4jVersion")
             dependency("dev.langchain4j:langchain4j-open:$langChain4jVersion")
             dependency("dev.langchain4j:langchain4j-open-ai:$langChain4jVersion")

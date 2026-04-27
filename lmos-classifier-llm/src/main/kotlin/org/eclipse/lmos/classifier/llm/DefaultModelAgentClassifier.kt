@@ -4,9 +4,6 @@
 
 package org.eclipse.lmos.classifier.llm
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.SystemMessage
@@ -30,6 +27,9 @@ import org.eclipse.lmos.classifier.core.tracing.ClassifierTracer
 import org.eclipse.lmos.classifier.core.tracing.NoopClassifierTracer
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.module.kotlin.readValue
 
 class DefaultModelAgentClassifier(
     private val chatModel: ChatModel,

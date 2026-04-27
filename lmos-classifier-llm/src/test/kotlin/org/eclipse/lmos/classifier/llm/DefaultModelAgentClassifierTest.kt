@@ -4,7 +4,6 @@
 
 package org.eclipse.lmos.classifier.llm
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
@@ -22,6 +21,7 @@ import org.eclipse.lmos.classifier.core.HistoryMessageRole.*
 import org.eclipse.lmos.classifier.core.llm.AgentProvider
 import org.eclipse.lmos.classifier.core.tracing.NoopClassifierTracer
 import org.junit.jupiter.api.Test
+import tools.jackson.module.kotlin.jacksonObjectMapper
 
 internal class DefaultModelAgentClassifierTest {
     private val chatModelMock = mockk<ChatModel>()

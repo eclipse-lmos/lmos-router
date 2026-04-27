@@ -18,9 +18,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
 
     implementation("net.logstash.logback:logstash-logback-encoder")
-    implementation("com.fasterxml.jackson.core:jackson-core")
-    implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("tools.jackson.core:jackson-core")
+    implementation("tools.jackson.core:jackson-databind")
+    implementation("tools.jackson.module:jackson-module-kotlin")
     implementation("com.fasterxml.jackson.core:jackson-annotations")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 }
