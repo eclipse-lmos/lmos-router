@@ -98,7 +98,7 @@ subprojects {
             dependency("io.ktor:ktor-client-cio-jvm:3.5.0")
             dependency("org.apache.commons:commons-csv:1.14.1")
             dependency("com.azure:azure-ai-openai:1.0.0-beta.16")
-            dependency("com.azure:azure-identity:1.18.3")
+            dependency("com.azure:azure-identity:1.18.4")
             dependency("io.mockk:mockk:1.14.11")
             dependency("net.logstash.logback:logstash-logback-encoder:9.0")
             dependency("org.springframework.ai:spring-ai-core:$springCloudVersion")
