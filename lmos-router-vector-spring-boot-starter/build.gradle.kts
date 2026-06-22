@@ -14,4 +14,5 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-web")
     testImplementation("org.testcontainers:testcontainers-qdrant")
+    testImplementation("com.google.guava:guava:33.4.8-jre")
 }
