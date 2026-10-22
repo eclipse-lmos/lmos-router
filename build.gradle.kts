@@ -94,7 +94,7 @@ subprojects {
             dependency("dev.langchain4j:langchain4j-qdrant:$langChain4jEmbeddingVersion")
             dependency("dev.langchain4j:langchain4j-hugging-face:$langChain4jEmbeddingVersion")
 
-            dependency("org.mvel:mvel2:2.5.4.Final")
+            dependency("org.mvel:mvel2:2.6.0.Final")
             dependency("io.ktor:ktor-client-cio-jvm:3.6.0")
             dependency("org.apache.commons:commons-csv:1.14.1")
             dependency("com.azure:azure-ai-openai:1.0.0-beta.16")
