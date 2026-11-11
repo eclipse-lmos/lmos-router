@@ -16,7 +16,7 @@ plugins {
     kotlin("plugin.spring") apply false
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
     id("org.jetbrains.kotlinx.kover") version "0.9.11"
-    id("org.jetbrains.dokka") version "2.2.0"
+    id("org.jetbrains.dokka") version "2.3.0"
     id("org.cyclonedx.bom") version "3.5.1" apply false
     id("net.researchgate.release") version "3.2.0"
     id("com.vanniktech.maven.publish") version "0.37.0"
